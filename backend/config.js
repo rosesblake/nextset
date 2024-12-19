@@ -13,7 +13,7 @@ const PORT = +process.env.PORT || 3001;
 function getDatabaseUri() {
   return process.env.NODE_ENV === "test"
     ? "nextset_test"
-    : "postgres://localhost/nextset";
+    : process.env.DATABASE_URL;
 }
 
 //setting the work factor for the password hashing algorithm
