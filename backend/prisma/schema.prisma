@@ -1,9 +1,3 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -11,4 +5,151 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
+}
+
+model amenities {
+  id              Int               @id @default(autoincrement())
+  name            String            @db.VarChar(50)
+  venue_amenities venue_amenities[]
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model artists {
+  id                        Int             @id @default(autoincrement())
+  name                      String          @db.VarChar(50)
+  instagram_handle          String?         @db.VarChar(50)
+  x_handle                  String?         @db.VarChar(50)
+  facebook_url              String?
+  rating_social_media       Float?
+  spotify_monthly_listeners Int?
+  spotify_popular_cities    Json?           @db.Json
+  spotify_most_plays        String?         @db.VarChar(50)
+  rating_streams            Float?
+  w9                        String?
+  rider                     String?
+  manager                   String?         @db.VarChar(50)
+  record_label              String?         @db.VarChar(50)
+  tour_booking_agent        String?         @db.VarChar(50)
+  tour_manager              String?         @db.VarChar(50)
+  phone                     String          @db.VarChar(15)
+  home_city                 String?         @db.VarChar(50)
+  home_state                String?         @db.VarChar(2)
+  email                     String
+  event_artists             event_artists[]
+  members                   members[]
+  pitch_artists             pitch_artists[]
+  tokens                    tokens[]
+}
+
+model event_artists {
+  event_id  Int
+  artist_id Int
+  artists   artists @relation(fields: [artist_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  events    events  @relation(fields: [event_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([event_id, artist_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model events {
+  id                Int             @id @default(autoincrement())
+  name              String          @db.VarChar(100)
+  venue_id          Int
+  event_date        DateTime        @db.Date
+  start_time        DateTime        @db.Time(6)
+  end_time          DateTime?       @db.Time(6)
+  description       String?
+  ticket_price      Decimal?        @db.Decimal(10, 2)
+  available_tickets Int?
+  status            String?         @default("Scheduled") @db.VarChar(20)
+  event_artists     event_artists[]
+  venues            venues          @relation(fields: [venue_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model members {
+  id        Int     @id @default(autoincrement())
+  artist_id Int
+  user_id   Int?    @unique
+  name      String  @db.VarChar(30)
+  role      String? @db.VarChar(25)
+  email     String? @db.VarChar(50)
+  phone     String? @db.VarChar(15)
+  artists   artists @relation(fields: [artist_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  users     users?  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model pitch_artists {
+  pitch_id  Int
+  artist_id Int
+  artists   artists @relation(fields: [artist_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  pitches   pitches @relation(fields: [pitch_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([pitch_id, artist_id])
+}
+
+model pitches {
+  id               Int             @id @default(autoincrement())
+  venue_id         Int
+  avg_ticket_sales Int?
+  content          String
+  status           String          @db.VarChar(15)
+  pitch_artists    pitch_artists[]
+  venues           venues          @relation(fields: [venue_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+model schedules {
+  id       Int      @id @default(autoincrement())
+  venue_id Int
+  date     DateTime @db.Date
+  venues   venues   @relation(fields: [venue_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model tokens {
+  id             Int       @id @default(autoincrement())
+  artist_id      Int
+  amount         Int?
+  date_purchased DateTime? @db.Date
+  date_spent     DateTime? @db.Date
+  artists        artists   @relation(fields: [artist_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model users {
+  id            Int       @id @default(autoincrement())
+  username      String    @unique @db.VarChar(50)
+  password_hash String
+  email         String    @unique
+  role          String    @default("user") @db.VarChar(20)
+  access_level  String    @default("ADMIN") @db.VarChar(20)
+  account_type  String    @db.VarChar(20)
+  artist_id     Int?
+  venue_id      Int?
+  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  members       members?
+}
+
+model venue_amenities {
+  venue_id   Int
+  amenity_id Int
+  amenities  amenities @relation(fields: [amenity_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  venues     venues    @relation(fields: [venue_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+
+  @@id([venue_id, amenity_id])
+}
+
+/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
+model venues {
+  id              Int               @id @default(autoincrement())
+  name            String            @unique @db.VarChar(50)
+  capacity        Int?
+  address         String?           @db.VarChar(50)
+  city            String?           @db.VarChar(50)
+  state           String?           @db.VarChar(2)
+  zip_code        String?           @db.VarChar(10)
+  available_dates Json?             @db.Json
+  events          events[]
+  pitches         pitches[]
+  schedules       schedules[]
+  venue_amenities venue_amenities[]
 }
