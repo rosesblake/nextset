@@ -21,7 +21,6 @@ const BCRYPT_WORK_FACTOR = process.env.NODE_ENV === "test" ? 1 : 12;
 
 console.log("NextSet Config:".green);
 console.log("PORT:".yellow, PORT.toString());
-console.log("Database:".yellow, getDatabaseUri());
 console.log("---");
 
 module.exports = {
