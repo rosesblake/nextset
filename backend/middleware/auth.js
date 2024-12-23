@@ -15,15 +15,24 @@ const { UnauthorizedError } = require("../expressError");
  */
 
 function authenticateJWT(req, res, next) {
+  const authHeader = req.headers && req.headers.authorization;
+
+  if (!authHeader) {
+    return next(new UnauthorizedError("Authorization token is missing"));
+  }
+
+  const token = authHeader.replace(/^[Bb]earer /, "").trim();
+
   try {
-    const authHeader = req.headers && req.headers.authorization;
-    if (authHeader) {
-      const token = authHeader.replace(/^[Bb]earer /, "").trim();
-      res.locals.user = jwt.verify(token, SECRET_KEY);
-    }
-    return next();
+    // Verify the token using the secret key
+    const user = jwt.verify(token, SECRET_KEY);
+    res.locals.user = user; // Store the user data in locals for later use
+    next();
   } catch (err) {
-    return next();
+    if (err.name === "TokenExpiredError") {
+      return next(new UnauthorizedError("Token has expired"));
+    }
+    return next(new UnauthorizedError("Invalid or missing token"));
   }
 }
 
