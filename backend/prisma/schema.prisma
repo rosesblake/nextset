@@ -13,7 +13,6 @@ model amenities {
   venue_amenities venue_amenities[]
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model artists {
   id                        Int             @id @default(autoincrement())
   name                      String          @db.VarChar(50)
@@ -31,14 +30,19 @@ model artists {
   record_label              String?         @db.VarChar(50)
   tour_booking_agent        String?         @db.VarChar(50)
   tour_manager              String?         @db.VarChar(50)
-  phone                     String          @db.VarChar(15)
+  phone                     String?         @db.VarChar(15)
   home_city                 String?         @db.VarChar(50)
   home_state                String?         @db.VarChar(2)
-  email                     String
+  email                     String?
+  created_by                Int
+  created_at                DateTime?       @default(now()) @db.Timestamp(6)
   event_artists             event_artists[]
   members                   members[]
   pitch_artists             pitch_artists[]
   tokens                    tokens[]
+
+  creator users          @relation("ArtistCreator", fields: [created_by], references: [id])
+  users   artist_users[]
 }
 
 model event_artists {
@@ -50,7 +54,6 @@ model event_artists {
   @@id([event_id, artist_id])
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model events {
   id                Int             @id @default(autoincrement())
   name              String          @db.VarChar(100)
@@ -104,7 +107,6 @@ model schedules {
   venues   venues   @relation(fields: [venue_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model tokens {
   id             Int       @id @default(autoincrement())
   artist_id      Int
@@ -114,19 +116,26 @@ model tokens {
   artists        artists   @relation(fields: [artist_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model users {
-  id            Int       @id @default(autoincrement())
-  username      String    @unique @db.VarChar(50)
+  id            Int            @id @default(autoincrement())
+  username      String         @unique @db.VarChar(50)
   password_hash String
-  email         String    @unique
-  role          String    @default("user") @db.VarChar(20)
-  access_level  String    @default("ADMIN") @db.VarChar(20)
-  account_type  String    @db.VarChar(20)
+  email         String         @unique
+  role          String         @default("user") @db.VarChar(20)
+  access_level  String         @default("ADMIN") @db.VarChar(20)
+  account_type  String         @db.VarChar(20)
   artist_id     Int?
   venue_id      Int?
-  created_at    DateTime? @default(now()) @db.Timestamp(6)
+  created_at    DateTime?      @default(now()) @db.Timestamp(6)
   members       members?
+  artist_users  artist_users[]
+  venue_users   venue_users[]
+
+  // Opposite relation for artists
+  artists artists[] @relation("ArtistCreator")
+
+  // Opposite relation for venues
+  venues venues[] @relation("VenueCreator")
 }
 
 model venue_amenities {
@@ -138,7 +147,6 @@ model venue_amenities {
   @@id([venue_id, amenity_id])
 }
 
-/// This table contains check constraints and requires additional setup for migrations. Visit https://pris.ly/d/check-constraints for more info.
 model venues {
   id              Int               @id @default(autoincrement())
   name            String            @unique @db.VarChar(50)
@@ -152,4 +160,31 @@ model venues {
   pitches         pitches[]
   schedules       schedules[]
   venue_amenities venue_amenities[]
+  created_by      Int
+  created_at      DateTime?         @default(now()) @db.Timestamp(6)
+
+  creator users         @relation("VenueCreator", fields: [created_by], references: [id])
+  users   venue_users[]
+}
+
+model artist_users {
+  user_id   Int
+  artist_id Int
+  role      String?
+
+  user   users   @relation(fields: [user_id], references: [id])
+  artist artists @relation(fields: [artist_id], references: [id])
+
+  @@id([user_id, artist_id])
+}
+
+model venue_users {
+  user_id  Int
+  venue_id Int
+  role     String?
+
+  user  users  @relation(fields: [user_id], references: [id])
+  venue venues @relation(fields: [venue_id], references: [id])
+
+  @@id([user_id, venue_id])
 }
