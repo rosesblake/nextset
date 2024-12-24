@@ -24,6 +24,8 @@ class NextSetApi {
     NextSetApi.token = res.token;
     return res;
   }
+
+  static async registerArtist(user) {}
 }
 
 export { NextSetApi };
