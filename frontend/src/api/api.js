@@ -25,7 +25,23 @@ class NextSetApi {
     return res;
   }
 
-  static async registerArtist(user) {}
+  static async registerArtist(artist, currUser) {
+    const newArtist = { ...artist, created_by: currUser.id };
+    let res = await this.request(`artists/register`, newArtist, "post");
+    return res;
+  }
+
+  static async registerVenue(venue, currUser) {
+    const newVenue = { ...venue, created_by: currUser.id };
+    let res = await this.request(`venues/register`, newVenue, "post");
+    return res;
+  }
+
+  static async loginUser(user) {
+    let res = await this.request(`auth/login`, user, "post");
+    NextSetApi.token = res.token;
+    return res;
+  }
 }
 
 export { NextSetApi };

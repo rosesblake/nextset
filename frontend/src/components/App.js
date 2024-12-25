@@ -1,20 +1,26 @@
-import "../styles/App.css";
-import { BrowserRouter, Route, Routes } from "react-router-dom";
+import React from "react";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { Register } from "../pages/Register";
-import { ArtistRegisterForm } from "./ArtistRegisterForm";
-import { VenueRegisterForm } from "./VenueRegisterForm";
+import { UserProvider } from "./UserContext"; // Import UserProvider
+import { ArtistHome } from "../pages/ArtistHome";
+import { Navbar } from "./NavBar";
+import { Login } from "../pages/Login";
 
 function App() {
   return (
-    <div className="App">
-      <BrowserRouter>
-        <Routes>
-          <Route path="/register" element={<Register />} />
-          <Route path="/register/artist" element={<ArtistRegisterForm />} />
-          <Route path="/register/venue" element={<VenueRegisterForm />} />
-        </Routes>
-      </BrowserRouter>
-    </div>
+    <UserProvider>
+      <div className="App">
+        <BrowserRouter>
+          <Navbar />
+          <Routes>
+            <Route path="/" element={<ArtistHome />} />
+            <Route path="/register" element={<Register />} />
+            <Route path="/register/:accountType" element={<Register />} />
+            <Route path="/login" element={<Login />} />
+          </Routes>
+        </BrowserRouter>
+      </div>
+    </UserProvider>
   );
 }
 

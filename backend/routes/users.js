@@ -31,13 +31,13 @@ router.post(
 
       // Create the user
       const user = await prisma.users.create({ data: req.body });
-
+      delete user.password_hash;
       // Generate JWT for the newly created user
       const token = createToken(user);
-
       // Return the token, and let frontend handle the redirect using the user.id from the token
       return res.status(201).json({
         token,
+        user,
       });
     } catch (e) {
       next(e);

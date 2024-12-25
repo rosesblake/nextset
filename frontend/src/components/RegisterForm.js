@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React from "react";
 import { useForm } from "../hooks/useForm";
 import { InputField } from "../components/InputField";
+import { FormWrapper } from "../components/FormWrapper";
 
-const RegisterForm = ({ addUser, onAccountTypeChange }) => {
+const RegisterForm = ({ addUser }) => {
   const INITIAL_STATE = {
     username: "",
     password: "",
@@ -10,7 +11,6 @@ const RegisterForm = ({ addUser, onAccountTypeChange }) => {
     account_type: "",
   };
 
-  //custom hook to re-use for other forms
   const { formData, handleChange, handleSubmit } = useForm(
     INITIAL_STATE,
     (data) => {
@@ -23,9 +23,7 @@ const RegisterForm = ({ addUser, onAccountTypeChange }) => {
   );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Signup</h1>
-
+    <FormWrapper title="Signup" handleSubmit={handleSubmit}>
       <InputField
         id="email"
         name="email"
@@ -33,7 +31,6 @@ const RegisterForm = ({ addUser, onAccountTypeChange }) => {
         value={formData.email}
         onChange={handleChange}
       />
-
       <InputField
         id="username"
         name="username"
@@ -41,7 +38,6 @@ const RegisterForm = ({ addUser, onAccountTypeChange }) => {
         value={formData.username}
         onChange={handleChange}
       />
-
       <InputField
         id="password"
         name="password"
@@ -50,24 +46,35 @@ const RegisterForm = ({ addUser, onAccountTypeChange }) => {
         value={formData.password}
         onChange={handleChange}
       />
-
-      <label htmlFor="account_type">Account Type</label>
-      <select
-        id="account_type"
-        name="account_type"
-        value={formData.account_type}
-        onChange={handleChange}
-        required
+      <div>
+        <label
+          htmlFor="account_type"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Account Type
+        </label>
+        <select
+          id="account_type"
+          name="account_type"
+          value={formData.account_type}
+          onChange={handleChange}
+          required
+          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          <option value="" disabled>
+            Select Account Type
+          </option>
+          <option value="artist">Artist</option>
+          <option value="venue">Venue</option>
+        </select>
+      </div>
+      <button
+        type="submit"
+        className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
       >
-        <option value="" disabled>
-          Select Account Type
-        </option>
-        <option value="artist">Artist</option>
-        <option value="venue">Venue</option>
-      </select>
-
-      <button type="submit">Submit</button>
-    </form>
+        Submit
+      </button>
+    </FormWrapper>
   );
 };
 

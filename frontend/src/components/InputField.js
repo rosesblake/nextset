@@ -1,24 +1,27 @@
-import React from "react";
-
 const InputField = ({
   id,
   name,
-  type = "text",
-  placeholder,
   value,
   onChange,
-}) => (
-  <div className="mb-4">
-    <label htmlFor={id}>{placeholder}</label>
-    <input
-      id={id}
-      name={name}
-      type={type}
-      value={value}
-      onChange={onChange}
-      required
-    />
-  </div>
-);
+  placeholder,
+  type = "text",
+}) => {
+  return (
+    <div>
+      <label htmlFor={id} className="block text-sm font-medium text-gray-700">
+        {placeholder}
+      </label>
+      <input
+        id={id}
+        name={name}
+        type={type}
+        value={value}
+        onChange={onChange}
+        placeholder={placeholder}
+        className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+      />
+    </div>
+  );
+};
 
 export { InputField };

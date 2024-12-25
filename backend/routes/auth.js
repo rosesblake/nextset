@@ -17,11 +17,11 @@ router.post(
   async function (req, res, next) {
     try {
       const { username, password } = req.body;
-
       // Fetch the user from DB
       const user = await prisma.users.findUnique({
         where: { username },
       });
+      console.log(user);
 
       if (!user) {
         return next(new UnauthorizedError("Invalid username or password"));
@@ -37,7 +37,7 @@ router.post(
       const token = createToken(user);
 
       // Send token in response
-      return res.json({ token });
+      return res.json({ token, user });
     } catch (e) {
       return next(e);
     }

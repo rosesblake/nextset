@@ -1,55 +1,65 @@
-import React, { useState } from "react";
+import React from "react";
 import { RegisterForm } from "../components/RegisterForm";
 import { NextSetApi } from "../api/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { ArtistRegisterForm } from "../components/ArtistRegisterForm";
 import { VenueRegisterForm } from "../components/VenueRegisterForm";
+import { useUser } from "../components/UserContext"; // Import useUser hook
 
 function Register() {
-  const [user, setUser] = useState("");
+  const { accountType } = useParams();
   const navigate = useNavigate();
+  const { currUser, setCurrUser } = useUser(); // Get currUser and setCurrUser from context
 
-  // Passing this function down to add a new user to db with the API
   const addUser = async (user) => {
     try {
-      const newUser = await NextSetApi.registerUser(user);
-      setUser(user);
-      // Redirect based on account type
-      navigate(`/register/${user.account_type}` || "/");
+      const res = await NextSetApi.registerUser(user);
+      const { token, user: registeredUser } = res;
+
+      localStorage.setItem("token", token);
+      setCurrUser(registeredUser); // Update currUser in context and localStorage
+      const accountType = user.account_type;
+      navigate(`/register/${accountType}`);
     } catch (e) {
       console.error("Error registering user:", e);
     }
   };
 
   const addArtist = async (artist) => {
+    if (!currUser) {
+      console.error("User is not logged in.");
+      return;
+    }
     try {
-      const newArtist = await NextSetApi.registerArtist(artist);
-      navigate(`/register/${artist.account_type}` || "/");
+      await NextSetApi.registerArtist(artist, currUser);
+      navigate("/");
     } catch (e) {
       console.error("Error registering artist:", e);
     }
   };
 
   const addVenue = async (venue) => {
+    if (!currUser) {
+      console.error("User is not logged in.");
+      return;
+    }
     try {
-      const newVenue = await NextSetApi.registerVenue(venue);
-      navigate(`/register/${venue.account_type}` || "/");
+      await NextSetApi.registerVenue(venue, currUser);
+      navigate("/");
     } catch (e) {
       console.error("Error registering venue:", e);
     }
   };
 
   return (
-    <div className="register-user-form">
-      <RegisterForm addUser={addUser} />
-
-      {/* Conditionally render forms based on formData.account_type */}
-      {user.account_type === "artist" && (
-        <ArtistRegisterForm addArtist={addArtist} />
-      )}
-      {user.account_type === "venue" && (
-        <VenueRegisterForm addVenue={addVenue} />
-      )}
+    <div className="flex items-center justify-center min-h-screen">
+      <div className="w-full max-w-md">
+        {!accountType && <RegisterForm addUser={addUser} />}
+        {accountType === "artist" && (
+          <ArtistRegisterForm addArtist={addArtist} />
+        )}
+        {accountType === "venue" && <VenueRegisterForm addVenue={addVenue} />}
+      </div>
     </div>
   );
 }

@@ -1,8 +1,9 @@
 import React from "react";
 import { useForm } from "../hooks/useForm";
 import { InputField } from "./InputField";
+import { FormWrapper } from "../components/FormWrapper"; // Assuming FormWrapper has the correct styling
 
-const VenueRegisterForm = () => {
+const VenueRegisterForm = ({ addVenue }) => {
   const INITIAL_STATE = {
     name: "",
     capacity: "",
@@ -10,20 +11,18 @@ const VenueRegisterForm = () => {
     city: "",
     state: "",
     zip_code: "",
-    available_dates: "",
   };
 
   const { formData, handleChange, handleSubmit } = useForm(
     INITIAL_STATE,
     (data) => {
       console.log("Venue Details Submitted:", data);
+      addVenue(data);
     }
   );
 
   return (
-    <form onSubmit={handleSubmit}>
-      <h1>Venue Details</h1>
-
+    <FormWrapper title="Venue Details" handleSubmit={handleSubmit}>
       <InputField
         id="name"
         name="name"
@@ -72,16 +71,13 @@ const VenueRegisterForm = () => {
         onChange={handleChange}
       />
 
-      <InputField
-        id="available_dates"
-        name="available_dates"
-        placeholder="Available Dates"
-        value={formData.available_dates}
-        onChange={handleChange}
-      />
-
-      <button type="submit">Submit</button>
-    </form>
+      <button
+        type="submit"
+        className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+      >
+        Submit
+      </button>
+    </FormWrapper>
   );
 };
 
