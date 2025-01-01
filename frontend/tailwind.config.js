@@ -9,8 +9,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        nextsetPrimary: "#64748B",
-        nextsetSecondary: "#FACC15",
+        nextsetPrimary: "#3B3054", // Dark Indigo
+        nextsetAccent: "#FF7F50", // Coral Orange
+        nextsetButton: "#7B68EE",
       },
     },
   },

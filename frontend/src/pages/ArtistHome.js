@@ -1,15 +1,20 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../components/UserContext";
 
 function ArtistHome() {
   const { currUser } = useUser();
+  const navigate = useNavigate();
 
+  const navigateLogin = () => {
+    navigate("/login");
+  };
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-2xl p-6 bg-white rounded-lg shadow-lg">
         {currUser ? (
           <div>
-            <h1 className="text-3xl font-bold text-center text-indigo-600 mb-4">
+            <h1 className="text-3xl font-bold text-center text-nextsetAccent mb-4">
               Welcome, {currUser.username}!
             </h1>
             <p className="text-lg text-gray-700 mb-4">
@@ -18,7 +23,7 @@ function ArtistHome() {
             </p>
             <div className="mt-6 text-center">
               <button
-                className="px-6 py-3 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-300"
+                className="px-6 py-3 text-white bg-nextsetButton hover:bg-nextsetPrimary rounded-md transition duration-300"
                 onClick={() => alert("Go to Artist Dashboard")}
               >
                 Go to Dashboard
@@ -31,8 +36,8 @@ function ArtistHome() {
               Please log in to view your profile.
             </h1>
             <button
-              className="px-6 py-3 text-white bg-indigo-600 rounded-md hover:bg-indigo-700 transition duration-300"
-              onClick={() => alert("Navigate to login page")}
+              className="px-6 py-3 text-white bg-nextsetButton hover:bg-nextsetPrimary rounded-md transition duration-300"
+              onClick={navigateLogin}
             >
               Login
             </button>

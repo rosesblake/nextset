@@ -59,7 +59,7 @@ const RegisterForm = ({ addUser }) => {
           value={formData.account_type}
           onChange={handleChange}
           required
-          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500"
+          className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-nextsetButton focus:border-nextsetPrimary"
         >
           <option value="" disabled>
             Select Account Type
@@ -70,7 +70,7 @@ const RegisterForm = ({ addUser }) => {
       </div>
       <button
         type="submit"
-        className="w-full bg-indigo-600 text-white font-semibold py-2 px-4 rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+        className="w-full bg-nextsetPrimary text-white font-semibold py-2 px-4 rounded-md shadow-sm hover:bg-nextsetButton focus:outline-none focus:ring-2 focus:ring-nextsetButton focus:ring-offset-2"
       >
         Submit
       </button>

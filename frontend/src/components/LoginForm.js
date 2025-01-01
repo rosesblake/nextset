@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { FormWrapper } from "./FormWrapper";
 import { InputField } from "./InputField";
 import { useForm } from "../hooks/useForm";
@@ -38,7 +38,7 @@ function LoginForm({ loginUser }) {
       <div className="space-y-4">
         <button
           type="submit"
-          className="w-full px-4 py-2 text-white bg-indigo-600 hover:bg-indigo-700 rounded-md transition duration-300"
+          className="w-full px-4 py-2 text-white bg-nextsetPrimary hover:bg-nextsetButton rounded-md transition duration-300"
         >
           Login
         </button>

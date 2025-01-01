@@ -43,21 +43,17 @@ app.use(function (req, res, next) {
 app.use(function (err, req, res, next) {
   if (process.env.NODE_ENV !== "test") console.error(err.stack);
   const status = err.status || 500;
-  const message = err.message;
-  // Handle BadRequestError specifically (like validation errors)
-  if (err instanceof BadRequestError) {
-    return res.status(status).json({
-      error: {
-        message: err.message,
-        status: err.status,
-        errors: err.errors || [],
-      },
-    });
-  }
 
-  return res.status(status).json({
-    error: { message, status },
-  });
+  // Consistent error response structure
+  const response = {
+    error: {
+      message: err.message,
+      status,
+      errors: err.errors || [],
+    },
+  };
+
+  res.status(status).json(response);
 });
 
 module.exports = app;

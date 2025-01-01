@@ -7,32 +7,37 @@ import { useUser } from "../components/UserContext";
 function Login() {
   const navigate = useNavigate();
   const { setCurrUser } = useUser(); // Get setCurrUser from context
-  const [errorMessage, setErrorMessage] = useState("");
+  const [errorMessage, setErrorMessage] = useState([]);
 
   const loginUser = async (user) => {
     try {
-      const res = await NextSetApi.loginUser(user); // Adjust API function as needed
+      const res = await NextSetApi.loginUser(user);
       const { token, user: loggedInUser } = res;
-      console.log(res);
+
       // Save the token in localStorage
       localStorage.setItem("token", token);
 
-      // Set the logged-in user in the context
-      setCurrUser(loggedInUser); // Update currUser in context
+      // Set the logged-in user in context
+      setCurrUser(loggedInUser);
 
       // Redirect to home page after successful login
       navigate("/");
     } catch (e) {
-      setErrorMessage("Invalid credentials. Please try again.");
-      console.error("Error logging in user:", e);
+      setErrorMessage(e);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md">
-        {errorMessage && (
-          <p className="text-red-500 mb-4 text-center">{errorMessage}</p>
+        {errorMessage.length > 0 && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+            {errorMessage.map((error, idx) => (
+              <p key={idx} className="text-sm">
+                {error.msg}
+              </p>
+            ))}
+          </div>
         )}
         <LoginForm loginUser={loginUser} />
       </div>

@@ -18,6 +18,13 @@ router.post(
   hashPassword, // Hash the password
   async function (req, res, next) {
     try {
+      // Check for missing fields after the validation middleware
+      const { email, username, password, account_type } = req.body;
+
+      // If any field is missing, throw a BadRequestError
+      if (!email || !username || !password || !account_type) {
+        throw new BadRequestError("All fields must be filled out");
+      }
       // Check for existing username/email
       const existingUser = await prisma.users.findFirst({
         where: {

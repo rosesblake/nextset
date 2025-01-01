@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { RegisterForm } from "../components/RegisterForm";
 import { NextSetApi } from "../api/api";
 import { useNavigate, useParams } from "react-router-dom";
@@ -10,6 +10,7 @@ function Register() {
   const { accountType } = useParams();
   const navigate = useNavigate();
   const { currUser, setCurrUser } = useUser(); // Get currUser and setCurrUser from context
+  const [errorMessage, setErrorMessage] = useState([]);
 
   const addUser = async (user) => {
     try {
@@ -21,7 +22,7 @@ function Register() {
       const accountType = user.account_type;
       navigate(`/register/${accountType}`);
     } catch (e) {
-      console.error("Error registering user:", e);
+      setErrorMessage(e);
     }
   };
 
@@ -34,7 +35,7 @@ function Register() {
       await NextSetApi.registerArtist(artist, currUser);
       navigate("/");
     } catch (e) {
-      console.error("Error registering artist:", e);
+      setErrorMessage(e);
     }
   };
 
@@ -47,13 +48,22 @@ function Register() {
       await NextSetApi.registerVenue(venue, currUser);
       navigate("/");
     } catch (e) {
-      console.error("Error registering venue:", e);
+      setErrorMessage(e);
     }
   };
 
   return (
     <div className="flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md">
+        {errorMessage.length > 0 && (
+          <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
+            {errorMessage.map((error, idx) => (
+              <p key={idx} className="text-sm">
+                {error.msg}
+              </p>
+            ))}
+          </div>
+        )}
         {!accountType && <RegisterForm addUser={addUser} />}
         {accountType === "artist" && (
           <ArtistRegisterForm addArtist={addArtist} />

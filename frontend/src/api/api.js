@@ -14,8 +14,11 @@ class NextSetApi {
       return (await axios({ url, method, data, params, headers })).data;
     } catch (e) {
       console.error("API Error:", e.message);
-      let message = e.response.data.error.message;
-      throw Array.isArray(message) ? message : [message];
+      // If the error is from the response, extract the message(s)
+      let errorMessages = e.response?.data?.error?.errors || [e.message];
+
+      // If errorMessages is an array, throw it, else wrap in an array
+      throw Array.isArray(errorMessages) ? errorMessages : [errorMessages];
     }
   }
 

@@ -25,6 +25,7 @@ class NotFoundError extends ExpressError {
 class UnauthorizedError extends ExpressError {
   constructor(message = "Unauthorized") {
     super(message, 401);
+    this.errors = [{ msg: message }];
   }
 }
 

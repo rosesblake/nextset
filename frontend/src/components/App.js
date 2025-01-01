@@ -5,6 +5,7 @@ import { UserProvider } from "./UserContext"; // Import UserProvider
 import { ArtistHome } from "../pages/ArtistHome";
 import { Navbar } from "./NavBar";
 import { Login } from "../pages/Login";
+import { NotFound } from "./NotFound";
 
 function App() {
   return (
@@ -12,12 +13,15 @@ function App() {
       <div className="App">
         <BrowserRouter>
           <Navbar />
-          <Routes>
-            <Route path="/" element={<ArtistHome />} />
-            <Route path="/register" element={<Register />} />
-            <Route path="/register/:accountType" element={<Register />} />
-            <Route path="/login" element={<Login />} />
-          </Routes>
+          <div className="mt-[64px]">
+            <Routes>
+              <Route path="/" element={<ArtistHome />} />
+              <Route path="/register" element={<Register />} />
+              <Route path="/register/:accountType" element={<Register />} />
+              <Route path="/login" element={<Login />} />
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </div>
         </BrowserRouter>
       </div>
     </UserProvider>
