@@ -3,15 +3,24 @@ const { BadRequestError } = require("../expressError");
 
 // Middleware to check validation errors
 function validate(req, res, next) {
+  const fields = req.body;
+
+  // Loop through the fields and check if any are empty strings
+  for (let key in fields) {
+    if (!fields[key]) {
+      // If any field is an empty string, return a BadRequestError
+      return next(
+        new BadRequestError("yeehaw", { msg: "All fields must be filled out" })
+      );
+    }
+  }
+
+  //send mapped errors
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
-    // Map errors to a simpler structure for response
-    const mappedErrors = errors.array().map((error) => ({
-      msg: error.msg,
-    }));
-    console.log(mappedErrors); // Check in the console for errors
-
-    // Pass the mapped errors to the BadRequestError
+    const mappedErrors = errors
+      .array()
+      .map((error) => ({ msg: error.msg, param: error.param }));
     return next(new BadRequestError("Validation failed", mappedErrors));
   }
   next();

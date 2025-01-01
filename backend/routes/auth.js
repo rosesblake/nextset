@@ -17,6 +17,9 @@ router.post(
   async function (req, res, next) {
     try {
       const { username, password } = req.body;
+      if (!username || !password) {
+        return next(UnauthorizedError("All fields must be filled out"));
+      }
 
       // Fetch the user from DB
       const user = await prisma.users.findUnique({
@@ -37,7 +40,7 @@ router.post(
       const token = createToken(user);
 
       // Send token in response
-      return res.json({ token });
+      return res.json({ token, user });
     } catch (e) {
       return next(e);
     }
