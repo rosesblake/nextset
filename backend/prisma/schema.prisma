@@ -16,7 +16,7 @@ model amenities {
 model artists {
   id                        Int             @id @default(autoincrement())
   name                      String          @db.VarChar(50)
-  genre                     String          @db.VarChar(20)
+  genre                     String?          @db.VarChar(20)
   instagram_handle          String?         @db.VarChar(50)
   x_handle                  String?         @db.VarChar(50)
   facebook_url              String?

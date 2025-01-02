@@ -32,7 +32,11 @@ function Register() {
       return;
     }
     try {
-      await NextSetApi.registerArtist(artist, currUser);
+      const newArtist = await NextSetApi.registerArtist(artist, currUser);
+      //update the currUser in context and localstorage
+      const updatedUser = { ...currUser, artist_id: newArtist.artist.id };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setCurrUser(updatedUser);
       navigate("/");
     } catch (e) {
       setErrorMessage(e);

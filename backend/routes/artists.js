@@ -4,6 +4,7 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
+const { createToken } = require("../helpers/createTokens");
 const { UnauthorizedError } = require("../expressError");
 const { authenticateJWT } = require("../middleware/auth");
 const { artistValidator } = require("../validators/artistValidator");
@@ -50,5 +51,20 @@ router.post(
     }
   }
 );
+
+//retrieve artist
+router.get("/:name", authenticateJWT, async function (req, res, next) {
+  try {
+    const artist = await prisma.artists.findUnique({
+      where: {
+        name: req.params.name,
+      },
+    });
+    console.log(artist);
+    return res.json(artist);
+  } catch (e) {
+    return next(e);
+  }
+});
 
 module.exports = router;

@@ -15,7 +15,7 @@ function ArtistHome() {
         {currUser ? (
           <div>
             <h1 className="text-3xl font-bold text-center text-nextsetAccent mb-4">
-              Welcome, {currUser.username}!
+              Welcome, {currUser.full_name}!
             </h1>
             <p className="text-lg text-gray-700 mb-4">
               You are logged in as an artist. Here you can manage your profile,

@@ -21,10 +21,6 @@ const ArtistRegisterForm = ({ addArtist }) => {
     }
   );
 
-  useEffect(() => {
-    console.log("Updated spotifyResults:", spotifyResults);
-  }, [spotifyResults]);
-
   const handleNameChange = async (e) => {
     const { value } = e.target;
     handleChange(e); // Update formData with user input
@@ -41,7 +37,6 @@ const ArtistRegisterForm = ({ addArtist }) => {
           const res = await NextSetApi.searchSpotifyArtist(value);
           if (res && res.artists) {
             setSpotifyResults(res.artists); // Update results
-            console.log("Spotify results:", res.artists); // Debug log
           } else {
             setSpotifyResults([]);
           }
@@ -79,6 +74,7 @@ const ArtistRegisterForm = ({ addArtist }) => {
           value={formData.name}
           onChange={handleNameChange} // Call the new handleNameChange
           onBlur={handleBlur}
+          autocomplete="off"
         />
         {error && <div className="text-red-500">{error}</div>}
 

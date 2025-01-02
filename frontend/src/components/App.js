@@ -1,30 +1,37 @@
-import React from "react";
-import { BrowserRouter, Routes, Route } from "react-router-dom";
+import React, { useEffect } from "react";
+import { Routes, Route } from "react-router-dom";
 import { Register } from "../pages/Register";
-import { UserProvider } from "./UserContext"; // Import UserProvider
+import { useUser } from "./UserContext"; // Import UserProvider and useUser hook
 import { ArtistHome } from "../pages/ArtistHome";
 import { Navbar } from "./NavBar";
 import { Login } from "../pages/Login";
 import { NotFound } from "./NotFound";
+import { useNavigate } from "react-router-dom";
 
 function App() {
+  const { currUser } = useUser();
+  const navigate = useNavigate();
+
+  //make sure that the user has finished setting up their artist or venue registration
+  useEffect(() => {
+    if (currUser && !currUser.artist_id && !currUser.venue_id) {
+      navigate(`/register/${currUser.account_type}`);
+    }
+  }, [currUser, navigate]);
+
   return (
-    <UserProvider>
-      <div className="App">
-        <BrowserRouter>
-          <Navbar />
-          <div className="mt-[64px]">
-            <Routes>
-              <Route path="/" element={<ArtistHome />} />
-              <Route path="/register" element={<Register />} />
-              <Route path="/register/:accountType" element={<Register />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="*" element={<NotFound />} />
-            </Routes>
-          </div>
-        </BrowserRouter>
+    <div className="App">
+      <Navbar />
+      <div className="mt-[64px]">
+        <Routes>
+          <Route path="/" element={<ArtistHome />} />
+          <Route path="/register" element={<Register />} />
+          <Route path="/register/:accountType" element={<Register />} />
+          <Route path="/login" element={<Login />} />
+          <Route path="*" element={<NotFound />} />
+        </Routes>
       </div>
-    </UserProvider>
+    </div>
   );
 }
 

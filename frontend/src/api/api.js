@@ -34,6 +34,22 @@ class NextSetApi {
     return res;
   }
 
+  static async findArtist(artist) {
+    // Check if token is available in static property or localStorage
+    const token = NextSetApi.token || localStorage.getItem("token");
+
+    // Log the token to see if it's correctly retrieved
+    console.log("Current token:", token);
+
+    if (!token) {
+      throw new Error("Missing token. Please log in.");
+    }
+
+    // Proceed with the API request
+    let res = await this.request(`artists/${artist.name}`, "get");
+    return res;
+  }
+
   static async registerVenue(venue, currUser) {
     const newVenue = { ...venue, created_by: currUser.id };
     let res = await this.request(`venues/register`, newVenue, "post");
