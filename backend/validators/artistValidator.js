@@ -116,19 +116,12 @@ const artistValidator = [
     .isLength({ min: 10, max: 15 })
     .withMessage("Phone number must be between 10 and 15 digits"),
 
-  body("home_city")
+  body("hometown")
     .optional()
     .isString()
-    .withMessage("Home city must be a string")
+    .withMessage("Hometown must be a string")
     .isLength({ max: 50 })
-    .withMessage("Home city cannot exceed 50 characters"),
-
-  body("home_state")
-    .optional()
-    .isString()
-    .withMessage("Home state must be a string")
-    .isLength({ max: 2 })
-    .withMessage("Home state cannot exceed 2 characters"),
+    .withMessage("Hometown cannot exceed 50 characters"),
 
   body("email")
     .optional()

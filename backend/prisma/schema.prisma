@@ -33,8 +33,7 @@ model artists {
   tour_booking_agent        String?         @db.VarChar(50)
   tour_manager              String?         @db.VarChar(50)
   phone                     String?         @db.VarChar(15)
-  home_city                 String?         @db.VarChar(50)
-  home_state                String?         @db.VarChar(2)
+  hometown                  String?         @db.VarChar(30)
   email                     String?
   created_by                Int
   created_at                DateTime?       @default(now()) @db.Timestamp(6)
@@ -120,7 +119,7 @@ model tokens {
 
 model users {
   id            Int            @id @default(autoincrement())
-  username      String         @unique @db.VarChar(50)
+  full_name     String         @unique @db.VarChar(50)
   password_hash String
   email         String         @unique
   role          String         @default("user") @db.VarChar(20)

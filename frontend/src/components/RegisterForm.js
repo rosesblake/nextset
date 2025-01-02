@@ -5,7 +5,7 @@ import { FormWrapper } from "../components/FormWrapper";
 
 const RegisterForm = ({ addUser }) => {
   const INITIAL_STATE = {
-    username: "",
+    full_name: "",
     password: "",
     email: "",
     account_type: "",
@@ -32,10 +32,10 @@ const RegisterForm = ({ addUser }) => {
         onChange={handleChange}
       />
       <InputField
-        id="username"
-        name="username"
-        placeholder="Username"
-        value={formData.username}
+        id="full_name"
+        name="full_name"
+        placeholder="Full Name"
+        value={formData.full_name}
         onChange={handleChange}
       />
       <InputField

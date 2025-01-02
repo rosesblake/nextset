@@ -21,12 +21,12 @@ router.post(
       // Check for existing username/email
       const existingUser = await prisma.users.findFirst({
         where: {
-          OR: [{ username: req.body.username }, { email: req.body.email }],
+          OR: [{ full_name: req.body.full_name }, { email: req.body.email }],
         },
       });
 
       if (existingUser) {
-        throw new BadRequestError("Username or email already in use");
+        throw new BadRequestError("Email already in use");
       }
 
       // Create the user
