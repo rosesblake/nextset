@@ -6,7 +6,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 const { createToken } = require("../helpers/createTokens");
 const { UnauthorizedError } = require("../expressError");
-const { authenticateJWT } = require("../middleware/auth");
+const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { artistValidator } = require("../validators/artistValidator");
 const { validate } = require("../middleware/validate");
 
@@ -15,6 +15,7 @@ router.post(
   artistValidator,
   validate,
   authenticateJWT, // Verifies JWT and populates res.locals.user
+  ensureLoggedIn,
   async function (req, res, next) {
     try {
       // Retrieve the user_id from the decoded JWT (already in res.locals.user)
@@ -53,18 +54,23 @@ router.post(
 );
 
 //retrieve artist
-router.get("/:name", authenticateJWT, async function (req, res, next) {
-  try {
-    const artist = await prisma.artists.findUnique({
-      where: {
-        name: req.params.name,
-      },
-    });
-    console.log(artist);
-    return res.json(artist);
-  } catch (e) {
-    return next(e);
+router.get(
+  "/:name",
+  authenticateJWT,
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const artist = await prisma.artists.findUnique({
+        where: {
+          name: req.params.name,
+        },
+      });
+      console.log(artist);
+      return res.json(artist);
+    } catch (e) {
+      return next(e);
+    }
   }
-});
+);
 
 module.exports = router;

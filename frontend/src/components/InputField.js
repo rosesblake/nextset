@@ -6,11 +6,12 @@ const InputField = ({
   placeholder,
   autocomplete,
   type = "text",
+  inputName,
 }) => {
   return (
     <div>
       <label htmlFor={id} className="block text-sm font-medium text-gray-700">
-        {placeholder}
+        {inputName || placeholder}
       </label>
       <input
         id={id}

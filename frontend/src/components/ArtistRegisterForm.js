@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { useForm } from "../hooks/useForm";
 import { InputField } from "./InputField";
 import { FormWrapper } from "../components/FormWrapper";
@@ -30,13 +30,14 @@ const ArtistRegisterForm = ({ addArtist }) => {
       clearTimeout(typingTimeout);
     }
 
-    // Set a new timeout to trigger the API request after 300ms
+    // Set a new timeout to trigger the API request
     const newTimeout = setTimeout(async () => {
       if (value) {
         try {
           const res = await NextSetApi.searchSpotifyArtist(value);
           if (res && res.artists) {
             setSpotifyResults(res.artists); // Update results
+            setError(null);
           } else {
             setSpotifyResults([]);
           }
@@ -47,7 +48,7 @@ const ArtistRegisterForm = ({ addArtist }) => {
       } else {
         setSpotifyResults([]); // Clear results if input is empty
       }
-    }, 200); // delay after the user stops typing
+    }, 200); // delay after the user stops typing to prevent too many requests
 
     setTypingTimeout(newTimeout); // Store the timeout ID to clear it on the next keystroke
   };
@@ -72,13 +73,12 @@ const ArtistRegisterForm = ({ addArtist }) => {
           name="name"
           placeholder="Artist Name"
           value={formData.name}
-          onChange={handleNameChange} // Call the new handleNameChange
+          onChange={handleNameChange}
           onBlur={handleBlur}
           autocomplete="off"
         />
         {error && <div className="text-red-500">{error}</div>}
 
-        {/* Dropdown results */}
         {limitedResults.length > 0 && (
           <ul
             className="space-y-2 mt-2 border border-gray-300 rounded-md absolute bg-white shadow-lg w-full z-10"
@@ -90,13 +90,10 @@ const ArtistRegisterForm = ({ addArtist }) => {
                 className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-200"
                 onClick={() => handleArtistSelect(artist)}
               >
-                {/* Check if images exist before rendering */}
                 <img
                   src={
-                    artist.photo && artist.photo.length > 0
-                      ? artist.photo
-                      : "/default-image.jpg"
-                  } // Use a default image if no images exist
+                    artist.photo && artist.photo.length > 0 ? artist.photo : ""
+                  }
                   alt={artist.name}
                   className="w-10 h-10 rounded-full"
                 />
@@ -110,7 +107,8 @@ const ArtistRegisterForm = ({ addArtist }) => {
       <InputField
         id="hometown"
         name="hometown"
-        placeholder="Hometown"
+        placeholder="City, State"
+        inputName="Hometown"
         value={formData.hometown}
         onChange={handleChange}
       />

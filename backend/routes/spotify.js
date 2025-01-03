@@ -1,5 +1,6 @@
 const express = require("express");
 const { spotifyApi, getSpotifyToken } = require("../helpers/spotify");
+const { ensureLoggedIn } = require("../middleware/auth");
 const router = express.Router();
 
 // Search Spotify API for artists
@@ -7,7 +8,7 @@ router.get("/search", async (req, res) => {
   const { query } = req.query;
   if (!query)
     return res.status(400).json({ error: "Query parameter is required" });
-
+  console.log(res.locals.user);
   try {
     await getSpotifyToken(); // Ensure token is set
     const data = await spotifyApi.searchArtists(query);

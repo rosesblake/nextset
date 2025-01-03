@@ -6,6 +6,7 @@ function createToken(user) {
     id: user.id,
     username: user.full_name,
     account_type: user.account_type,
+    role: user.role,
   };
 
   // Secret key should be stored in an environment variable

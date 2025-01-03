@@ -1,12 +1,12 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Register } from "../pages/Register";
-import { useUser } from "./UserContext"; // Import UserProvider and useUser hook
-import { ArtistHome } from "../pages/ArtistHome";
+import { useUser } from "./UserContext";
 import { Navbar } from "./NavBar";
 import { Login } from "../pages/Login";
 import { NotFound } from "./NotFound";
 import { useNavigate } from "react-router-dom";
+import { MainLanding } from "../pages/MainLanding";
 
 function App() {
   const { currUser } = useUser();
@@ -24,7 +24,7 @@ function App() {
       <Navbar />
       <div className="mt-[64px]">
         <Routes>
-          <Route path="/" element={<ArtistHome />} />
+          <Route path="/" element={<MainLanding />} />
           <Route path="/register" element={<Register />} />
           <Route path="/register/:accountType" element={<Register />} />
           <Route path="/login" element={<Login />} />
