@@ -60,7 +60,6 @@ class NextSetApi {
   // Search for artist on Spotify
   static searchSpotifyArtist = async (query) => {
     let res = await this.request(`spotify/search?query=${query}`);
-    console.log(res);
     return res;
   };
 }

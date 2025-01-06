@@ -1,6 +1,6 @@
 import React, { useEffect } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Register } from "../pages/Register";
+import { Register } from "./Register/Register";
 import { useUser } from "./UserContext";
 import { Navbar } from "./NavBar";
 import { Login } from "../pages/Login";
@@ -8,6 +8,7 @@ import { NotFound } from "./NotFound";
 import { useNavigate } from "react-router-dom";
 import { MainLanding } from "../pages/MainLanding";
 import { ArtistHome } from "../pages/ArtistHome";
+import { VenueHome } from "../pages/VenueHome";
 
 function App() {
   const { currUser } = useUser();
@@ -30,6 +31,7 @@ function App() {
           <Route path="/register/:accountType" element={<Register />} />
           <Route path="/login" element={<Login />} />
           <Route path="/artist/home" element={<ArtistHome />} />
+          <Route path="/venue/home" element={<VenueHome />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

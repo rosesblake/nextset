@@ -10,7 +10,9 @@ function validate(req, res, next) {
     if (!fields[key]) {
       // If any field is an empty string, return a BadRequestError
       return next(
-        new BadRequestError("yeehaw", { msg: "All fields must be filled out" })
+        new BadRequestError("Invalid Fields", {
+          msg: "All fields must be filled out",
+        })
       );
     }
   }
@@ -20,7 +22,7 @@ function validate(req, res, next) {
   if (!errors.isEmpty()) {
     const mappedErrors = errors
       .array()
-      .map((error) => ({ msg: error.msg, param: error.param }));
+      .map((error) => ({ msg: error.msg, field: error.param }));
     return next(new BadRequestError("Validation failed", mappedErrors));
   }
   next();

@@ -15,7 +15,7 @@ function MainLanding() {
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl px-4">
         {/* Artist Module */}
-        <Link to="/register?account_type=artist" className="group">
+        <Link to="/register/artist" className="group">
           <div className="bg-white shadow-md rounded-lg p-8 hover:shadow-xl transform hover:-translate-y-1 transition duration-300">
             <h2 className="text-3xl font-bold text-gray-800 group-hover:text-indigo-600">
               🎵 Artist
@@ -31,7 +31,7 @@ function MainLanding() {
         </Link>
 
         {/* Venue Module */}
-        <Link to="/register?account_type=venue" className="group">
+        <Link to="/register/venue" className="group">
           <div className="bg-white shadow-md rounded-lg p-8 hover:shadow-xl transform hover:-translate-y-1 transition duration-300">
             <h2 className="text-3xl font-bold text-gray-800 group-hover:text-teal-600">
               🏢 Venue

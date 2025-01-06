@@ -156,7 +156,7 @@ model venues {
   address         String?           @db.VarChar(50)
   city            String?           @db.VarChar(50)
   state           String?           @db.VarChar(2)
-  zip_code        String?           @db.VarChar(10)
+  zip_code        Int?             
   available_dates Json?             @db.Json
   events          events[]
   pitches         pitches[]

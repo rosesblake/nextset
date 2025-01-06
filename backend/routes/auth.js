@@ -16,14 +16,14 @@ router.post(
   validate,
   async function (req, res, next) {
     try {
-      const { username, password } = req.body;
-      if (!username || !password) {
+      const { email, password } = req.body;
+      if (!email || !password) {
         return next(UnauthorizedError("All fields must be filled out"));
       }
 
       // Fetch the user from DB
       const user = await prisma.users.findUnique({
-        where: { username },
+        where: { email },
       });
 
       if (!user) {

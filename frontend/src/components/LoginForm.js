@@ -1,5 +1,5 @@
 import React from "react";
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "./Register/FormWrapper";
 import { InputField } from "./InputField";
 import { useForm } from "../hooks/useForm";
 

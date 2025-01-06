@@ -35,8 +35,8 @@ const venueValidator = [
 
   body("zip_code")
     .optional()
-    .isString()
-    .withMessage("Zip code must be a string")
+    .isInt()
+    .withMessage("Zip code must be a number")
     .isLength({ max: 10 })
     .withMessage("Zip code cannot exceed 10 characters"),
 ];
