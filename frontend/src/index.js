@@ -3,11 +3,20 @@ import ReactDOM from "react-dom/client";
 import "./index.css";
 import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
+import { UserProvider } from "./components/UserContext";
+import { ArtistProvider } from "./components/ArtistContext";
+import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <UserProvider>
+      <ArtistProvider>
+        <BrowserRouter>
+          <App />
+        </BrowserRouter>
+      </ArtistProvider>
+    </UserProvider>
   </React.StrictMode>
 );
 

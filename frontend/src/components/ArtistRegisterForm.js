@@ -1,75 +1,116 @@
-import React from "react";
+import React, { useState } from "react";
 import { useForm } from "../hooks/useForm";
 import { InputField } from "./InputField";
-import { FormWrapper } from "../components/FormWrapper"; // Assuming FormWrapper has the correct styling
+import { FormWrapper } from "../components/FormWrapper";
+import { NextSetApi } from "../api/api";
 
 const ArtistRegisterForm = ({ addArtist }) => {
   const INITIAL_STATE = {
     name: "",
-    instagram_handle: "",
-    x_handle: "",
-    facebook_url: "",
-    home_city: "",
-    home_state: "",
-    genre: "",
+    hometown: "",
   };
+  const [artistSpotify, setArtistSpotify] = useState();
+  const [spotifyResults, setSpotifyResults] = useState([]);
+  const [error, setError] = useState(null);
+  const [typingTimeout, setTypingTimeout] = useState(null); // Track typing timeout
 
   const { formData, handleChange, handleSubmit } = useForm(
     INITIAL_STATE,
     (data) => {
-      addArtist(data); // Trigger addArtist function passed as prop
+      addArtist(data, artistSpotify);
     }
   );
 
+  const handleNameChange = async (e) => {
+    const { value } = e.target;
+    handleChange(e); // Update formData with user input
+
+    // Clear the previous timeout to avoid unnecessary requests
+    if (typingTimeout) {
+      clearTimeout(typingTimeout);
+    }
+
+    // Set a new timeout to trigger the API request
+    const newTimeout = setTimeout(async () => {
+      if (value) {
+        try {
+          const res = await NextSetApi.searchSpotifyArtist(value);
+          if (res && res.artists) {
+            setSpotifyResults(res.artists); // Update results
+            setError(null);
+          } else {
+            setSpotifyResults([]);
+          }
+        } catch (err) {
+          console.error("Error searching Spotify:", err);
+          setError("Failed to search for artist");
+        }
+      } else {
+        setSpotifyResults([]); // Clear results if input is empty
+      }
+    }, 200); // delay after the user stops typing to prevent too many requests
+
+    setTypingTimeout(newTimeout); // Store the timeout ID to clear it on the next keystroke
+  };
+
+  const handleArtistSelect = (artist) => {
+    setSpotifyResults([]); // Clear the dropdown
+    setArtistSpotify(artist);
+    handleChange({ target: { name: "name", value: artist.name } }); // Update formData with selected artist
+  };
+
+  const handleBlur = () => {
+    setSpotifyResults([]); // Clear results when input loses focus
+  };
+
+  // Limit results to the first 5 artists
+  const limitedResults = spotifyResults.slice(0, 5);
+
   return (
     <FormWrapper title="Artist Details" handleSubmit={handleSubmit}>
+      <div className="relative">
+        <InputField
+          id="name"
+          name="name"
+          placeholder="Artist Name"
+          value={formData.name}
+          onChange={handleNameChange}
+          onBlur={handleBlur}
+          autocomplete="off"
+        />
+        {error && <div className="text-red-500">{error}</div>}
+
+        {limitedResults.length > 0 && (
+          <ul
+            className="space-y-2 mt-2 border border-gray-300 rounded-md absolute bg-white shadow-lg w-full z-10"
+            style={{ maxHeight: "200px", overflowY: "auto", left: 0 }}
+          >
+            {limitedResults.map((artist) => (
+              <li
+                key={artist.id}
+                className="flex items-center space-x-2 cursor-pointer p-2 hover:bg-gray-200"
+                onClick={() => handleArtistSelect(artist)}
+              >
+                <img
+                  src={
+                    artist.photo && artist.photo.length > 0 ? artist.photo : ""
+                  }
+                  alt={artist.name}
+                  className="w-10 h-10 rounded-full"
+                />
+                <span>{artist.name}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+
       <InputField
-        id="name"
-        name="name"
-        placeholder="Artist Name"
-        value={formData.name}
-        onChange={handleChange}
-      />
-      <InputField
-        id="instagram_handle"
-        name="instagram_handle"
-        placeholder="Instagram Handle"
-        value={formData.instagram_handle}
-        onChange={handleChange}
-      />
-      <InputField
-        id="x_handle"
-        name="x_handle"
-        placeholder="X Handle"
-        value={formData.x_handle}
-        onChange={handleChange}
-      />
-      <InputField
-        id="facebook_url"
-        name="facebook_url"
-        placeholder="Facebook URL"
-        value={formData.facebook_url}
-        onChange={handleChange}
-      />
-      <InputField
-        id="home_city"
-        name="home_city"
-        placeholder="Home City"
-        value={formData.home_city}
-        onChange={handleChange}
-      />
-      <InputField
-        id="home_state"
-        name="home_state"
-        placeholder="Home State"
-        value={formData.home_state}
-        onChange={handleChange}
-      />
-      <InputField
-        id="genre"
-        name="genre"
-        placeholder="Genre"
-        value={formData.genre}
+        id="hometown"
+        name="hometown"
+        placeholder="City, State"
+        inputName="Hometown"
+        value={formData.hometown}
         onChange={handleChange}
       />
       <button

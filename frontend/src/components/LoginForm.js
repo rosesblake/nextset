@@ -5,7 +5,7 @@ import { useForm } from "../hooks/useForm";
 
 function LoginForm({ loginUser }) {
   const INITIAL_STATE = {
-    username: "",
+    email: "",
     password: "",
   };
 
@@ -19,11 +19,12 @@ function LoginForm({ loginUser }) {
   return (
     <FormWrapper title="Login" handleSubmit={handleSubmit}>
       <InputField
-        id="username"
-        name="username"
-        value={formData.username}
+        id="email"
+        name="email"
+        value={formData.email}
         onChange={handleChange}
-        placeholder="Username"
+        placeholder="Email"
+        autocomplete="username"
       />
 
       <InputField
@@ -33,6 +34,7 @@ function LoginForm({ loginUser }) {
         onChange={handleChange}
         placeholder="Password"
         type="password"
+        autocomplete="current-password"
       />
 
       <div className="space-y-4">

@@ -16,15 +16,16 @@ model amenities {
 model artists {
   id                        Int             @id @default(autoincrement())
   name                      String          @db.VarChar(50)
-  genre                     String          @db.VarChar(20)
+  genre                     String?          @db.VarChar(20)
   instagram_handle          String?         @db.VarChar(50)
   x_handle                  String?         @db.VarChar(50)
   facebook_url              String?
   rating_social_media       Float?
   spotify_url               String?         
-  spotify_monthly_listeners Int?
+  spotify_followers         Int?
   spotify_popular_cities    Json?           @db.Json
-  spotify_most_plays        String?         @db.VarChar(50)
+  spotify_popularity        Int?         
+  spotify_photo             String?
   rating_streams            Float?
   w9                        String?
   rider                     String?
@@ -33,8 +34,7 @@ model artists {
   tour_booking_agent        String?         @db.VarChar(50)
   tour_manager              String?         @db.VarChar(50)
   phone                     String?         @db.VarChar(15)
-  home_city                 String?         @db.VarChar(50)
-  home_state                String?         @db.VarChar(2)
+  hometown                  String?         @db.VarChar(30)
   email                     String?
   created_by                Int
   created_at                DateTime?       @default(now()) @db.Timestamp(6)
@@ -120,7 +120,7 @@ model tokens {
 
 model users {
   id            Int            @id @default(autoincrement())
-  username      String         @unique @db.VarChar(50)
+  full_name     String         @unique @db.VarChar(50)
   password_hash String
   email         String         @unique
   role          String         @default("user") @db.VarChar(20)

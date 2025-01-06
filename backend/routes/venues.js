@@ -5,7 +5,7 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
 const { UnauthorizedError } = require("../expressError");
-const { authenticateJWT } = require("../middleware/auth");
+const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { venueValidator } = require("../validators/venueValidator");
 const { validate } = require("../middleware/validate");
 
@@ -14,6 +14,7 @@ router.post(
   venueValidator,
   validate,
   authenticateJWT,
+  ensureLoggedIn,
   async function (req, res, next) {
     try {
       // Retrieve the user_id from JWT

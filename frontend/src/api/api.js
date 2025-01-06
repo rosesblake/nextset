@@ -34,6 +34,17 @@ class NextSetApi {
     return res;
   }
 
+  static async findArtist(artist_id) {
+    const token = NextSetApi.token || localStorage.getItem("token");
+
+    if (!token) {
+      throw new Error("Missing token. Please log in.");
+    }
+
+    let res = await this.request(`artists/${artist_id}`, "get");
+    return res;
+  }
+
   static async registerVenue(venue, currUser) {
     const newVenue = { ...venue, created_by: currUser.id };
     let res = await this.request(`venues/register`, newVenue, "post");
@@ -45,6 +56,13 @@ class NextSetApi {
     NextSetApi.token = res.token;
     return res;
   }
+
+  // Search for artist on Spotify
+  static searchSpotifyArtist = async (query) => {
+    let res = await this.request(`spotify/search?query=${query}`);
+    console.log(res);
+    return res;
+  };
 }
 
 export { NextSetApi };

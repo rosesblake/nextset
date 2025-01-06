@@ -11,6 +11,7 @@ const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const artistsRoutes = require("./routes/artists");
 const venuesRoutes = require("./routes/venues");
+const spotifyRoutes = require("./routes/spotify");
 
 const morgan = require("morgan");
 
@@ -33,6 +34,7 @@ app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);
 app.use("/artists", artistsRoutes);
 app.use("/venues", venuesRoutes);
+app.use("/spotify", spotifyRoutes);
 
 //handle 404 errors
 app.use(function (req, res, next) {
@@ -44,13 +46,14 @@ app.use(function (err, req, res, next) {
   if (process.env.NODE_ENV !== "test") console.error(err.stack);
   const status = err.status || 500;
   const message = err.message;
+  const errors = err.errors;
   // Handle BadRequestError specifically (like validation errors)
   if (err instanceof BadRequestError) {
     return res.status(status).json({
       error: {
         message: err.message,
         status: err.status,
-        errors: err.errors || [],
+        errors: errors || [],
       },
     });
   }

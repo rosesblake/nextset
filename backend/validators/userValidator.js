@@ -2,15 +2,15 @@ const { body } = require("express-validator");
 
 // Validator for user registration
 const userValidator = [
-  body("username")
+  body("full_name")
     .isString()
-    .withMessage("Username must be a string")
+    .withMessage("Name must be a string")
     .notEmpty()
-    .withMessage("Username is required")
+    .withMessage("Name is required")
     .isLength({ min: 3 })
-    .withMessage("Username must be at least 3 characters")
+    .withMessage("Name must be at least 3 characters")
     .isLength({ max: 50 })
-    .withMessage("Username cannot exceed 50 characters"),
+    .withMessage("Name cannot exceed 50 characters"),
 
   body("email")
     .isEmail()
