@@ -36,6 +36,7 @@ const RegisterForm = ({ addUser }) => {
         placeholder="Email"
         value={formData.email}
         onChange={handleChange}
+        autocomplete="username"
       />
       <InputField
         id="full_name"
@@ -51,6 +52,7 @@ const RegisterForm = ({ addUser }) => {
         placeholder="Password"
         value={formData.password}
         onChange={handleChange}
+        autocomplete="current-password"
       />
       <button
         type="submit"

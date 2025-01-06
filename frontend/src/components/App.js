@@ -7,6 +7,7 @@ import { Login } from "../pages/Login";
 import { NotFound } from "./NotFound";
 import { useNavigate } from "react-router-dom";
 import { MainLanding } from "../pages/MainLanding";
+import { ArtistHome } from "../pages/ArtistHome";
 
 function App() {
   const { currUser } = useUser();
@@ -28,6 +29,7 @@ function App() {
           <Route path="/register" element={<Register />} />
           <Route path="/register/:accountType" element={<Register />} />
           <Route path="/login" element={<Login />} />
+          <Route path="/artist/home" element={<ArtistHome />} />
           <Route path="*" element={<NotFound />} />
         </Routes>
       </div>

@@ -11,7 +11,7 @@ const { artistValidator } = require("../validators/artistValidator");
 const { validate } = require("../middleware/validate");
 
 router.post(
-  "/register", // Simplified route
+  "/register",
   artistValidator,
   validate,
   authenticateJWT, // Verifies JWT and populates res.locals.user
@@ -55,17 +55,16 @@ router.post(
 
 //retrieve artist
 router.get(
-  "/:name",
+  "/:id",
   authenticateJWT,
   ensureLoggedIn,
   async function (req, res, next) {
     try {
       const artist = await prisma.artists.findUnique({
         where: {
-          name: req.params.name,
+          id: req.params.id,
         },
       });
-      console.log(artist);
       return res.json(artist);
     } catch (e) {
       return next(e);

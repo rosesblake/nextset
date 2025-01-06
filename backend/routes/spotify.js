@@ -8,7 +8,6 @@ router.get("/search", async (req, res) => {
   const { query } = req.query;
   if (!query)
     return res.status(400).json({ error: "Query parameter is required" });
-  console.log(res.locals.user);
   try {
     await getSpotifyToken(); // Ensure token is set
     const data = await spotifyApi.searchArtists(query);
@@ -19,6 +18,9 @@ router.get("/search", async (req, res) => {
       id: artist.id,
       name: artist.name,
       photo: artist.images.length > 0 ? artist.images[0].url : null,
+      spotify_url: artist.external_urls.spotify || null,
+      followers: artist.followers.total,
+      popularity: artist.popularity,
     }));
     res.json({ artists });
   } catch (error) {

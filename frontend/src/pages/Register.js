@@ -5,11 +5,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import { ArtistRegisterForm } from "../components/ArtistRegisterForm";
 import { VenueRegisterForm } from "../components/VenueRegisterForm";
 import { useUser } from "../components/UserContext"; // Import useUser hook
+import { useArtist } from "../components/ArtistContext";
 
 function Register() {
   const { accountType } = useParams();
   const navigate = useNavigate();
   const { currUser, setCurrUser } = useUser(); // Get currUser and setCurrUser from context
+  const { setArtist } = useArtist();
   const [errorMessage, setErrorMessage] = useState([]);
 
   const addUser = async (user) => {
@@ -20,24 +22,48 @@ function Register() {
       localStorage.setItem("token", token);
       setCurrUser(registeredUser); // Update currUser in context and localStorage
       const accountType = user.account_type;
+      //reset errors after submit
+      setErrorMessage([]);
       navigate(`/register/${accountType}`);
     } catch (e) {
       setErrorMessage(e);
     }
   };
 
-  const addArtist = async (artist) => {
+  const addArtist = async (artist, spotify) => {
     if (!currUser) {
       console.error("User is not logged in.");
       return;
     }
     try {
-      const newArtist = await NextSetApi.registerArtist(artist, currUser);
+      let updatedArtist = { ...artist };
+      //added spotify data if there was any
+      if (spotify) {
+        updatedArtist = {
+          ...updatedArtist,
+          spotify_photo: spotify.photo || "",
+          spotify_url: spotify.spotify_url || "",
+          spotify_popularity: spotify.popularity || 0,
+          spotify_followers: spotify.followers || 0,
+        };
+      }
+
+      const newArtist = await NextSetApi.registerArtist(
+        updatedArtist,
+        currUser
+      );
+      //update artist context and local storage
+      localStorage.setItem("artist", JSON.stringify(newArtist.artist));
+      setArtist(newArtist.artist);
+
       //update the currUser in context and localstorage
       const updatedUser = { ...currUser, artist_id: newArtist.artist.id };
       localStorage.setItem("user", JSON.stringify(updatedUser));
       setCurrUser(updatedUser);
-      navigate("/");
+
+      setErrorMessage([]);
+
+      navigate("/artist/home");
     } catch (e) {
       setErrorMessage(e);
     }

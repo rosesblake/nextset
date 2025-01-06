@@ -22,9 +22,10 @@ model artists {
   facebook_url              String?
   rating_social_media       Float?
   spotify_url               String?         
-  spotify_monthly_listeners Int?
+  spotify_followers         Int?
   spotify_popular_cities    Json?           @db.Json
-  spotify_most_plays        String?         @db.VarChar(50)
+  spotify_popularity        Int?         
+  spotify_photo             String?
   rating_streams            Float?
   w9                        String?
   rider                     String?

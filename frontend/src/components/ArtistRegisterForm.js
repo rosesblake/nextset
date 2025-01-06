@@ -9,7 +9,7 @@ const ArtistRegisterForm = ({ addArtist }) => {
     name: "",
     hometown: "",
   };
-
+  const [artistSpotify, setArtistSpotify] = useState();
   const [spotifyResults, setSpotifyResults] = useState([]);
   const [error, setError] = useState(null);
   const [typingTimeout, setTypingTimeout] = useState(null); // Track typing timeout
@@ -17,7 +17,7 @@ const ArtistRegisterForm = ({ addArtist }) => {
   const { formData, handleChange, handleSubmit } = useForm(
     INITIAL_STATE,
     (data) => {
-      addArtist(data);
+      addArtist(data, artistSpotify);
     }
   );
 
@@ -55,6 +55,7 @@ const ArtistRegisterForm = ({ addArtist }) => {
 
   const handleArtistSelect = (artist) => {
     setSpotifyResults([]); // Clear the dropdown
+    setArtistSpotify(artist);
     handleChange({ target: { name: "name", value: artist.name } }); // Update formData with selected artist
   };
 

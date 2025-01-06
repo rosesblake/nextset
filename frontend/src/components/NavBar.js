@@ -41,7 +41,7 @@ function Navbar() {
             </button>
           )}
           {!currUser && (
-            <Link to="/register">
+            <Link to="/">
               <button className="ml-4 px-6 py-2 text-nextsetPrimary bg-nextsetButton hover:bg-nextsetAccent rounded-md transition duration-300">
                 Signup
               </button>
