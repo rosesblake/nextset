@@ -7,17 +7,24 @@ class NextSetApi {
 
   static async request(endpoint, data = {}, method = "get") {
     const url = `${BASE_URL}/${endpoint}`;
-    const headers = { Authorization: `Bearer ${NextSetApi.token}` };
-    const params = method === "get" ? data : {};
+    const token = NextSetApi.token || localStorage.getItem("token");
+
+    const config = {
+      url,
+      method,
+      headers: {
+        Authorization: token ? `Bearer ${token}` : "",
+        "Content-Type": "application/json",
+      },
+      ...(method === "get" ? { params: data } : { data }),
+    };
 
     try {
-      return (await axios({ url, method, data, params, headers })).data;
+      const response = await axios(config);
+      return response.data;
     } catch (e) {
-      console.error("API Error:", e.message);
-      // If the error is from the response, extract the message(s)
-      let errorMessages = e.response?.data?.error?.errors || [e.message];
-
-      // If errorMessages is an array, throw it, else wrap in an array
+      console.error("API Error:", e.response?.data || e.message);
+      const errorMessages = e.response?.data?.error?.errors || [e.message];
       throw Array.isArray(errorMessages) ? errorMessages : [errorMessages];
     }
   }
@@ -35,19 +42,23 @@ class NextSetApi {
   }
 
   static async findArtist(artist_id) {
-    const token = NextSetApi.token || localStorage.getItem("token");
+    let res = await this.request(`artists/${artist_id}`);
+    return res;
+  }
 
-    if (!token) {
-      throw new Error("Missing token. Please log in.");
-    }
-
-    let res = await this.request(`artists/${artist_id}`, "get");
+  static async updateArtist(artist, data) {
+    let res = await this.request(`artists/${artist.id}`, data, "patch");
     return res;
   }
 
   static async registerVenue(venue, currUser) {
     const newVenue = { ...venue, created_by: currUser.id };
     let res = await this.request(`venues/register`, newVenue, "post");
+    return res;
+  }
+
+  static async allVenues() {
+    let res = await this.request(`venues`);
     return res;
   }
 

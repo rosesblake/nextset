@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import { Register } from "./Register/Register";
 import { useUser } from "./UserContext";
@@ -9,8 +9,14 @@ import { useNavigate } from "react-router-dom";
 import { MainLanding } from "../pages/MainLanding";
 import { ArtistHome } from "../pages/ArtistHome";
 import { VenueHome } from "../pages/VenueHome";
+import { LeftSidebar } from "./LeftSideBar";
+import { RightSidebar } from "./RightSideBar";
+import { ArtistProfile } from "../pages/ArtistProfile";
+import { ProtectedRoute } from "../Routes/ProtectedRoute";
+import { PublicRoute } from "../Routes/PublicRoute";
 
 function App() {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const { currUser } = useUser();
   const navigate = useNavigate();
 
@@ -21,20 +27,90 @@ function App() {
     }
   }, [currUser, navigate]);
 
+  const toggleSidebars = () => {
+    setIsCollapsed((prev) => !prev);
+  };
+
   return (
     <div className="App">
-      <Navbar />
-      <div className="mt-[64px]">
-        <Routes>
-          <Route path="/" element={<MainLanding />} />
-          <Route path="/register" element={<Register />} />
-          <Route path="/register/:accountType" element={<Register />} />
-          <Route path="/login" element={<Login />} />
-          <Route path="/artist/home" element={<ArtistHome />} />
-          <Route path="/venue/home" element={<VenueHome />} />
-          <Route path="*" element={<NotFound />} />
-        </Routes>
-      </div>
+      {!currUser ? (
+        <Navbar />
+      ) : (
+        <>
+          <LeftSidebar
+            isCollapsed={isCollapsed}
+            toggleSidebars={toggleSidebars}
+          />
+          <RightSidebar
+            isCollapsed={isCollapsed}
+            toggleSidebars={toggleSidebars}
+          />
+        </>
+      )}
+      <Routes>
+        {/* Public Routes */}
+        <Route
+          path="/"
+          element={
+            <PublicRoute>
+              <MainLanding />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/register/:accountType"
+          element={
+            <PublicRoute>
+              <Register />
+            </PublicRoute>
+          }
+        />
+        <Route
+          path="/login"
+          element={
+            <PublicRoute>
+              <Login />
+            </PublicRoute>
+          }
+        />
+
+        {/* Protected Routes */}
+        <Route
+          path="/artist/home"
+          element={
+            <ProtectedRoute>
+              <ArtistHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/artist/profile"
+          element={
+            <ProtectedRoute>
+              <ArtistProfile />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/venue/home"
+          element={
+            <ProtectedRoute>
+              <VenueHome />
+            </ProtectedRoute>
+          }
+        />
+
+        {/* Fallback */}
+        <Route path="*" element={<NotFound />} />
+      </Routes>
     </div>
   );
 }

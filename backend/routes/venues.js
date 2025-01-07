@@ -55,4 +55,14 @@ router.post(
   }
 );
 
+router.get("/", authenticateJWT, ensureLoggedIn, async (req, res, next) => {
+  try {
+    const venues = await prisma.venues.findMany();
+    return res.status(200).json({ venues });
+  } catch (e) {
+    console.error("Error fetching venues from Prisma:", e.message);
+    return next(e);
+  }
+});
+
 module.exports = router;

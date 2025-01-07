@@ -7,7 +7,7 @@ function NotFound() {
   //ensure navigation happened, otherwise show 404 page
   useEffect(() => {
     if (!navigated) {
-      navigate("/login");
+      navigate("/");
       setNavigated(true);
     } else {
       return;

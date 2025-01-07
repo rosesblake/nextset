@@ -4,7 +4,7 @@ function SpotifyDropdown({ results, onSelect }) {
   if (!results || results.length === 0) return null;
 
   return (
-    <ul className="absolute bg-white border border-gray-300 w-full rounded-md shadow-lg mt-1 max-h-60 overflow-y-auto z-10">
+    <ul className="absolute bg-white border border-gray-300 w-full rounded-md shadow-lg max-h-60 overflow-y-auto z-10">
       {results.map((artist) => (
         <li
           key={artist.id}

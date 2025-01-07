@@ -72,4 +72,27 @@ router.get(
   }
 );
 
+// Update artist details
+router.patch(
+  "/:id",
+  authenticateJWT,
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const artistId = parseInt(req.params.id, 10);
+
+      // Update the artist in the database with the provided fields
+      const updatedArtist = await prisma.artists.update({
+        where: { id: artistId },
+        data: req.body,
+      });
+
+      return res.status(200).json({ artist: updatedArtist });
+    } catch (e) {
+      console.error("Error updating artist:", e.message);
+      return next(e);
+    }
+  }
+);
+
 module.exports = router;

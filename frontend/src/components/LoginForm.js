@@ -1,6 +1,6 @@
 import React from "react";
 import { FormWrapper } from "./Register/FormWrapper";
-import { InputField } from "./InputField";
+import { InputField } from "./Register/InputField";
 import { useForm } from "../hooks/useForm";
 
 function LoginForm({ loginUser }) {

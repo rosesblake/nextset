@@ -1,7 +1,7 @@
 import React from "react";
 import { SharedFields } from "./SharedFields";
 import { FormWrapper } from "./FormWrapper";
-import { InputField } from "../InputField";
+import { InputField } from "./InputField";
 import { useForm } from "../../hooks/useForm";
 
 function VenueForm({ onSubmit }) {

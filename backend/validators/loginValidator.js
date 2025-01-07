@@ -2,11 +2,11 @@ const { body } = require("express-validator");
 
 // Validator for user login
 const loginValidator = [
-  body("username")
-    .isString()
-    .withMessage("Username must be a string")
+  body("email")
+    .isEmail()
+    .withMessage("Must be a valid email")
     .notEmpty()
-    .withMessage("Username is required"),
+    .withMessage("Email is required"),
 
   body("password")
     .isString()

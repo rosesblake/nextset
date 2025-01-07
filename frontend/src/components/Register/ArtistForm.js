@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { FormWrapper } from "./FormWrapper";
 import { SpotifyDropdown } from "./SpotifyDropdown";
 import { SharedFields } from "./SharedFields";
-import { InputField } from "../InputField";
+import { InputField } from "./InputField";
 import { useForm } from "../../hooks/useForm";
 import { NextSetApi } from "../../api/api";
 
@@ -57,8 +57,14 @@ function ArtistForm({ onSubmit }) {
         placeholder="Artist Name"
         value={formData.artist_name}
         onChange={(e) => handleSearch(e.target.value)}
+        autocomplete={"off"}
       />
-      <SpotifyDropdown results={spotifyResults} onSelect={handleArtistSelect} />
+      <div className="relative w-full">
+        <SpotifyDropdown
+          results={spotifyResults}
+          onSelect={handleArtistSelect}
+        />
+      </div>
       <InputField
         id="hometown"
         name="hometown"
