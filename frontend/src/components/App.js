@@ -9,6 +9,7 @@ import { useNavigate } from "react-router-dom";
 import { MainLanding } from "../pages/MainLanding";
 import { ArtistHome } from "../pages/ArtistHome";
 import { VenueHome } from "../pages/VenueHome";
+import { VenueList } from "../pages/VenueList";
 import { LeftSidebar } from "./LeftSideBar";
 import { RightSidebar } from "./RightSideBar";
 import { ArtistProfile } from "../pages/ArtistProfile";
@@ -84,7 +85,7 @@ function App() {
 
         {/* Protected Routes */}
         <Route
-          path="/artist/home"
+          path="/artist/dashboard"
           element={
             <ProtectedRoute>
               <ArtistHome />
@@ -104,6 +105,14 @@ function App() {
           element={
             <ProtectedRoute>
               <VenueHome />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/venue/list"
+          element={
+            <ProtectedRoute>
+              <VenueList />
             </ProtectedRoute>
           }
         />

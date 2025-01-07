@@ -63,20 +63,20 @@ function LeftSidebar({ isCollapsed, toggleSidebars }) {
           {/* Navigation Links */}
           <ul className="space-y-6">
             <li>
-              <a
-                href="/artist/home"
+              <Link
+                to="/artist/dashboard"
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
-                <span>Home</span>
-              </a>
+                <span>Dashboard</span>
+              </Link>
             </li>
             <li>
-              <a
-                href="/discover"
+              <Link
+                to="/venue/list"
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
-                <span>Discover / Charts</span>
-              </a>
+                <span>Venues</span>
+              </Link>
             </li>
             <li>
               <a
