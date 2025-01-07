@@ -61,7 +61,7 @@ function ArtistHome() {
             Recommended Venues
           </h2>
           <ul className="space-y-4">
-            {venues.map((venue) => (
+            {venues.slice(0, 2).map((venue) => (
               <li
                 key={venue.id}
                 className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition"
@@ -94,7 +94,7 @@ function ArtistHome() {
           <div className="text-right mt-4">
             <button
               className="text-nextsetAccent hover:underline"
-              onClick={() => navigate("/venues")}
+              onClick={() => navigate("/venue/list")}
             >
               View All Venues
             </button>
@@ -131,13 +131,13 @@ function ArtistHome() {
         <div className="flex justify-center space-x-4">
           <button
             className="px-6 py-3 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
-            onClick={() => navigate("/profile")}
+            onClick={() => navigate("/artist/profile")}
           >
             View Profile
           </button>
           <button
             className="px-6 py-3 bg-nextsetAccent text-white rounded-md hover:bg-nextsetButton transition"
-            onClick={() => navigate("/venues")}
+            onClick={() => navigate("/venue/list")}
           >
             Explore Venues
           </button>

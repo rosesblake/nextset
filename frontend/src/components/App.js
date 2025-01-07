@@ -15,6 +15,7 @@ import { RightSidebar } from "./RightSideBar";
 import { ArtistProfile } from "../pages/ArtistProfile";
 import { ProtectedRoute } from "../Routes/ProtectedRoute";
 import { PublicRoute } from "../Routes/PublicRoute";
+import { ArtistVenueView } from "../pages/ArtistVenueView";
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -113,6 +114,14 @@ function App() {
           element={
             <ProtectedRoute>
               <VenueList />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/venue/:id"
+          element={
+            <ProtectedRoute>
+              <ArtistVenueView />
             </ProtectedRoute>
           }
         />

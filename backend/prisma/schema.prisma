@@ -28,6 +28,7 @@ model artists {
   spotify_photo             String?
   rating_streams            Float?
   w9                        String?
+  stage_plot                String?
   rider                     String?
   manager                   String?         @db.VarChar(50)
   record_label              String?         @db.VarChar(50)
@@ -149,6 +150,15 @@ model venue_amenities {
   @@id([venue_id, amenity_id])
 }
 
+model venue_blocked_dates {
+  id           Int      @id @default(autoincrement())
+  venue        venues   @relation(fields: [venue_id], references: [id])
+  venue_id     Int      // Foreign key to venues
+  blocked_date DateTime // The date when the venue is unavailable
+
+  @@unique([venue_id, blocked_date]) // Prevent duplicate entries for the same date
+}
+
 model venues {
   id              Int               @id @default(autoincrement())
   name            String            @unique @db.VarChar(50)
@@ -157,17 +167,19 @@ model venues {
   city            String?           @db.VarChar(50)
   state           String?           @db.VarChar(2)
   zip_code        Int?             
-  available_dates Json?             @db.Json
   events          events[]
   pitches         pitches[]
   schedules       schedules[]
   venue_amenities venue_amenities[]
+  blocked_dates   venue_blocked_dates[] // Relation to blocked dates
   created_by      Int
   created_at      DateTime?         @default(now()) @db.Timestamp(6)
 
   creator users         @relation("VenueCreator", fields: [created_by], references: [id])
   users   venue_users[]
 }
+
+
 
 model artist_users {
   user_id   Int

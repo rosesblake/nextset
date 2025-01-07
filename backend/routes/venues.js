@@ -60,7 +60,29 @@ router.get("/", authenticateJWT, ensureLoggedIn, async (req, res, next) => {
     const venues = await prisma.venues.findMany();
     return res.status(200).json({ venues });
   } catch (e) {
-    console.error("Error fetching venues from Prisma:", e.message);
+    return next(e);
+  }
+});
+
+router.get("/:id", authenticateJWT, ensureLoggedIn, async (req, res, next) => {
+  try {
+    const venue_id = parseInt(req.params.id);
+    const venue = await prisma.venues.findFirst({
+      where: { id: venue_id },
+    });
+    //add on blocked dates call to venue
+    const blockedDates = await prisma.venue_blocked_dates.findMany({
+      where: { venue_id: venue_id },
+      select: { blocked_date: true },
+    });
+
+    const updatedVenue = {
+      ...venue,
+      blocked_dates: blockedDates.map((date) => date.blocked_date),
+    };
+
+    return res.json(updatedVenue);
+  } catch (e) {
     return next(e);
   }
 });

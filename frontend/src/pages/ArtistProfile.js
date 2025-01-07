@@ -63,12 +63,7 @@ function ArtistProfile() {
           />
         </div>
 
-        {/* Artist Details */}
         <div className="mb-8">
-          <h2 className="text-2xl font-semibold text-nextsetPrimary mb-4 text-center">
-            Artist Details
-          </h2>
-
           {/* Contact Section */}
           <div className="p-4 bg-gray-50 rounded-lg shadow-sm mb-6">
             <h3 className="text-lg font-bold text-nextsetAccent mb-4">
@@ -135,12 +130,6 @@ function ArtistProfile() {
             onClick={() => navigate("/artist/home")}
           >
             Back to Home
-          </button>
-          <button
-            className="px-6 py-3 bg-nextsetAccent text-white rounded-md hover:bg-nextsetButton transition"
-            onClick={() => navigate("/edit-profile")}
-          >
-            Edit Profile
           </button>
         </div>
       </div>

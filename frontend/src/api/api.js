@@ -62,6 +62,11 @@ class NextSetApi {
     return res;
   }
 
+  static async getVenue(venue_id) {
+    let res = await this.request(`venues/${venue_id}`);
+    return res;
+  }
+
   static async loginUser(user) {
     let res = await this.request(`auth/login`, user, "post");
     NextSetApi.token = res.token;
