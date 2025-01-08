@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
+import { useArtist } from "../components/ArtistContext";
 import { NextSetApi } from "../api/api";
-import { Link } from "react-router-dom";
+import { VenueCard } from "../components/VenueCard";
 
 function VenueList() {
+  const { artist } = useArtist();
   const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -11,8 +13,8 @@ function VenueList() {
       try {
         const allVenues = await NextSetApi.allVenues();
         setVenues(allVenues.venues);
-      } catch (err) {
-        console.error("Error fetching venues:", err);
+      } catch (e) {
+        console.error("Error fetching venues:", e);
       } finally {
         setLoading(false);
       }
@@ -31,41 +33,13 @@ function VenueList() {
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-10">
-      <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
-        <h1 className="text-3xl font-bold text-nextsetPrimary mb-6 text-center">
-          All Venues
+      <div className="w-full max-w-4xl bg-white p-6 rounded-lg shadow-lg">
+        <h1 className="text-3xl font-bold text-nextsetAccent mb-6">
+          Explore Venues
         </h1>
         <ul className="space-y-4">
           {venues.map((venue) => (
-            <li
-              key={venue.id}
-              className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition"
-            >
-              <div className="flex justify-between items-center">
-                <Link to={`/venue/${venue.id}`}>
-                  <div>
-                    <h3 className="text-lg font-bold text-nextsetAccent">
-                      {venue.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {venue.city}, {venue.state}
-                    </p>
-                    <p className="text-sm font-medium text-gray-600">
-                      <span className="text-nextsetButton font-semibold">
-                        Capacity:
-                      </span>{" "}
-                      {venue.capacity || "N/A"}
-                    </p>
-                  </div>
-                </Link>
-                <button
-                  className="px-4 py-2 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
-                  onClick={() => alert(`Pitch to ${venue.name}`)}
-                >
-                  Pitch
-                </button>
-              </div>
-            </li>
+            <VenueCard key={venue.id} venue={venue} artist={artist} />
           ))}
         </ul>
       </div>

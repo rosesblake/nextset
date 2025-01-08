@@ -3,33 +3,35 @@ import { useNavigate } from "react-router-dom";
 import { useUser } from "../components/UserContext";
 import { useArtist } from "../components/ArtistContext";
 import { NextSetApi } from "../api/api";
+import { VenueCard } from "../components/VenueCard";
 
 function ArtistHome() {
   const { currUser } = useUser();
   const { artist } = useArtist();
   const navigate = useNavigate();
   const [venues, setVenues] = useState();
-  const [loading, setLoading] = useState(true); // Loading state
+  const [loading, setLoading] = useState(true);
+
+  // Temporary upcoming gigs data
+  const upcomingGigs = [
+    { id: 1, venue: "The Velvet Room", date: "Jan 15, 2025" },
+    { id: 2, venue: "Blue Note Stage", date: "Jan 20, 2025" },
+  ];
 
   useEffect(() => {
     async function fetchVenues() {
       try {
-        const allVenues = await NextSetApi.allVenues(); // Await the promise
+        const allVenues = await NextSetApi.allVenues();
         setVenues(allVenues.venues);
       } catch (e) {
         console.error("Error fetching venues:", e);
       } finally {
-        setLoading(false); // Stop loading after fetching venues
+        setLoading(false);
       }
     }
 
     fetchVenues();
   }, []);
-
-  const upcomingGigs = [
-    { id: 1, venue: "The Velvet Room", date: "Jan 15, 2025" },
-    { id: 2, venue: "Blue Note Stage", date: "Jan 20, 2025" },
-  ];
 
   if (loading) {
     return (
@@ -62,33 +64,7 @@ function ArtistHome() {
           </h2>
           <ul className="space-y-4">
             {venues.slice(0, 2).map((venue) => (
-              <li
-                key={venue.id}
-                className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition"
-              >
-                <div className="flex justify-between items-center">
-                  <div>
-                    <h3 className="text-lg font-bold text-nextsetAccent">
-                      {venue.name}
-                    </h3>
-                    <p className="text-sm text-gray-500">
-                      {venue.city}, {venue.state}
-                    </p>
-                    <p className="text-sm font-medium text-gray-600">
-                      <span className="text-nextsetButton font-semibold">
-                        Capacity:
-                      </span>{" "}
-                      {venue.capacity || "N/A"}
-                    </p>
-                  </div>
-                  <button
-                    className="px-4 py-2 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
-                    onClick={() => alert(`Pitch to ${venue.name}`)}
-                  >
-                    Pitch
-                  </button>
-                </div>
-              </li>
+              <VenueCard key={venue.id} venue={venue} artist={artist} />
             ))}
           </ul>
           <div className="text-right mt-4">
@@ -111,7 +87,7 @@ function ArtistHome() {
               {upcomingGigs.map((gig) => (
                 <li
                   key={gig.id}
-                  className="p-4 bg-gray-50 rounded-lg shadow-sm"
+                  className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition"
                 >
                   <div className="flex justify-between">
                     <span className="text-nextsetAccent font-medium">
