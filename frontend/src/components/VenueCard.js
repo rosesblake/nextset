@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { PitchModal } from "./PitchModal";
+import { NextSetApi } from "../api/api";
 
 function VenueCard({ venue, artist }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -8,9 +9,18 @@ function VenueCard({ venue, artist }) {
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
-  const handleSubmitPitch = (pitchData) => {
-    console.log("Pitch submitted:", pitchData);
-    closeModal();
+  const handleSubmitPitch = async (pitchData) => {
+    try {
+      console.log("Pitch submitted:", pitchData);
+      const pitch = await NextSetApi.sendPitch({
+        ...pitchData,
+        date: new Date(pitchData.date).toISOString(),
+      });
+      console.log(pitch);
+      closeModal();
+    } catch (e) {
+      closeModal();
+    }
   };
 
   return (

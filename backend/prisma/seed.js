@@ -3,8 +3,9 @@ const prisma = new PrismaClient();
 
 async function main() {
   console.log("Seeding venues...");
-  await prisma.venues.deleteMany();
   await prisma.venue_blocked_dates.deleteMany();
+
+  await prisma.venues.deleteMany();
 
   // Create venues
   const venues = await prisma.venues.createMany({

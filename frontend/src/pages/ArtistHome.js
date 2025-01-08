@@ -63,7 +63,7 @@ function ArtistHome() {
             Recommended Venues
           </h2>
           <ul className="space-y-4">
-            {venues.slice(0, 2).map((venue) => (
+            {venues?.slice(0, 2).map((venue) => (
               <VenueCard key={venue.id} venue={venue} artist={artist} />
             ))}
           </ul>

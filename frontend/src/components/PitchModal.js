@@ -4,10 +4,9 @@ import DatePicker from "react-date-picker";
 
 function PitchModal({ venue, selectedDate, artist, onClose, onSubmit }) {
   const initialState = {
-    description: "",
-    audienceSize: "",
-    technicalRequirements: "",
-    supportActs: "",
+    content: "",
+    avg_ticket_sales: "",
+    support_acts: "",
   };
 
   const { formData, handleChange, handleSubmit } = useForm(
@@ -16,6 +15,7 @@ function PitchModal({ venue, selectedDate, artist, onClose, onSubmit }) {
       const pitchData = {
         venue_id: venue.id,
         date,
+        artist_id: artist.id,
         ...data,
       };
       onSubmit(pitchData);
@@ -44,7 +44,7 @@ function PitchModal({ venue, selectedDate, artist, onClose, onSubmit }) {
           </h2>
           <button
             onClick={onClose}
-            className="text-gray-500 hover:text-black text-2xl"
+            className="text-gray-500 hover:text-black text-3xl"
           >
             &times;
           </button>
@@ -84,8 +84,8 @@ function PitchModal({ venue, selectedDate, artist, onClose, onSubmit }) {
               Event Details
             </h3>
             <textarea
-              name="description"
-              value={formData.description}
+              name="content"
+              value={formData.content}
               onChange={handleChange}
               placeholder="Describe your event..."
               className="w-full border rounded-md p-2"
@@ -93,26 +93,18 @@ function PitchModal({ venue, selectedDate, artist, onClose, onSubmit }) {
 
             <input
               type="number"
-              name="audienceSize"
-              value={formData.audienceSize}
+              name="avg_ticket_sales"
+              value={formData.avg_ticket_sales}
               onChange={handleChange}
-              placeholder="Expected Audience Size"
+              placeholder="Expected Ticket Sales"
               className="w-full border rounded-md p-2 mt-3"
             />
 
             <textarea
-              name="technicalRequirements"
-              value={formData.technicalRequirements}
+              name="support_acts"
+              value={formData.support_acts}
               onChange={handleChange}
-              placeholder="Technical Requirements (e.g., sound, lighting, stage size)"
-              className="w-full border rounded-md p-2 mt-3"
-            ></textarea>
-
-            <textarea
-              name="supportActs"
-              value={formData.supportActs}
-              onChange={handleChange}
-              placeholder="Support Acts (if any)"
+              placeholder="Support Acts (could use spotify api here if we want and send venue spotify links)"
               className="w-full border rounded-md p-2 mt-3"
             ></textarea>
           </div>

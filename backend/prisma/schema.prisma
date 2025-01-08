@@ -41,7 +41,7 @@ model artists {
   created_at                DateTime?       @default(now()) @db.Timestamp(6)
   event_artists             event_artists[]
   members                   members[]
-  pitch_artists             pitch_artists[]
+  artist_pitches            artist_pitches[]
   tokens                    tokens[]
 
   creator users          @relation("ArtistCreator", fields: [created_by], references: [id])
@@ -84,7 +84,7 @@ model members {
   users     users?  @relation(fields: [user_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
 }
 
-model pitch_artists {
+model artist_pitches {
   pitch_id  Int
   artist_id Int
   artists   artists @relation(fields: [artist_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
@@ -97,9 +97,11 @@ model pitches {
   id               Int             @id @default(autoincrement())
   venue_id         Int
   avg_ticket_sales Int?
+  support_acts     String?         @db.VarChar(30)
+  date             DateTime        @db.Date
   content          String
   status           String          @db.VarChar(15)
-  pitch_artists    pitch_artists[]
+  artist_pitches   artist_pitches[]
   venues           venues          @relation(fields: [venue_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 

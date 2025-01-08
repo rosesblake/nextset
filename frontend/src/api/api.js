@@ -67,6 +67,11 @@ class NextSetApi {
     return res;
   }
 
+  static async sendPitch(data) {
+    let res = await this.request(`pitches`, data, "post");
+    return res;
+  }
+
   static async loginUser(user) {
     let res = await this.request(`auth/login`, user, "post");
     NextSetApi.token = res.token;

@@ -5,12 +5,12 @@ import { Spinner } from "../components/Spinner";
 
 function ProtectedRoute({ children }) {
   const { currUser, isLoading } = useUser();
-
+  const token = localStorage.getItem("token");
   if (isLoading) {
     return <Spinner />; // Show spinner while loading
   }
 
-  return currUser ? children : <Navigate to="/login" replace />;
+  return currUser && token ? children : <Navigate to="/login" replace />;
 }
 
 export { ProtectedRoute };
