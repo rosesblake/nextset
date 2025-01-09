@@ -20,22 +20,15 @@ import { ArtistVenueView } from "../pages/ArtistVenueView";
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
   const { currUser } = useUser();
-  const token = localStorage.getItem("token");
   const navigate = useNavigate();
 
   // Centralized token validation and routing logic
   useEffect(() => {
-    if (!token) {
-      console.warn("No token found, redirecting to login.");
-      navigate("/login");
-      return;
-    }
-
     // Ensure the user completes their artist or venue registration
     if (currUser && !currUser.artist_id && !currUser.venue_id) {
       navigate(`/register/${currUser.account_type}`);
     }
-  }, [currUser, navigate, token]);
+  }, [currUser, navigate]);
 
   const toggleSidebars = () => {
     setIsCollapsed((prev) => !prev);

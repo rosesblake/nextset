@@ -7,12 +7,16 @@ import { NextSetApi } from "../api/api";
 function LeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, setCurrUser } = useUser();
   const navigate = useNavigate();
-  const { artist } = useArtist();
+  const { artist, setArtist } = useArtist();
 
   const handleLogout = () => {
     localStorage.removeItem("user");
-    delete NextSetApi.token;
+    localStorage.removeItem("artist");
+    localStorage.removeItem("token");
+    NextSetApi.token = null;
+    NextSetApi.axiosInstance.defaults.headers.Authorization = null;
     setCurrUser(null);
+    setArtist(null);
     navigate("/login");
   };
 
