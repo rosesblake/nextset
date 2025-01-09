@@ -5,27 +5,62 @@ const BASE_URL = "http://localhost:3001";
 class NextSetApi {
   static token;
 
-  static async request(endpoint, data = {}, method = "get") {
-    const url = `${BASE_URL}/${endpoint}`;
-    const token = NextSetApi.token || localStorage.getItem("token");
+  // Create Axios instance with interceptors
+  static axiosInstance = axios.create({
+    baseURL: BASE_URL,
+    headers: {
+      "Content-Type": "application/json",
+    },
+  });
 
-    const config = {
-      url,
-      method,
-      headers: {
-        Authorization: token ? `Bearer ${token}` : "",
-        "Content-Type": "application/json",
+  // Set up interceptors
+  static initializeInterceptors() {
+    // Attach token to every request
+    this.axiosInstance.interceptors.request.use(
+      (config) => {
+        const token = NextSetApi.token || localStorage.getItem("token");
+        if (token) {
+          config.headers.Authorization = `Bearer ${token}`;
+        }
+        return config;
       },
-      ...(method === "get" ? { params: data } : { data }),
-    };
+      (error) => Promise.reject(error)
+    );
 
+    // Handle token expiration
+    this.axiosInstance.interceptors.response.use(
+      (response) => response,
+      (error) => {
+        if (error.response?.status === 401) {
+          const errorMessage = error.response?.data?.error?.message;
+          if (errorMessage === "Token has expired") {
+            console.warn("Token expired, logging out.");
+            NextSetApi.token = null;
+            localStorage.removeItem("token");
+          }
+        }
+        return Promise.reject(error);
+      }
+    );
+  }
+
+  // Centralized request method
+  static async request(endpoint, data = {}, method = "get") {
     try {
-      const response = await axios(config);
+      const response = await this.axiosInstance({
+        url: endpoint,
+        method,
+        ...(method === "get" ? { params: data } : { data }),
+      });
       return response.data;
-    } catch (e) {
-      console.error("API Error:", e.response?.data || e.message);
-      const errorMessages = e.response?.data?.error?.errors || [e.message];
-      throw Array.isArray(errorMessages) ? errorMessages : [errorMessages];
+    } catch (error) {
+      // Extract error message
+      const errorMessage =
+        error.response?.data?.error?.message ||
+        error.message ||
+        "Unknown error occurred.";
+
+      throw new Error(errorMessage);
     }
   }
 
@@ -41,7 +76,7 @@ class NextSetApi {
     return res;
   }
 
-  static async findArtist(artist_id) {
+  static async getArtist(artist_id) {
     let res = await this.request(`artists/${artist_id}`);
     return res;
   }
@@ -68,7 +103,16 @@ class NextSetApi {
   }
 
   static async sendPitch(data) {
-    let res = await this.request(`pitches`, data, "post");
+    try {
+      let res = await this.request(`pitches`, data, "post");
+      return res;
+    } catch (e) {
+      throw e;
+    }
+  }
+
+  static async getArtistPitches(artist_id) {
+    let res = await this.request(`pitches/${artist_id}`);
     return res;
   }
 
@@ -84,5 +128,7 @@ class NextSetApi {
     return res;
   };
 }
+
+NextSetApi.initializeInterceptors();
 
 export { NextSetApi };

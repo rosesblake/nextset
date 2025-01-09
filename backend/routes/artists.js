@@ -60,9 +60,27 @@ router.get(
   ensureLoggedIn,
   async function (req, res, next) {
     try {
+      //fetch the artist and their pitches
       const artist = await prisma.artists.findUnique({
         where: {
-          id: req.params.id,
+          id: parseInt(req.params.id, 10),
+        },
+        include: {
+          artist_pitches: {
+            include: {
+              pitches: {
+                include: {
+                  venues: {
+                    select: {
+                      name: true,
+                      city: true,
+                      state: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
       return res.json(artist);
@@ -85,9 +103,26 @@ router.patch(
       const updatedArtist = await prisma.artists.update({
         where: { id: artistId },
         data: req.body,
+        include: {
+          artist_pitches: {
+            include: {
+              pitches: {
+                include: {
+                  venues: {
+                    select: {
+                      name: true,
+                      city: true,
+                      state: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
       });
 
-      return res.status(200).json({ artist: updatedArtist });
+      return res.status(200).json(updatedArtist);
     } catch (e) {
       console.error("Error updating artist:", e.message);
       return next(e);

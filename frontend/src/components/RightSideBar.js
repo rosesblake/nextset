@@ -1,7 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { NextSetApi } from "../api/api";
+import { useArtist } from "./ArtistContext";
+import { Link } from "react-router-dom";
 
 function RightSidebar({ isCollapsed, toggleSidebars }) {
   const [activeTab, setActiveTab] = useState("sent"); // Default tab is "sent"
+  const { artist, setArtist } = useArtist();
+
+  useEffect(() => {
+    async function fetchPitches() {
+      if (artist?.id) {
+        try {
+          const currArtist = await NextSetApi.getArtist(artist.id);
+          setArtist(currArtist); // update artist context
+        } catch (error) {
+          console.error("Error fetching artist pitches:", error.message);
+        }
+      }
+    }
+
+    fetchPitches();
+  }, [artist?.id, setArtist]);
+
+  const sentPitches = artist?.artist_pitches?.filter(
+    (pitch) => pitch.pitches.status === "PENDING"
+  );
+
+  const resultPitches = artist?.artist_pitches?.filter(
+    (pitch) =>
+      pitch.pitches.status === "APPROVED" || pitch.pitches.status === "DENIED"
+  );
 
   return (
     <div
@@ -49,59 +77,71 @@ function RightSidebar({ isCollapsed, toggleSidebars }) {
           </div>
 
           {/* Content */}
-          <div>
-            {activeTab === "sent" && (
-              <div>
-                <h3 className="text-xl font-bold text-nextsetAccent mb-4">
-                  Sent Pitches
-                </h3>
-                <div className="space-y-3">
-                  <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
-                    <h4 className="text-lg text-nextsetAccent font-semibold">
-                      Venue Name
-                    </h4>
-                    <p className="text-sm text-gray-300">City, State</p>
-                    <p className="text-sm text-yellow-400">
-                      Status: Waiting for Review
-                    </p>
-                  </div>
-                  <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
-                    <h4 className="text-lg text-nextsetAccent font-semibold">
-                      Venue Name
-                    </h4>
-                    <p className="text-sm text-gray-300">City, State</p>
-                    <p className="text-sm text-yellow-400">
-                      Status: Waiting for Review
-                    </p>
-                  </div>
-                </div>
+          {activeTab === "sent" && (
+            <div>
+              <h3 className="text-xl font-bold text-nextsetAccent mb-4">
+                Sent Pitches
+              </h3>
+              <div className="space-y-3">
+                {sentPitches?.map((pitch) => (
+                  <Link
+                    key={pitch.pitch_id}
+                    to={`/venue/${pitch.pitches.venue_id}`}
+                    className="block"
+                  >
+                    <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
+                      <h4 className="text-lg text-nextsetAccent font-semibold">
+                        {pitch.pitches.venues?.name || "Unknown Venue"}
+                      </h4>
+                      <p className="text-sm text-gray-300">
+                        {pitch.pitches.venues?.city || "Unknown City"},{" "}
+                        {pitch.pitches.venues?.state || "Unknown State"}
+                      </p>
+                      <p className="text-sm text-yellow-400">
+                        Status: {pitch.pitches.status}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            )}
+            </div>
+          )}
 
-            {activeTab === "approvedDenied" && (
-              <div>
-                <h3 className="text-xl font-bold text-nextsetAccent mb-4">
-                  Approved/Denied Pitches
-                </h3>
-                <div className="space-y-3">
-                  <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
-                    <h4 className="text-lg text-nextsetAccent font-semibold">
-                      Venue Name
-                    </h4>
-                    <p className="text-sm text-gray-300">City, State</p>
-                    <p className="text-sm text-green-400">Approved</p>
-                  </div>
-                  <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
-                    <h4 className="text-lg text-nextsetAccent font-semibold">
-                      Venue Name
-                    </h4>
-                    <p className="text-sm text-gray-300">City, State</p>
-                    <p className="text-sm text-red-400">Denied</p>
-                  </div>
-                </div>
+          {activeTab === "approvedDenied" && (
+            <div>
+              <h3 className="text-xl font-bold text-nextsetAccent mb-4">
+                Approved/Denied Pitches
+              </h3>
+              <div className="space-y-3">
+                {resultPitches?.map((pitch) => (
+                  <Link
+                    key={pitch.pitch_id}
+                    to={`/venue/${pitch.pitches.venue_id}`}
+                    className="block"
+                  >
+                    <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
+                      <h4 className="text-lg text-nextsetAccent font-semibold">
+                        {pitch.pitches.venues?.name || "Unknown Venue"}
+                      </h4>
+                      <p className="text-sm text-gray-300">
+                        {pitch.pitches.venues?.city || "Unknown City"},{" "}
+                        {pitch.pitches.venues?.state || "Unknown State"}
+                      </p>
+                      <p
+                        className={`text-sm ${
+                          pitch.pitches.status === "APPROVED"
+                            ? "text-green-400"
+                            : "text-red-400"
+                        }`}
+                      >
+                        {pitch.pitches.status}
+                      </p>
+                    </div>
+                  </Link>
+                ))}
               </div>
-            )}
-          </div>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -14,8 +14,7 @@ function ArtistProfile() {
     try {
       const data = { [field]: newValue };
       const updatedArtist = await NextSetApi.updateArtist(artist, data);
-      setArtist(updatedArtist.artist);
-      console.log(`Updated ${field}:`, updatedArtist);
+      setArtist(updatedArtist);
     } catch (e) {
       console.error(e);
     }
@@ -82,7 +81,7 @@ function ArtistProfile() {
               }
             />
             <EditableField
-              label="Email"
+              label="Artist Email"
               value={artist.email || currUser.email}
               onSave={(newValue) => handleFieldSave("email", newValue)}
             />

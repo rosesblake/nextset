@@ -2,23 +2,32 @@ import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { PitchModal } from "./PitchModal";
 import { NextSetApi } from "../api/api";
+import { useMessage } from "./MessageContext";
+import { useArtist } from "./ArtistContext";
 
 function VenueCard({ venue, artist }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const { showMessage } = useMessage();
+  const { setArtist } = useArtist();
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
 
   const handleSubmitPitch = async (pitchData) => {
     try {
-      console.log("Pitch submitted:", pitchData);
-      const pitch = await NextSetApi.sendPitch({
+      await NextSetApi.sendPitch({
         ...pitchData,
         date: new Date(pitchData.date).toISOString(),
       });
-      console.log(pitch);
+
+      // Fetch updated artist data
+      const updatedArtist = await NextSetApi.getArtist(artist.id);
+      setArtist(updatedArtist); // Update artist context with latest data
+
       closeModal();
+      showMessage("Submission successful!", "success");
     } catch (e) {
+      showMessage(e.message, "error");
       closeModal();
     }
   };

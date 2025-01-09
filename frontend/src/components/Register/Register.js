@@ -41,8 +41,8 @@ function Register() {
         );
 
         // Update user with artist_id
-        user = { ...user, artist_id: artistRes.artist.id };
         setArtist(artistRes.artist);
+        user = { ...user, artist_id: artistRes.artist.id };
         navigate("/artist/home");
       } else if (accountType === "venue") {
         const venueRes = await NextSetApi.registerVenue(
