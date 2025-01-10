@@ -21,6 +21,7 @@ function ArtistForm({ onSubmit }) {
     (data) => {
       onSubmit({
         ...data,
+        spotify_id: artistSpotify?.id,
         spotify_photo: artistSpotify?.photo || "",
         spotify_url: artistSpotify?.spotify_url || "",
         spotify_popularity: artistSpotify?.popularity || 0,

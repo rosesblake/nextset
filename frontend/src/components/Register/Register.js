@@ -32,6 +32,7 @@ function Register() {
           {
             name: data.artist_name,
             hometown: data.hometown,
+            spotify_id: data.id,
             spotify_photo: data.spotify_photo,
             spotify_url: data.spotify_url,
             spotify_popularity: data.spotify_popularity,
