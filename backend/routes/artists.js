@@ -4,7 +4,7 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
-const { UnauthorizedError } = require("../expressError");
+const { UnauthorizedError, BadRequestError } = require("../expressError");
 const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { artistValidator } = require("../validators/artistValidator");
 const { validate } = require("../middleware/validate");
@@ -23,6 +23,14 @@ router.post(
       // Ensure the user_id is present and the request is valid
       if (!user_id) {
         return next(new UnauthorizedError("User is not authenticated"));
+      }
+      console.log(req.body);
+      const duplicate_check = await prisma.artists.findFirst({
+        where: { spotify_id: req.body.spotify_id },
+      });
+
+      if (duplicate_check) {
+        return next(new BadRequestError("Artist already exists"));
       }
 
       // Create the artist record in the database

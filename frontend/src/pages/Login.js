@@ -4,10 +4,12 @@ import { LoginForm } from "../components/LoginForm";
 import { NextSetApi } from "../api/api";
 import { useUser } from "../components/UserContext";
 import { useMessage } from "../components/MessageContext";
+import { useArtist } from "../components/ArtistContext";
 
 function Login() {
   const navigate = useNavigate();
   const { setCurrUser } = useUser(); // Get setCurrUser from context
+  const { setArtist } = useArtist();
   const [errorMessage, setErrorMessage] = useState([]);
   const { showMessage } = useMessage();
 
@@ -21,7 +23,7 @@ function Login() {
 
       // Set the logged-in user in context
       setCurrUser(loggedInUser);
-
+      setArtist(loggedInUser.artist);
       // Redirect to home page after successful login
       navigate(`/${loggedInUser.account_type}/home`);
       showMessage("Successfully logged in", "success");

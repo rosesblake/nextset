@@ -34,7 +34,7 @@ function Register() {
           {
             name: data.artist_name,
             hometown: data.hometown,
-            spotify_id: data.id,
+            spotify_id: data.spotify_id,
             spotify_photo: data.spotify_photo,
             spotify_url: data.spotify_url,
             spotify_popularity: data.spotify_popularity,
@@ -43,7 +43,6 @@ function Register() {
           user
         );
 
-        // Update user with artist_id
         setArtist(artistRes.artist);
         user = { ...user, artist_id: artistRes.artist.id };
         navigate("/artist/home");

@@ -31,6 +31,10 @@ function ArtistForm({ onSubmit }) {
   );
 
   const handleSearch = async (value) => {
+    if (value !== formData.artist_name) {
+      setArtistSpotify(null);
+    }
+
     handleChange({ target: { name: "artist_name", value } });
     if (!value) {
       setSpotifyResults([]);
@@ -49,7 +53,6 @@ function ArtistForm({ onSubmit }) {
     setArtistSpotify(artist);
     handleChange({ target: { name: "artist_name", value: artist.name } });
   };
-
   return (
     <FormWrapper title="Register as Artist" handleSubmit={handleSubmit}>
       <InputField

@@ -21,7 +21,7 @@ model artists {
   x_handle                  String?         @db.VarChar(50)
   facebook_url              String?
   rating_social_media       Float?
-  spotify_id                Int?
+  spotify_id                String?
   spotify_url               String?         
   spotify_followers         Int?
   spotify_popular_cities    Json?           @db.Json
@@ -124,7 +124,7 @@ model tokens {
 
 model users {
   id            Int            @id @default(autoincrement())
-  full_name     String         @unique @db.VarChar(50)
+  full_name     String         @db.VarChar(50)
   password_hash String
   email         String         @unique
   role          String         @default("user") @db.VarChar(20)
