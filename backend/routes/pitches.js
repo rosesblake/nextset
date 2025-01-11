@@ -5,15 +5,16 @@ const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
 const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
-const { venueValidator } = require("../validators/venueValidator");
+const { pitchValidator } = require("../validators/pitchValidator");
 const { validate } = require("../middleware/validate");
 const { BadRequestError } = require("../expressError");
 
 router.post(
   "/",
-  validate,
   authenticateJWT,
   ensureLoggedIn,
+  validate,
+  pitchValidator,
   async (req, res, next) => {
     try {
       //make sure date is available

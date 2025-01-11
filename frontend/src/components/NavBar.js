@@ -1,18 +1,10 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../components/UserContext";
-import { NextSetApi } from "../api/api";
 
 function Navbar() {
-  const { currUser, setCurrUser } = useUser();
+  const { currUser, logout } = useUser();
   const navigate = useNavigate();
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    delete NextSetApi.token;
-    setCurrUser(null);
-    navigate("/login");
-  };
 
   const handleLogin = () => {
     navigate("/login");
@@ -27,7 +19,7 @@ function Navbar() {
         <div className="pr-4">
           {currUser ? (
             <button
-              onClick={handleLogout}
+              onClick={logout}
               className="px-6 py-2 text-nextsetPrimary bg-nextsetAccent hover:bg-nextsetButton rounded-md transition duration-300"
             >
               Logout

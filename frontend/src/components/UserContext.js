@@ -1,4 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
+import { NextSetApi } from "../api/api";
+import { useNavigate } from "react-router-dom";
+import { useArtist } from "./ArtistContext";
 
 // Create a Context for the current user
 const UserContext = createContext();
@@ -11,7 +14,9 @@ export const useUser = () => {
 // Provider to wrap your app and provide the user state
 export const UserProvider = ({ children }) => {
   const [currUser, setCurrUser] = useState(null);
+  const { setArtist } = useArtist();
   const [isLoading, setIsLoading] = useState(true); // Add a loading state
+  const navigate = useNavigate();
 
   // Load user from localStorage when app starts
   useEffect(() => {
@@ -31,8 +36,18 @@ export const UserProvider = ({ children }) => {
     }
   }, [currUser]);
 
+  const logout = () => {
+    NextSetApi.token = null;
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+    localStorage.removeItem("artist");
+    setCurrUser(null);
+    setArtist(null);
+    navigate("/login");
+  };
+
   return (
-    <UserContext.Provider value={{ currUser, setCurrUser, isLoading }}>
+    <UserContext.Provider value={{ currUser, setCurrUser, isLoading, logout }}>
       {children}
     </UserContext.Provider>
   );

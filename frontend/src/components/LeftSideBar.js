@@ -1,24 +1,11 @@
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import { useUser } from "../components/UserContext";
 import { useArtist } from "../components/ArtistContext";
-import { NextSetApi } from "../api/api";
 
 function LeftSidebar({ isCollapsed, toggleSidebars }) {
-  const { currUser, setCurrUser } = useUser();
-  const navigate = useNavigate();
-  const { artist, setArtist } = useArtist();
-
-  const handleLogout = () => {
-    localStorage.removeItem("user");
-    localStorage.removeItem("artist");
-    localStorage.removeItem("token");
-    NextSetApi.token = null;
-    NextSetApi.axiosInstance.defaults.headers.Authorization = null;
-    setCurrUser(null);
-    setArtist(null);
-    navigate("/login");
-  };
+  const { currUser, logout } = useUser();
+  const { artist } = useArtist();
 
   return (
     <div
@@ -92,7 +79,7 @@ function LeftSidebar({ isCollapsed, toggleSidebars }) {
             </li>
             <li>
               <button
-                onClick={handleLogout}
+                onClick={logout}
                 className="flex items-center justify-center text-nextsetPrimary text-lg font-semibold bg-nextsetAccent hover:bg-nextsetButton p-3 rounded-lg transition duration-200 w-full"
               >
                 Logout

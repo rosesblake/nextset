@@ -14,7 +14,7 @@ class NextSetApi {
   });
 
   // Set up interceptors
-  static initializeInterceptors() {
+  static initializeInterceptors(logout) {
     // Attach token to every request
     this.axiosInstance.interceptors.request.use(
       (config) => {
@@ -33,10 +33,12 @@ class NextSetApi {
       (error) => {
         if (error.response?.status === 401) {
           const errorMessage = error.response?.data?.error?.message;
-          if (errorMessage === "Token has expired") {
+          if (
+            errorMessage === "Token has expired" ||
+            errorMessage === "Invalid or missing token"
+          ) {
             console.warn("Token expired, logging out.");
-            NextSetApi.token = null;
-            localStorage.removeItem("token");
+            logout();
           }
         }
         return Promise.reject(error);
@@ -56,11 +58,9 @@ class NextSetApi {
     } catch (error) {
       // Extract error message
       const errorMessage =
-        error.response?.data?.error?.message ||
-        error.message ||
-        "Unknown error occurred.";
-
-      throw new Error(errorMessage);
+        error.response?.data?.error?.message || "Unknown error occurred.";
+      const errors = error.response?.data?.error?.errors;
+      throw { message: errorMessage, errors };
     }
   }
 
@@ -93,8 +93,12 @@ class NextSetApi {
   }
 
   static async allVenues() {
-    let res = await this.request(`venues`);
-    return res;
+    try {
+      let res = await this.request(`venues`);
+      return res;
+    } catch (e) {
+      throw e;
+    }
   }
 
   static async getVenue(venue_id) {

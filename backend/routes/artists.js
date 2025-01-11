@@ -4,7 +4,6 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
-const { createToken } = require("../helpers/createTokens");
 const { UnauthorizedError } = require("../expressError");
 const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { artistValidator } = require("../validators/artistValidator");
@@ -30,6 +29,8 @@ router.post(
       const artist = await prisma.artists.create({
         data: { ...req.body, created_by: user_id },
       });
+
+      res.locals.user.artist = artist;
 
       // Update the user's artist_id to associate with the newly created artist
       await prisma.users.update({

@@ -26,7 +26,7 @@ function authenticateJWT(req, res, next) {
   try {
     // Verify the token using the secret key
     const user = jwt.verify(token, SECRET_KEY);
-    res.locals.user = user; // Store the user data in locals for later use
+    res.locals.user = user;
     next();
   } catch (err) {
     if (err.name === "TokenExpiredError") {
@@ -43,7 +43,7 @@ function authenticateJWT(req, res, next) {
 
 function ensureLoggedIn(req, res, next) {
   try {
-    if (!res.locals.user) throw new UnauthorizedError();
+    if (!res.locals.user) throw new UnauthorizedError("Must be logged in");
     return next();
   } catch (err) {
     return next(err);
@@ -54,6 +54,16 @@ function ensureLoggedIn(req, res, next) {
  *
  *  If not, raises Unauthorized.
  */
+
+function ensureArtist(req, res, next) {
+  try {
+    if (!res.locals.user.artist)
+      throw new UnauthorizedError("Must be an artist");
+    return next();
+  } catch (err) {
+    return next(err);
+  }
+}
 
 function ensureAdmin(req, res, next) {
   try {
@@ -70,4 +80,5 @@ module.exports = {
   authenticateJWT,
   ensureLoggedIn,
   ensureAdmin,
+  ensureArtist,
 };

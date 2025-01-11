@@ -16,19 +16,21 @@ import { ArtistProfile } from "../pages/ArtistProfile";
 import { ProtectedRoute } from "../Routes/ProtectedRoute";
 import { PublicRoute } from "../Routes/PublicRoute";
 import { ArtistVenueView } from "../pages/ArtistVenueView";
+import { NextSetApi } from "../api/api";
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { currUser } = useUser();
+  const { currUser, logout } = useUser();
   const navigate = useNavigate();
 
   // Centralized token validation and routing logic
   useEffect(() => {
+    NextSetApi.initializeInterceptors(logout);
     // Ensure the user completes their artist or venue registration
     if (currUser && !currUser.artist_id && !currUser.venue_id) {
       navigate(`/register/${currUser.account_type}`);
     }
-  }, [currUser, navigate]);
+  }, [currUser, navigate, logout]);
 
   const toggleSidebars = () => {
     setIsCollapsed((prev) => !prev);

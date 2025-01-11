@@ -27,8 +27,8 @@ function VenueCard({ venue, artist }) {
       closeModal();
       showMessage("Submission successful!", "success");
     } catch (e) {
-      showMessage(e.message, "error");
       closeModal();
+      showMessage(e.message, "error");
     }
   };
 

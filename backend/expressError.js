@@ -32,9 +32,10 @@ class UnauthorizedError extends ExpressError {
 /** 400 BAD REQUEST error. */
 
 // expressError.js
-class BadRequestError extends Error {
+class BadRequestError extends ExpressError {
   constructor(message = "Bad Request", errors = []) {
     super(message);
+    this.message = message;
     this.status = 400; // HTTP Status for Bad Request
     this.errors = errors; // Store validation errors
     this.name = this.constructor.name; // To keep track of the error type

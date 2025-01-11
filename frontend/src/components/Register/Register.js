@@ -6,12 +6,14 @@ import { NextSetApi } from "../../api/api";
 import { ErrorDisplay } from "./ErrorDisplay";
 import { ArtistForm } from "./ArtistForm";
 import { VenueForm } from "./VenueForm";
+import { useMessage } from "../MessageContext";
 
 function Register() {
   const { accountType } = useParams();
   const navigate = useNavigate();
   const { setCurrUser } = useUser();
   const { setArtist } = useArtist();
+  const { showMessage } = useMessage();
   const [errorMessage, setErrorMessage] = useState([]);
 
   const handleRegister = async (data) => {
@@ -67,10 +69,11 @@ function Register() {
       localStorage.setItem("token", token);
       localStorage.setItem("user", JSON.stringify(user));
       setCurrUser(user);
-
+      showMessage("Registration successful", "success");
       setErrorMessage([]);
     } catch (e) {
-      setErrorMessage(e);
+      showMessage(e.message, "error");
+      setErrorMessage(e.errors);
     }
   };
 

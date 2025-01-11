@@ -3,11 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { LoginForm } from "../components/LoginForm";
 import { NextSetApi } from "../api/api";
 import { useUser } from "../components/UserContext";
+import { useMessage } from "../components/MessageContext";
 
 function Login() {
   const navigate = useNavigate();
   const { setCurrUser } = useUser(); // Get setCurrUser from context
   const [errorMessage, setErrorMessage] = useState([]);
+  const { showMessage } = useMessage();
 
   const loginUser = async (user) => {
     try {
@@ -22,8 +24,10 @@ function Login() {
 
       // Redirect to home page after successful login
       navigate(`/${loggedInUser.account_type}/home`);
+      showMessage("Successfully logged in", "success");
     } catch (e) {
-      setErrorMessage(e);
+      showMessage(e.message, "error");
+      setErrorMessage(e.errors);
     }
   };
 
