@@ -19,12 +19,12 @@ router.post(
     try {
       // Retrieve the user_id from the decoded JWT (already in res.locals.user)
       const user_id = res.locals.user.id;
-
       // Ensure the user_id is present and the request is valid
       if (!user_id) {
         return next(new UnauthorizedError("User is not authenticated"));
       }
-      console.log(req.body);
+
+      //check for duplicate artists
       const duplicate_check = await prisma.artists.findFirst({
         where: { spotify_id: req.body.spotify_id },
       });

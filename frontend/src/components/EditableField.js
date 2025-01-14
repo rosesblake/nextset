@@ -27,7 +27,18 @@ function EditableField({ label, value, onSave }) {
         {label && (
           <span className="text-nextsetButton font-bold">{label}:</span>
         )}
-        <span className="text-gray-600">{value}</span>
+        {label !== "Spotify Profile" ? (
+          <span className="text-gray-600">{value}</span>
+        ) : (
+          <a
+            href={value}
+            className="text-nextsetAccent"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            Spotify Link
+          </a>
+        )}
       </div>
 
       <div>

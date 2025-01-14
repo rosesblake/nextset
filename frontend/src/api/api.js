@@ -60,7 +60,14 @@ class NextSetApi {
       const errorMessage =
         error.response?.data?.error?.message || "Unknown error occurred.";
       const errors = error.response?.data?.error?.errors;
-      throw { message: errorMessage, errors };
+
+      // Create a new error instance
+      const newError = new Error(errorMessage);
+      // Attach additional data if desired
+      newError.errors = errors;
+
+      // Throw the actual error object
+      throw newError;
     }
   }
 

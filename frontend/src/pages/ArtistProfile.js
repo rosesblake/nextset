@@ -36,7 +36,7 @@ function ArtistProfile() {
         {/* Profile Header */}
         <div className="text-center mb-6">
           <img
-            src={artist.spotify_photo || "/default-profile.png"}
+            src={artist.spotify_photo}
             alt={artist.name}
             className="w-36 h-36 rounded-full shadow-md mx-auto mb-4"
           />
