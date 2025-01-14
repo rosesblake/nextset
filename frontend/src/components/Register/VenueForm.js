@@ -1,36 +1,36 @@
 import React from "react";
-import { useForm } from "../hooks/useForm";
+import { SharedFields } from "./SharedFields";
+import { FormWrapper } from "./FormWrapper";
 import { InputField } from "./InputField";
-import { FormWrapper } from "../components/FormWrapper"; // Assuming FormWrapper has the correct styling
+import { useForm } from "../../hooks/useForm";
 
-const VenueRegisterForm = ({ addVenue }) => {
-  const INITIAL_STATE = {
-    name: "",
-    capacity: "",
-    address: "",
-    city: "",
-    state: "",
-    zip_code: "",
-  };
-
+function VenueForm({ onSubmit }) {
   const { formData, handleChange, handleSubmit } = useForm(
-    INITIAL_STATE,
-    (data) => {
-      console.log("Venue Details Submitted:", data);
-      addVenue(data);
+    {
+      venue_name: "",
+      capacity: "",
+      address: "",
+      city: "",
+      state: "",
+      zip_code: "",
+      full_name: "",
+      email: "",
+      password: "",
+    },
+    async (data) => {
+      await onSubmit(data);
     }
   );
 
   return (
-    <FormWrapper title="Venue Details" handleSubmit={handleSubmit}>
+    <FormWrapper title="Register as Venue" handleSubmit={handleSubmit}>
       <InputField
-        id="name"
-        name="name"
+        id="venue_name"
+        name="venue_name"
         placeholder="Venue Name"
-        value={formData.name}
+        value={formData.venue_name}
         onChange={handleChange}
       />
-
       <InputField
         id="capacity"
         name="capacity"
@@ -38,7 +38,6 @@ const VenueRegisterForm = ({ addVenue }) => {
         value={formData.capacity}
         onChange={handleChange}
       />
-
       <InputField
         id="address"
         name="address"
@@ -46,7 +45,6 @@ const VenueRegisterForm = ({ addVenue }) => {
         value={formData.address}
         onChange={handleChange}
       />
-
       <InputField
         id="city"
         name="city"
@@ -54,7 +52,6 @@ const VenueRegisterForm = ({ addVenue }) => {
         value={formData.city}
         onChange={handleChange}
       />
-
       <InputField
         id="state"
         name="state"
@@ -62,7 +59,6 @@ const VenueRegisterForm = ({ addVenue }) => {
         value={formData.state}
         onChange={handleChange}
       />
-
       <InputField
         id="zip_code"
         name="zip_code"
@@ -70,15 +66,18 @@ const VenueRegisterForm = ({ addVenue }) => {
         value={formData.zip_code}
         onChange={handleChange}
       />
-
+      <h1 className="text-2xl font-bold text-center text-gray-800 py-4">
+        Create a User
+      </h1>
+      <SharedFields formData={formData} onChange={handleChange} />
       <button
         type="submit"
-        className="w-full bg-nextsetPrimary text-white font-semibold py-2 px-4 rounded-md shadow-sm hover:bg-nextsetButton focus:outline-none focus:ring-2 focus:ring-nextsetPrimary focus:ring-offset-2"
+        className="w-full bg-nextsetPrimary text-white font-semibold py-2 px-4 rounded-md shadow-sm hover:bg-nextsetButton focus:outline-none focus:ring-2 focus:ring-nextsetButton focus:ring-offset-2"
       >
-        Submit
+        Register
       </button>
     </FormWrapper>
   );
-};
+}
 
-export { VenueRegisterForm };
+export { VenueForm };

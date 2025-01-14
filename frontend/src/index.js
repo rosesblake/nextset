@@ -5,18 +5,21 @@ import App from "./components/App";
 import reportWebVitals from "./reportWebVitals";
 import { UserProvider } from "./components/UserContext";
 import { ArtistProvider } from "./components/ArtistContext";
+import { MessageProvider } from "./components/MessageContext";
 import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <UserProvider>
+    <BrowserRouter>
       <ArtistProvider>
-        <BrowserRouter>
-          <App />
-        </BrowserRouter>
+        <UserProvider>
+          <MessageProvider>
+            <App />
+          </MessageProvider>
+        </UserProvider>
       </ArtistProvider>
-    </UserProvider>
+    </BrowserRouter>
   </React.StrictMode>
 );
 

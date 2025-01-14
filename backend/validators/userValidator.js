@@ -18,7 +18,8 @@ const userValidator = [
     .notEmpty()
     .withMessage("Email is required")
     .isLength({ max: 255 })
-    .withMessage("Email cannot exceed 255 characters"),
+    .withMessage("Email cannot exceed 255 characters")
+    .normalizeEmail(),
 
   body("password")
     .isString()
@@ -32,7 +33,11 @@ const userValidator = [
     .matches(/[A-Z]/)
     .withMessage("Password must contain at least one uppercase letter")
     .matches(/[a-z]/)
-    .withMessage("Password must contain at least one lowercase letter"),
+    .withMessage("Password must contain at least one lowercase letter")
+    .matches(/[!@#$%^&*]/)
+    .withMessage(
+      "Password must contain at least one special character (!@#$%^&*)"
+    ),
 
   body("account_type")
     .isString()

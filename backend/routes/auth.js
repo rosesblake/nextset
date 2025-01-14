@@ -16,33 +16,56 @@ router.post(
   validate,
   async function (req, res, next) {
     try {
-      const { username, password } = req.body;
-      if (!username || !password) {
-        return next(UnauthorizedError("All fields must be filled out"));
+      const { email, password } = req.body;
+
+      if (!email || !password) {
+        return next(new UnauthorizedError("All fields must be filled out"));
       }
 
-      // Fetch the user from DB
+      // Fetch user along with related artist information
       const user = await prisma.users.findUnique({
-        where: { username },
+        where: { email },
+        include: {
+          artist_users: {
+            include: {
+              artist: true, // Include the artist associated with this user
+            },
+          },
+        },
       });
 
       if (!user) {
         return next(new UnauthorizedError("Invalid username or password"));
       }
 
-      // Compare the provided password with the hashed password in the DB
       const validPassword = await bcrypt.compare(password, user.password_hash);
       if (!validPassword) {
         return next(new UnauthorizedError("Invalid username or password"));
       }
 
-      // Generate JWT for the logged-in user
-      const token = createToken(user);
+      const artist = user.artist_users[0]?.artist;
 
-      // Send token in response
-      return res.json({ token, user });
-    } catch (e) {
-      return next(e);
+      delete user.password_hash;
+      delete user.artist_users;
+
+      const tokenPayload = {
+        id: user.id,
+        email: user.email,
+        role: user.role,
+        artist, // Add artist info to the token
+      };
+
+      // Generate token
+      const token = createToken(tokenPayload);
+      return res.json({
+        token,
+        user: {
+          ...user,
+          artist,
+        },
+      });
+    } catch (err) {
+      return next(err);
     }
   }
 );

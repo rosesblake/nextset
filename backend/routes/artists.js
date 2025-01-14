@@ -4,8 +4,7 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
-const { createToken } = require("../helpers/createTokens");
-const { UnauthorizedError } = require("../expressError");
+const { UnauthorizedError, BadRequestError } = require("../expressError");
 const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { artistValidator } = require("../validators/artistValidator");
 const { validate } = require("../middleware/validate");
@@ -20,16 +19,26 @@ router.post(
     try {
       // Retrieve the user_id from the decoded JWT (already in res.locals.user)
       const user_id = res.locals.user.id;
-
       // Ensure the user_id is present and the request is valid
       if (!user_id) {
         return next(new UnauthorizedError("User is not authenticated"));
+      }
+
+      //check for duplicate artists
+      const duplicate_check = await prisma.artists.findFirst({
+        where: { spotify_id: req.body.spotify_id },
+      });
+
+      if (duplicate_check) {
+        return next(new BadRequestError("Artist already exists"));
       }
 
       // Create the artist record in the database
       const artist = await prisma.artists.create({
         data: { ...req.body, created_by: user_id },
       });
+
+      res.locals.user.artist = artist;
 
       // Update the user's artist_id to associate with the newly created artist
       await prisma.users.update({
@@ -60,13 +69,71 @@ router.get(
   ensureLoggedIn,
   async function (req, res, next) {
     try {
+      //fetch the artist and their pitches
       const artist = await prisma.artists.findUnique({
         where: {
-          id: req.params.id,
+          id: parseInt(req.params.id, 10),
+        },
+        include: {
+          artist_pitches: {
+            include: {
+              pitches: {
+                include: {
+                  venues: {
+                    select: {
+                      name: true,
+                      city: true,
+                      state: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
         },
       });
       return res.json(artist);
     } catch (e) {
+      return next(e);
+    }
+  }
+);
+
+// Update artist details
+router.patch(
+  "/:id",
+  authenticateJWT,
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const artistId = parseInt(req.params.id, 10);
+
+      // Update the artist in the database with the provided fields
+      const updatedArtist = await prisma.artists.update({
+        where: { id: artistId },
+        data: req.body,
+        include: {
+          artist_pitches: {
+            include: {
+              pitches: {
+                include: {
+                  venues: {
+                    select: {
+                      name: true,
+                      city: true,
+                      state: true,
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return res.status(200).json(updatedArtist);
+    } catch (e) {
+      console.error("Error updating artist:", e.message);
       return next(e);
     }
   }

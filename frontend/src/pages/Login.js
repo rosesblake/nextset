@@ -3,11 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { LoginForm } from "../components/LoginForm";
 import { NextSetApi } from "../api/api";
 import { useUser } from "../components/UserContext";
+import { useMessage } from "../components/MessageContext";
+import { useArtist } from "../components/ArtistContext";
 
 function Login() {
   const navigate = useNavigate();
   const { setCurrUser } = useUser(); // Get setCurrUser from context
+  const { setArtist } = useArtist();
   const [errorMessage, setErrorMessage] = useState([]);
+  const { showMessage } = useMessage();
 
   const loginUser = async (user) => {
     try {
@@ -19,16 +23,18 @@ function Login() {
 
       // Set the logged-in user in context
       setCurrUser(loggedInUser);
-
+      setArtist(loggedInUser.artist);
       // Redirect to home page after successful login
-      navigate("/");
+      navigate(`/${loggedInUser.account_type}/home`);
+      showMessage("Successfully logged in", "success");
     } catch (e) {
-      setErrorMessage(e);
+      showMessage(e.message, "error");
+      setErrorMessage(e.errors);
     }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen">
+    <div className="mt-[64px] flex items-center justify-center min-h-screen">
       <div className="w-full max-w-md">
         {errorMessage.length > 0 && (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">

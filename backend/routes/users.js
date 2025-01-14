@@ -21,7 +21,7 @@ router.post(
       // Check for existing username/email
       const existingUser = await prisma.users.findFirst({
         where: {
-          OR: [{ full_name: req.body.full_name }, { email: req.body.email }],
+          email: req.body.email,
         },
       });
 
