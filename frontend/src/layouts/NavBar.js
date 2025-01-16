@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate, Link } from "react-router-dom";
-import { useUser } from "../components/UserContext";
+import { useUser } from "../contexts/UserContext";
 
 function Navbar() {
   const { currUser, logout } = useUser();

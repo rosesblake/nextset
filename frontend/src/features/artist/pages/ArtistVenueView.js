@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { NextSetApi } from "../api/api";
+import { NextSetApi } from "../../../services/api";
 import Calendar from "react-calendar";
 import "react-calendar/dist/Calendar.css"; // Import default styles for react-calendar
 

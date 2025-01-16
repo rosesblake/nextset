@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { LoginForm } from "../components/LoginForm";
-import { NextSetApi } from "../api/api";
-import { useUser } from "../components/UserContext";
-import { useMessage } from "../components/MessageContext";
-import { useArtist } from "../components/ArtistContext";
+import { NextSetApi } from "../../../services/api";
+import { useUser } from "../../../contexts/UserContext";
+import { useMessage } from "../../../contexts/MessageContext";
+import { useArtist } from "../../../contexts/ArtistContext";
 
 function Login() {
   const navigate = useNavigate();

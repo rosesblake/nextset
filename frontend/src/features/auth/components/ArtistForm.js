@@ -1,10 +1,10 @@
 import React, { useState } from "react";
-import { FormWrapper } from "./FormWrapper";
+import { FormWrapper } from "../../../shared/forms/FormWrapper";
 import { SpotifyDropdown } from "./SpotifyDropdown";
-import { SharedFields } from "./SharedFields";
-import { InputField } from "./InputField";
-import { useForm } from "../../hooks/useForm";
-import { NextSetApi } from "../../api/api";
+import { SharedFields } from "../../../shared/forms/SharedFields";
+import { InputField } from "../../../shared/forms/InputField";
+import { useForm } from "../../../hooks/useForm";
+import { NextSetApi } from "../../../services/api";
 
 function ArtistForm({ onSubmit }) {
   const [spotifyResults, setSpotifyResults] = useState([]);

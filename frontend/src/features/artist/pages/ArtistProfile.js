@@ -1,9 +1,9 @@
 import React from "react";
-import { useArtist } from "../components/ArtistContext";
-import { useUser } from "../components/UserContext";
+import { useArtist } from "../../../contexts/ArtistContext";
+import { useUser } from "../../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
-import { EditableField } from "../components/EditableField";
-import { NextSetApi } from "../api/api";
+import { EditableField } from "../../../shared/components/EditableField";
+import { NextSetApi } from "../../../services/api";
 
 function ArtistProfile() {
   const { currUser } = useUser();

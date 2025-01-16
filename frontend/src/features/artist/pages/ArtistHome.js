@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../components/UserContext";
-import { useArtist } from "../components/ArtistContext";
-import { NextSetApi } from "../api/api";
+import { useUser } from "../../../contexts/UserContext";
+import { useArtist } from "../../../contexts/ArtistContext";
+import { NextSetApi } from "../../../services/api";
 import { VenueCard } from "../components/VenueCard";
 
 function ArtistHome() {

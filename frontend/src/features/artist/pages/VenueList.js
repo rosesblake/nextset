@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { useArtist } from "../components/ArtistContext";
-import { NextSetApi } from "../api/api";
+import { useArtist } from "../../../contexts/ArtistContext";
+import { NextSetApi } from "../../../services/api";
 import { VenueCard } from "../components/VenueCard";
 
 function VenueList() {

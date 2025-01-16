@@ -1,6 +1,6 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
-import { useUser } from "../components/UserContext";
+import { useUser } from "../../../contexts/UserContext";
 
 function VenueHome() {
   const { currUser } = useUser();

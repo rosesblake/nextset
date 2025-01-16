@@ -1,6 +1,6 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useUser } from "../components/UserContext";
+import { useUser } from "../contexts/UserContext";
 
 function PublicRoute({ children }) {
   const { currUser } = useUser();

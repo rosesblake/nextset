@@ -1,12 +1,12 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import { useUser } from "../UserContext";
-import { useArtist } from "../ArtistContext";
-import { NextSetApi } from "../../api/api";
-import { ErrorDisplay } from "./ErrorDisplay";
-import { ArtistForm } from "./ArtistForm";
-import { VenueForm } from "./VenueForm";
-import { useMessage } from "../MessageContext";
+import { useUser } from "../../../contexts/UserContext";
+import { useArtist } from "../../../contexts/ArtistContext";
+import { NextSetApi } from "../../../services/api";
+import { ErrorDisplay } from "../../../shared/forms/ErrorDisplay";
+import { ArtistForm } from "../components/ArtistForm";
+import { VenueForm } from "../components/VenueForm";
+import { useMessage } from "../../../contexts/MessageContext";
 
 function Register() {
   const { accountType } = useParams();
@@ -60,7 +60,7 @@ function Register() {
         );
         user = { ...user, venue_id: venueRes.venue.id };
 
-        navigate("/venue/home");
+        navigate("/venue/dashboard");
       }
 
       // Step 3: Store Token and Updated User

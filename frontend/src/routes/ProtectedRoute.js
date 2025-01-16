@@ -1,7 +1,7 @@
 import React from "react";
 import { Navigate } from "react-router-dom";
-import { useUser } from "../components/UserContext";
-import { Spinner } from "../components/Spinner";
+import { useUser } from "../contexts/UserContext";
+import { Spinner } from "../shared/components/Spinner";
 
 function ProtectedRoute({ children }) {
   const { currUser, isLoading } = useUser();

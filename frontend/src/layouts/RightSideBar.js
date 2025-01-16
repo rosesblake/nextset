@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { NextSetApi } from "../api/api";
-import { useArtist } from "./ArtistContext";
+import { NextSetApi } from "../services/api";
+import { useArtist } from "../contexts/ArtistContext";
 import { Link } from "react-router-dom";
 
 function RightSidebar({ isCollapsed, toggleSidebars }) {

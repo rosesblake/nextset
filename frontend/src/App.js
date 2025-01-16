@@ -1,23 +1,23 @@
 import React, { useEffect, useState } from "react";
 import { Routes, Route } from "react-router-dom";
-import { Register } from "./Register/Register";
-import { useUser } from "./UserContext";
-import { Navbar } from "./NavBar";
-import { Login } from "../pages/Login";
-import { NotFound } from "./NotFound";
+import { Register } from "./features/auth/pages/Register";
+import { useUser } from "./contexts/UserContext";
+import { Navbar } from "./layouts/NavBar";
+import { Login } from "./features/auth/pages/Login";
+import { NotFound } from "./pages/NotFound";
 import { useNavigate } from "react-router-dom";
-import { MainLanding } from "../pages/MainLanding";
-import { ArtistHome } from "../pages/ArtistHome";
-import { VenueHome } from "../pages/VenueHome";
-import { VenueList } from "../pages/VenueList";
-import { LeftSidebar } from "./LeftSideBar";
-import { RightSidebar } from "./RightSideBar";
-import { ArtistProfile } from "../pages/ArtistProfile";
-import { ProtectedRoute } from "../Routes/ProtectedRoute";
-import { PublicRoute } from "../Routes/PublicRoute";
-import { ArtistVenueView } from "../pages/ArtistVenueView";
-import { NextSetApi } from "../api/api";
-import { ArtistMessage } from "../pages/ArtistMessage";
+import { MainLanding } from "./pages/MainLanding";
+import { ArtistHome } from "./features/artist/pages/ArtistHome";
+import { VenueHome } from "./features/venue/pages/VenueHome";
+import { VenueList } from "./features/artist/pages/VenueList";
+import { LeftSidebar } from "./layouts/LeftSideBar";
+import { RightSidebar } from "./layouts/RightSideBar";
+import { ArtistProfile } from "./features/artist/pages/ArtistProfile";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { PublicRoute } from "./routes/PublicRoute";
+import { ArtistVenueView } from "./features/artist/pages/ArtistVenueView";
+import { NextSetApi } from "./services/api";
+import { ArtistMessage } from "./features/artist/pages/ArtistMessage";
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -114,7 +114,7 @@ function App() {
           }
         ></Route>
         <Route
-          path="/venue/home"
+          path="/venue/dashboard"
           element={
             <ProtectedRoute>
               <VenueHome />

@@ -1,7 +1,7 @@
 import React from "react";
-import { FormWrapper } from "./Register/FormWrapper";
-import { InputField } from "./Register/InputField";
-import { useForm } from "../hooks/useForm";
+import { FormWrapper } from "../../../shared/forms/FormWrapper";
+import { InputField } from "../../../shared/forms/InputField";
+import { useForm } from "../../../hooks/useForm";
 
 function LoginForm({ loginUser }) {
   const INITIAL_STATE = {

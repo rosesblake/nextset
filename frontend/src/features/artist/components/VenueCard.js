@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { PitchModal } from "./PitchModal";
-import { NextSetApi } from "../api/api";
-import { useMessage } from "./MessageContext";
-import { useArtist } from "./ArtistContext";
+import { NextSetApi } from "../../../services/api";
+import { useMessage } from "../../../contexts/MessageContext";
+import { useArtist } from "../../../contexts/ArtistContext";
 
 function VenueCard({ venue, artist }) {
   const [isModalOpen, setIsModalOpen] = useState(false);

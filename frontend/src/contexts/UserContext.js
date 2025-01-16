@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
-import { NextSetApi } from "../api/api";
+import { NextSetApi } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext();

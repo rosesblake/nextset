@@ -1,11 +1,11 @@
 import React from "react";
 import ReactDOM from "react-dom/client";
 import "./index.css";
-import App from "./components/App";
+import App from "./App";
 import reportWebVitals from "./reportWebVitals";
-import { UserProvider } from "./components/UserContext";
-import { ArtistProvider } from "./components/ArtistContext";
-import { MessageProvider } from "./components/MessageContext";
+import { UserProvider } from "./contexts/UserContext";
+import { ArtistProvider } from "./contexts/ArtistContext";
+import { MessageProvider } from "./contexts/MessageContext";
 import { BrowserRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));

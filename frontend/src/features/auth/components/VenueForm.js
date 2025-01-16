@@ -1,8 +1,8 @@
 import React from "react";
-import { SharedFields } from "./SharedFields";
-import { FormWrapper } from "./FormWrapper";
-import { InputField } from "./InputField";
-import { useForm } from "../../hooks/useForm";
+import { SharedFields } from "../../../shared/forms/SharedFields";
+import { FormWrapper } from "../../../shared/forms/FormWrapper";
+import { InputField } from "../../../shared/forms/InputField";
+import { useForm } from "../../../hooks/useForm";
 
 function VenueForm({ onSubmit }) {
   const { formData, handleChange, handleSubmit } = useForm(

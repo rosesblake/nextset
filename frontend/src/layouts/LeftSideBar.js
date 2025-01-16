@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useUser } from "../components/UserContext";
-import { useArtist } from "../components/ArtistContext";
+import { useUser } from "../contexts/UserContext";
+import { useArtist } from "../contexts/ArtistContext";
 
 function LeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();
