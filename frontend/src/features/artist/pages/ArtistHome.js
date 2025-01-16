@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../contexts/UserContext";
-import { useArtist } from "../../../contexts/ArtistContext";
 import { NextSetApi } from "../../../services/api";
 import { VenueCard } from "../components/VenueCard";
 
 function ArtistHome() {
   const { currUser } = useUser();
-  const { artist } = useArtist();
   const navigate = useNavigate();
   const [venues, setVenues] = useState();
   const [loading, setLoading] = useState(true);
@@ -49,10 +47,10 @@ function ArtistHome() {
           <h1 className="text-3xl font-bold text-nextsetAccent mb-2">
             Welcome back, {currUser?.full_name || "Artist"}!
           </h1>
-          {artist && (
+          {currUser.artist && (
             <p className="text-gray-600">
               You are logged in as{" "}
-              <span className="font-medium">{artist.name}</span>.
+              <span className="font-medium">{currUser.artist.name}</span>.
             </p>
           )}
         </div>
@@ -64,7 +62,11 @@ function ArtistHome() {
           </h2>
           <ul className="space-y-4">
             {venues?.slice(0, 2).map((venue) => (
-              <VenueCard key={venue.id} venue={venue} artist={artist} />
+              <VenueCard
+                key={venue.id}
+                venue={venue}
+                artist={currUser.artist}
+              />
             ))}
           </ul>
           <div className="text-right mt-4">

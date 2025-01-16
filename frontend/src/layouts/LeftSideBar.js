@@ -1,11 +1,9 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
-import { useArtist } from "../contexts/ArtistContext";
 
 function LeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();
-  const { artist } = useArtist();
 
   return (
     <div
@@ -30,19 +28,21 @@ function LeftSidebar({ isCollapsed, toggleSidebars }) {
           </div>
 
           {/* Artist Name */}
-          {currUser && artist && (
+          {currUser && currUser.artist && (
             <Link
               to="/artist/profile"
               className="block text-nextsetAccent mb-6 hover:bg-nextsetButton hover:text-white transition duration-200 rounded-lg"
             >
               <div className="flex items-center space-x-4 p-3 hover:bg-nextsetButton hover:shadow-lg rounded-lg transition duration-300">
                 <img
-                  src={artist.spotify_photo || "/default-profile.png"}
-                  alt={artist.name}
+                  src={currUser.artist.spotify_photo || "/default-profile.png"}
+                  alt={currUser.artist.name}
                   className="w-12 h-12 rounded-full shadow-md"
                 />
                 <div className="flex flex-col">
-                  <span className="text-xl font-semibold">{artist.name}</span>
+                  <span className="text-xl font-semibold">
+                    {currUser.artist.name}
+                  </span>
                   <span className="text-sm text-gray-300 hover:text-gray-100">
                     View Profile
                   </span>

@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useUser } from "../../../contexts/UserContext";
-import { useArtist } from "../../../contexts/ArtistContext";
 import { NextSetApi } from "../../../services/api";
 import { ErrorDisplay } from "../../../shared/forms/ErrorDisplay";
 import { ArtistForm } from "../components/ArtistForm";
@@ -12,7 +11,6 @@ function Register() {
   const { accountType } = useParams();
   const navigate = useNavigate();
   const { setCurrUser } = useUser();
-  const { setArtist } = useArtist();
   const { showMessage } = useMessage();
   const [errorMessage, setErrorMessage] = useState([]);
 
@@ -43,8 +41,11 @@ function Register() {
           user
         );
 
-        setArtist(artistRes.artist);
-        user = { ...user, artist_id: artistRes.artist.id };
+        user = {
+          ...user,
+          artist_id: artistRes.artist.id,
+          artist: artistRes.artist,
+        };
         navigate("/artist/home");
       } else if (accountType === "venue") {
         const venueRes = await NextSetApi.registerVenue(
@@ -58,7 +59,7 @@ function Register() {
           },
           user
         );
-        user = { ...user, venue_id: venueRes.venue.id };
+        user = { ...user, venue_id: venueRes.venue.id, venue: venueRes.venue };
 
         navigate("/venue/dashboard");
       }

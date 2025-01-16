@@ -1,26 +1,27 @@
 import React from "react";
-import { useArtist } from "../../../contexts/ArtistContext";
 import { useUser } from "../../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { EditableField } from "../../../shared/components/EditableField";
 import { NextSetApi } from "../../../services/api";
 
 function ArtistProfile() {
-  const { currUser } = useUser();
-  const { artist, setArtist } = useArtist();
+  const { currUser, setCurrUser } = useUser();
   const navigate = useNavigate();
 
   const handleFieldSave = async (field, newValue) => {
     try {
       const data = { [field]: newValue };
-      const updatedArtist = await NextSetApi.updateArtist(artist, data);
-      setArtist(updatedArtist);
+      const updatedArtist = await NextSetApi.updateArtist(
+        currUser.artist,
+        data
+      );
+      setCurrUser({ ...currUser, artist: updatedArtist });
     } catch (e) {
       console.error(e);
     }
   };
 
-  if (!artist) {
+  if (!currUser.artist) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <p className="text-xl font-semibold text-gray-600">
@@ -36,12 +37,12 @@ function ArtistProfile() {
         {/* Profile Header */}
         <div className="text-center mb-6">
           <img
-            src={artist.spotify_photo}
-            alt={artist.name}
+            src={currUser.artist.spotify_photo}
+            alt={currUser.artist.name}
             className="w-36 h-36 rounded-full shadow-md mx-auto mb-4"
           />
           <h1 className="text-3xl font-bold text-nextsetAccent mb-2">
-            {artist.name}
+            {currUser.artist.name}
           </h1>
         </div>
 
@@ -52,12 +53,12 @@ function ArtistProfile() {
           </h3>
           <EditableField
             label="Hometown"
-            value={artist.hometown}
+            value={currUser.artist.hometown}
             onSave={(newValue) => handleFieldSave("hometown", newValue)}
           />
           <EditableField
             label="Genre"
-            value={artist.genre}
+            value={currUser.artist.genre}
             onSave={(newValue) => handleFieldSave("genre", newValue)}
           />
         </div>
@@ -70,24 +71,24 @@ function ArtistProfile() {
             </h3>
             <EditableField
               label="Manager"
-              value={artist.manager}
+              value={currUser.artist.manager}
               onSave={(newValue) => handleFieldSave("manager", newValue)}
             />
             <EditableField
               label="Booking Agent"
-              value={artist.tour_booking_agent}
+              value={currUser.artist.tour_booking_agent}
               onSave={(newValue) =>
                 handleFieldSave("tour_booking_agent", newValue)
               }
             />
             <EditableField
               label="Artist Email"
-              value={artist.email || currUser.email}
+              value={currUser.artist.email || currUser.email}
               onSave={(newValue) => handleFieldSave("email", newValue)}
             />
             <EditableField
               label="Phone"
-              value={artist.phone}
+              value={currUser.artist.phone}
               onSave={(newValue) => handleFieldSave("phone", newValue)}
             />
           </div>
@@ -99,24 +100,24 @@ function ArtistProfile() {
             </h3>
             <EditableField
               label="Instagram"
-              value={artist.instagram_handle}
+              value={currUser.artist.instagram_handle}
               onSave={(newValue) =>
                 handleFieldSave("instagram_handle", newValue)
               }
             />
             <EditableField
               label="X Handle"
-              value={artist.x_handle}
+              value={currUser.artist.x_handle}
               onSave={(newValue) => handleFieldSave("x_handle", newValue)}
             />
             <EditableField
               label="Facebook URL"
-              value={artist.facebook_url}
+              value={currUser.artist.facebook_url}
               onSave={(newValue) => handleFieldSave("facebook_url", newValue)}
             />
             <EditableField
               label="Spotify Profile"
-              value={artist.spotify_url}
+              value={currUser.artist.spotify_url}
               onSave={(newValue) => handleFieldSave("spotify_url", newValue)}
             />
           </div>

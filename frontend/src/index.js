@@ -4,7 +4,6 @@ import "./index.css";
 import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { UserProvider } from "./contexts/UserContext";
-import { ArtistProvider } from "./contexts/ArtistContext";
 import { MessageProvider } from "./contexts/MessageContext";
 import { BrowserRouter } from "react-router-dom";
 
@@ -12,13 +11,11 @@ const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <ArtistProvider>
-        <UserProvider>
-          <MessageProvider>
-            <App />
-          </MessageProvider>
-        </UserProvider>
-      </ArtistProvider>
+      <UserProvider>
+        <MessageProvider>
+          <App />
+        </MessageProvider>
+      </UserProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

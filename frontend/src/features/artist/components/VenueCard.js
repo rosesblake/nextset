@@ -3,12 +3,12 @@ import { Link } from "react-router-dom";
 import { PitchModal } from "./PitchModal";
 import { NextSetApi } from "../../../services/api";
 import { useMessage } from "../../../contexts/MessageContext";
-import { useArtist } from "../../../contexts/ArtistContext";
+import { useUser } from "../../../contexts/UserContext";
 
 function VenueCard({ venue, artist }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { showMessage } = useMessage();
-  const { setArtist } = useArtist();
+  const { currUser, setCurrUser } = useUser();
 
   const openModal = () => setIsModalOpen(true);
   const closeModal = () => setIsModalOpen(false);
@@ -22,7 +22,7 @@ function VenueCard({ venue, artist }) {
 
       // Fetch updated artist data
       const updatedArtist = await NextSetApi.getArtist(artist.id);
-      setArtist(updatedArtist); // Update artist context with latest data
+      setCurrUser({ ...currUser, artist: updatedArtist });
 
       closeModal();
       showMessage("Submission successful!", "success");
@@ -62,7 +62,7 @@ function VenueCard({ venue, artist }) {
       {isModalOpen && (
         <PitchModal
           venue={venue}
-          artist={artist}
+          artist={currUser.artist}
           onClose={closeModal}
           onSubmit={handleSubmitPitch}
         />

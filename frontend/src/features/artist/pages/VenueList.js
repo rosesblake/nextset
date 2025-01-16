@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from "react";
-import { useArtist } from "../../../contexts/ArtistContext";
 import { NextSetApi } from "../../../services/api";
 import { VenueCard } from "../components/VenueCard";
+import { useUser } from "../../../contexts/UserContext";
 
 function VenueList() {
-  const { artist } = useArtist();
   const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(true);
+  const { currUser } = useUser();
 
   useEffect(() => {
     async function fetchVenues() {
@@ -39,7 +39,7 @@ function VenueList() {
         </h1>
         <ul className="space-y-4">
           {venues.map((venue) => (
-            <VenueCard key={venue.id} venue={venue} artist={artist} />
+            <VenueCard key={venue.id} venue={venue} artist={currUser.artist} />
           ))}
         </ul>
       </div>

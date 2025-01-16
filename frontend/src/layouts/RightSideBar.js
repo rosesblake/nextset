@@ -1,32 +1,33 @@
 import React, { useEffect, useState } from "react";
-import { NextSetApi } from "../services/api";
-import { useArtist } from "../contexts/ArtistContext";
 import { Link } from "react-router-dom";
+import { useUser } from "../contexts/UserContext";
 
 function RightSidebar({ isCollapsed, toggleSidebars }) {
-  const [activeTab, setActiveTab] = useState("sent"); // Default tab is "sent"
-  const { artist, setArtist } = useArtist();
+  const [activeTab, setActiveTab] = useState("sent");
+  const { currUser } = useUser();
+  const [pitches, setPitches] = useState(
+    currUser?.artist?.artist_pitches ?? []
+  );
 
   useEffect(() => {
     async function fetchPitches() {
-      if (artist?.id) {
-        try {
-          const currArtist = await NextSetApi.getArtist(artist.id);
-          setArtist(currArtist); // update artist context
-        } catch (error) {
-          console.error("Error fetching artist pitches:", error.message);
-        }
+      const artistPitches = currUser?.artist?.artist_pitches;
+      if (!artistPitches) return;
+      try {
+        setPitches(artistPitches);
+      } catch (error) {
+        console.error("Error fetching artist pitches:", error.message);
       }
     }
 
     fetchPitches();
-  }, [artist?.id, setArtist]);
+  }, [currUser]);
 
-  const sentPitches = artist?.artist_pitches?.filter(
+  const sentPitches = pitches.filter(
     (pitch) => pitch.pitches.status === "PENDING"
   );
 
-  const resultPitches = artist?.artist_pitches?.filter(
+  const resultPitches = pitches.filter(
     (pitch) =>
       pitch.pitches.status === "APPROVED" || pitch.pitches.status === "DENIED"
   );

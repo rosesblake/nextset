@@ -15,17 +15,42 @@ export const UserProvider = ({ children }) => {
 
   useEffect(() => {
     const user = JSON.parse(localStorage.getItem("user"));
-    if (user) {
-      setCurrUser(user); // Load user from localStorage
+    const artist = JSON.parse(localStorage.getItem("artist"));
+    const venue = JSON.parse(localStorage.getItem("venue"));
+    const token = localStorage.getItem("token");
+
+    // If you need to set the token for your API requests
+    if (token) {
+      NextSetApi.token = token;
     }
+
+    // If there's no user at all, just finish loading
+    if (!user) {
+      setIsLoading(false);
+      return;
+    }
+
+    // If user is an artist and we have artist data, merge them
+    if (user.account_type === "artist" && artist) {
+      setCurrUser({ ...user, artist });
+    }
+    // If user is a venue and we have venue data, merge them
+    else if (user.account_type === "venue" && venue) {
+      setCurrUser({ ...user, venue });
+    }
+    // Otherwise, just set the user object as is
+    else {
+      setCurrUser(user);
+    }
+
     setIsLoading(false);
   }, []);
 
   useEffect(() => {
     if (currUser) {
-      localStorage.setItem("user", JSON.stringify(currUser)); // Save user to localStorage
+      localStorage.setItem("user", JSON.stringify(currUser));
     } else {
-      localStorage.removeItem("user"); // Remove user from localStorage if null
+      localStorage.removeItem("user");
     }
   }, [currUser]);
 
@@ -33,6 +58,8 @@ export const UserProvider = ({ children }) => {
     NextSetApi.token = null;
     localStorage.removeItem("token");
     localStorage.removeItem("user");
+    localStorage.removeItem("artist");
+    localStorage.removeItem("venue");
     setCurrUser(null);
     navigate("/login");
   };

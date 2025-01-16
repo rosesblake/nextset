@@ -24,14 +24,18 @@ function App() {
   const { currUser, logout } = useUser();
   const navigate = useNavigate();
 
-  // Centralized token validation and routing logic
   useEffect(() => {
+    // This only runs once (on mount), since [] is the dependency array
+    // If "logout" must always be up-to-date, change [] to [logout]
     NextSetApi.initializeInterceptors(logout);
+  }, [logout]);
+
+  useEffect(() => {
     // Ensure the user completes their artist or venue registration
     if (currUser && !currUser.artist_id && !currUser.venue_id) {
       navigate(`/register/${currUser.account_type}`);
     }
-  }, [currUser, navigate, logout]);
+  }, [currUser, navigate]);
 
   const toggleSidebars = () => {
     setIsCollapsed((prev) => !prev);

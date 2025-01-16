@@ -28,7 +28,26 @@ router.post(
         include: {
           artist_users: {
             include: {
-              artist: true, // Include the artist associated with this user
+              artist: {
+                include: {
+                  // Include pitches if you want all pitch details here
+                  artist_pitches: {
+                    include: {
+                      pitches: {
+                        include: {
+                          venues: {
+                            select: {
+                              name: true,
+                              city: true,
+                              state: true,
+                            },
+                          },
+                        },
+                      },
+                    },
+                  },
+                },
+              },
             },
           },
         },
