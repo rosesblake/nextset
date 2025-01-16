@@ -17,6 +17,7 @@ import { ProtectedRoute } from "../Routes/ProtectedRoute";
 import { PublicRoute } from "../Routes/PublicRoute";
 import { ArtistVenueView } from "../pages/ArtistVenueView";
 import { NextSetApi } from "../api/api";
+import { ArtistMessage } from "../pages/ArtistMessage";
 
 function App() {
   const [isCollapsed, setIsCollapsed] = useState(false);
@@ -104,6 +105,14 @@ function App() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/artist/messages"
+          element={
+            <ProtectedRoute>
+              <ArtistMessage />
+            </ProtectedRoute>
+          }
+        ></Route>
         <Route
           path="/venue/home"
           element={
