@@ -25,8 +25,6 @@ function App() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    // This only runs once (on mount), since [] is the dependency array
-    // If "logout" must always be up-to-date, change [] to [logout]
     NextSetApi.initializeInterceptors(logout);
   }, [logout]);
 

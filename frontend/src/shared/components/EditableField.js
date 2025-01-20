@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function EditableField({ label, value, onSave }) {
+function EditableField({ label, value, onSave, link = false }) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
 
@@ -27,7 +27,7 @@ function EditableField({ label, value, onSave }) {
         {label && (
           <span className="text-nextsetButton font-bold">{label}:</span>
         )}
-        {label !== "Spotify Profile" ? (
+        {!link ? (
           <span className="text-gray-600">{value}</span>
         ) : (
           <a
@@ -36,7 +36,7 @@ function EditableField({ label, value, onSave }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            Spotify Link
+            {value}
           </a>
         )}
       </div>

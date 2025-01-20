@@ -38,7 +38,11 @@ class NextSetApi {
             errorMessage === "Invalid or missing token"
           ) {
             console.warn("Token expired, logging out.");
-            logout();
+            try {
+              logout();
+            } catch (logoutError) {
+              console.error("Error during logout:", logoutError);
+            }
           }
         }
         return Promise.reject(error);

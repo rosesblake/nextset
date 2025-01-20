@@ -7,7 +7,7 @@ import { useMessage } from "../../../contexts/MessageContext";
 
 function Login() {
   const navigate = useNavigate();
-  const { setCurrUser } = useUser(); // Get setCurrUser from context
+  const { setCurrUser } = useUser();
   const [errorMessage, setErrorMessage] = useState([]);
   const { showMessage } = useMessage();
 
@@ -17,7 +17,6 @@ function Login() {
       const { token, user: loggedInUser } = res;
       // Save the token in localStorage
       localStorage.setItem("token", token);
-      console.log(loggedInUser);
       // Set the logged-in user in context
       setCurrUser(loggedInUser);
       // Redirect to home page after successful login
