@@ -81,9 +81,8 @@ class NextSetApi {
     return res;
   }
 
-  static async registerArtist(artist, currUser) {
-    const newArtist = { ...artist, created_by: currUser.id };
-    let res = await this.request(`artists/register`, newArtist, "post");
+  static async registerArtist(artist) {
+    let res = await this.request(`artists/register`, artist, "post");
     return res;
   }
 
@@ -92,14 +91,23 @@ class NextSetApi {
     return res;
   }
 
+  static async allArtists() {
+    let res = await this.request(`artists`);
+    return res;
+  }
+
   static async updateArtist(artist, data) {
     let res = await this.request(`artists/${artist.id}`, data, "patch");
     return res;
   }
 
-  static async registerVenue(venue, currUser) {
-    const newVenue = { ...venue, created_by: currUser.id };
-    let res = await this.request(`venues/register`, newVenue, "post");
+  static async registerVenue(venue) {
+    let res = await this.request(`venues/register`, venue, "post");
+    return res;
+  }
+
+  static async updateVenue(venue, data) {
+    let res = await this.request(`venues/${venue.id}`, data, "patch");
     return res;
   }
 
@@ -114,6 +122,10 @@ class NextSetApi {
 
   static async getVenue(venue_id) {
     let res = await this.request(`venues/${venue_id}`);
+    return res;
+  }
+  static async getVenueBookings(venue_id) {
+    let res = await this.request(`venues/${venue_id}/bookings`);
     return res;
   }
 

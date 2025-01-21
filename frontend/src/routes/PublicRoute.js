@@ -6,7 +6,7 @@ function PublicRoute({ children }) {
   const { currUser } = useUser();
 
   return currUser ? (
-    <Navigate to={`/${currUser.account_type}/home`} replace />
+    <Navigate to={`/${currUser.account_type}/dashboard`} replace />
   ) : (
     children
   );

@@ -1,8 +1,8 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
 
-function LeftSidebar({ isCollapsed, toggleSidebars }) {
+function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();
 
   return (
@@ -27,24 +27,19 @@ function LeftSidebar({ isCollapsed, toggleSidebars }) {
             NextSet
           </div>
 
-          {/* Artist Name */}
-          {currUser && currUser.artist && (
+          {/* Venue Name */}
+          {currUser && currUser.venue && (
             <Link
-              to="/artist/profile"
+              to="/venue/profile"
               className="block text-nextsetAccent mb-6 hover:bg-nextsetButton hover:text-white transition duration-200 rounded-lg"
             >
               <div className="flex items-center space-x-4 p-3 hover:bg-nextsetButton hover:shadow-lg rounded-lg transition duration-300">
-                <img
-                  src={currUser.artist.spotify_photo || "/default-profile.png"}
-                  alt={currUser.artist.name}
-                  className="w-12 h-12 rounded-full shadow-md"
-                />
                 <div className="flex flex-col">
                   <span className="text-xl font-semibold">
-                    {currUser.artist.name}
+                    {currUser.venue.name}
                   </span>
                   <span className="text-sm text-gray-300 hover:text-gray-100">
-                    View Profile
+                    Manage Venue
                   </span>
                 </div>
               </div>
@@ -55,7 +50,7 @@ function LeftSidebar({ isCollapsed, toggleSidebars }) {
           <ul className="space-y-6">
             <li>
               <Link
-                to="/artist/dashboard"
+                to="/venue/dashboard"
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
                 <span>Dashboard</span>
@@ -63,18 +58,18 @@ function LeftSidebar({ isCollapsed, toggleSidebars }) {
             </li>
             <li>
               <Link
-                to="/venue/list"
+                to="/venue/bookings"
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
-                <span>Venues</span>
+                <span>Bookings</span>
               </Link>
             </li>
             <li>
               <Link
-                to="/artist/messages"
+                to="/venue/explore"
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
-                <span>Messages</span>
+                <span>Explore</span>
               </Link>
             </li>
 
@@ -93,4 +88,4 @@ function LeftSidebar({ isCollapsed, toggleSidebars }) {
   );
 }
 
-export { LeftSidebar };
+export { VenueLeftSidebar };

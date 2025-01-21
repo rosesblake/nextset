@@ -1,60 +1,43 @@
 import React, { useEffect, useState } from "react";
-import { Routes, Route } from "react-router-dom";
-import { Register } from "./features/auth/pages/Register";
+import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 import { Navbar } from "./layouts/NavBar";
+import { PublicRoute } from "./routes/PublicRoute";
+import { ProtectedRoute } from "./routes/ProtectedRoute";
+import { MainLanding } from "./pages/MainLanding";
+import { Register } from "./features/auth/pages/Register";
 import { Login } from "./features/auth/pages/Login";
 import { NotFound } from "./pages/NotFound";
-import { useNavigate } from "react-router-dom";
-import { MainLanding } from "./pages/MainLanding";
-import { ArtistHome } from "./features/artist/pages/ArtistHome";
-import { VenueHome } from "./features/venue/pages/VenueHome";
-import { VenueList } from "./features/artist/pages/VenueList";
-import { LeftSidebar } from "./layouts/LeftSideBar";
-import { RightSidebar } from "./layouts/RightSideBar";
-import { ArtistProfile } from "./features/artist/pages/ArtistProfile";
-import { ProtectedRoute } from "./routes/ProtectedRoute";
-import { PublicRoute } from "./routes/PublicRoute";
-import { ArtistVenueView } from "./features/artist/pages/ArtistVenueView";
 import { NextSetApi } from "./services/api";
+import { ArtistLayout } from "./layouts/ArtistLayout";
+import { VenueLayout } from "./layouts/VenueLayout";
+import { ArtistDashboard } from "./features/artist/pages/ArtistDashboard";
+import { VenueDashboard } from "./features/venue/pages/VenueDashboard";
+import { ArtistProfile } from "./features/artist/pages/ArtistProfile";
 import { ArtistMessage } from "./features/artist/pages/ArtistMessage";
+import { VenueList } from "./features/artist/pages/VenueList";
+import { ArtistVenueView } from "./features/artist/pages/ArtistVenueView";
+import { VenueProfile } from "./features/venue/pages/VenueProfile";
+import { Spinner } from "./shared/components/Spinner";
+import { VenueBooking } from "./features/venue/pages/VenueBooking";
+import { ArtistList } from "./features/venue/pages/ArtistList";
 
 function App() {
+  const { currUser, logout, isLoading } = useUser();
   const [isCollapsed, setIsCollapsed] = useState(false);
-  const { currUser, logout } = useUser();
-  const navigate = useNavigate();
+  const toggleSidebars = () => setIsCollapsed((prev) => !prev);
 
   useEffect(() => {
     NextSetApi.initializeInterceptors(logout);
   }, [logout]);
 
-  useEffect(() => {
-    // Ensure the user completes their artist or venue registration
-    if (currUser && !currUser.artist_id && !currUser.venue_id) {
-      navigate(`/register/${currUser.account_type}`);
-    }
-  }, [currUser, navigate]);
-
-  const toggleSidebars = () => {
-    setIsCollapsed((prev) => !prev);
-  };
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="App">
-      {!currUser ? (
-        <Navbar />
-      ) : (
-        <>
-          <LeftSidebar
-            isCollapsed={isCollapsed}
-            toggleSidebars={toggleSidebars}
-          />
-          <RightSidebar
-            isCollapsed={isCollapsed}
-            toggleSidebars={toggleSidebars}
-          />
-        </>
-      )}
+      {!currUser && <Navbar />}
       <Routes>
         {/* Public Routes */}
         <Route
@@ -65,14 +48,7 @@ function App() {
             </PublicRoute>
           }
         />
-        <Route
-          path="/register"
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
+
         <Route
           path="/register/:accountType"
           element={
@@ -90,57 +66,46 @@ function App() {
           }
         />
 
-        {/* Protected Routes */}
+        {/* Artist Routes */}
         <Route
-          path="/artist/dashboard"
+          path="/artist"
           element={
-            <ProtectedRoute>
-              <ArtistHome />
+            <ProtectedRoute accountType="artist">
+              <ArtistLayout
+                isCollapsed={isCollapsed}
+                toggleSidebars={toggleSidebars}
+              />
             </ProtectedRoute>
           }
-        />
-        <Route
-          path="/artist/profile"
-          element={
-            <ProtectedRoute>
-              <ArtistProfile />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/artist/messages"
-          element={
-            <ProtectedRoute>
-              <ArtistMessage />
-            </ProtectedRoute>
-          }
-        ></Route>
-        <Route
-          path="/venue/dashboard"
-          element={
-            <ProtectedRoute>
-              <VenueHome />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/venue/list"
-          element={
-            <ProtectedRoute>
-              <VenueList />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/venue/:id"
-          element={
-            <ProtectedRoute>
-              <ArtistVenueView />
-            </ProtectedRoute>
-          }
-        />
+        >
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<ArtistDashboard />} />
+          <Route path="profile" element={<ArtistProfile />} />
+          <Route path="messages" element={<ArtistMessage />} />
+          <Route path="venue/list" element={<VenueList />} />
+          <Route path="venue/:id" element={<ArtistVenueView />} />
+        </Route>
 
-        {/* Fallback */}
+        {/* Venue Routes */}
+        <Route
+          path="/venue"
+          element={
+            <ProtectedRoute accountType="venue">
+              <VenueLayout
+                isCollapsed={isCollapsed}
+                toggleSidebars={toggleSidebars}
+              />
+            </ProtectedRoute>
+          }
+        >
+          <Route index element={<Navigate to="dashboard" replace />} />
+          <Route path="dashboard" element={<VenueDashboard />} />
+          <Route path="profile" element={<VenueProfile />} />
+          <Route path="bookings" element={<VenueBooking />} />
+          <Route path="explore" element={<ArtistList />} />
+        </Route>
+
+        {/* Catch-All Route */}
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>

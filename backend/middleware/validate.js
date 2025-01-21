@@ -3,7 +3,6 @@ const { BadRequestError } = require("../expressError");
 
 function validate(req, res, next) {
   const errors = validationResult(req);
-
   if (!errors.isEmpty()) {
     // Extract validation errors
     const errorMessages = errors.array().map((error) => ({

@@ -4,7 +4,7 @@ import { useUser } from "../../../contexts/UserContext";
 import { NextSetApi } from "../../../services/api";
 import { VenueCard } from "../components/VenueCard";
 
-function ArtistHome() {
+function ArtistDashboard() {
   const { currUser } = useUser();
   const navigate = useNavigate();
   const [venues, setVenues] = useState();
@@ -72,7 +72,7 @@ function ArtistHome() {
           <div className="text-right mt-4">
             <button
               className="text-nextsetAccent hover:underline"
-              onClick={() => navigate("/venue/list")}
+              onClick={() => navigate("/artist/venue/list")}
             >
               View All Venues
             </button>
@@ -115,7 +115,7 @@ function ArtistHome() {
           </button>
           <button
             className="px-6 py-3 bg-nextsetAccent text-white rounded-md hover:bg-nextsetButton transition"
-            onClick={() => navigate("/venue/list")}
+            onClick={() => navigate("/artist/venue/list")}
           >
             Explore Venues
           </button>
@@ -125,4 +125,4 @@ function ArtistHome() {
   );
 }
 
-export { ArtistHome };
+export { ArtistDashboard };

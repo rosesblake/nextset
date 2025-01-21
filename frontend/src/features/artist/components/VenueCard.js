@@ -35,7 +35,7 @@ function VenueCard({ venue, artist }) {
   return (
     <div className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition">
       <div className="flex justify-between items-center">
-        <Link to={`/venue/${venue.id}`}>
+        <Link to={`/artist/venue/${venue.id}`}>
           <div>
             <h3 className="text-lg font-bold text-nextsetAccent">
               {venue.name}

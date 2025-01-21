@@ -9,8 +9,10 @@ export const useUser = () => {
 };
 
 export const UserProvider = ({ children }) => {
-  const [currUser, setCurrUser] = useState(null);
-  const [isLoading, setIsLoading] = useState(true); // Loading state for the user
+  const [currUser, setCurrUser] = useState(null); // General user data
+  const [artistData, setArtistData] = useState(null); // Artist-specific data
+  const [venueData, setVenueData] = useState(null); // Venue-specific data
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -19,28 +21,21 @@ export const UserProvider = ({ children }) => {
     const venue = JSON.parse(localStorage.getItem("venue"));
     const token = localStorage.getItem("token");
 
-    // If you need to set the token for your API requests
     if (token) {
       NextSetApi.token = token;
     }
 
-    // If there's no user at all, just finish loading
     if (!user) {
       setIsLoading(false);
       return;
     }
 
-    // If user is an artist and we have artist data, merge them
+    setCurrUser(user);
+    //set the artist or venue data to separate context
     if (user.account_type === "artist" && artist) {
-      setCurrUser({ ...user, artist });
-    }
-    // If user is a venue and we have venue data, merge them
-    else if (user.account_type === "venue" && venue) {
-      setCurrUser({ ...user, venue });
-    }
-    // Otherwise, just set the user object as is
-    else {
-      setCurrUser(user);
+      setArtistData(artist);
+    } else if (user.account_type === "venue" && venue) {
+      setVenueData(venue);
     }
 
     setIsLoading(false);
@@ -51,6 +46,8 @@ export const UserProvider = ({ children }) => {
       localStorage.setItem("user", JSON.stringify(currUser));
     } else {
       localStorage.removeItem("user");
+      setArtistData(null);
+      setVenueData(null);
     }
   }, [currUser]);
 
@@ -61,11 +58,24 @@ export const UserProvider = ({ children }) => {
     localStorage.removeItem("artist");
     localStorage.removeItem("venue");
     setCurrUser(null);
+    setArtistData(null);
+    setVenueData(null);
     navigate("/login");
   };
 
   return (
-    <UserContext.Provider value={{ currUser, setCurrUser, isLoading, logout }}>
+    <UserContext.Provider
+      value={{
+        currUser,
+        setCurrUser,
+        artistData,
+        setArtistData,
+        venueData,
+        setVenueData,
+        isLoading,
+        logout,
+      }}
+    >
       {children}
     </UserContext.Provider>
   );

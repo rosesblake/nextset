@@ -22,7 +22,7 @@ router.post(
         return next(new UnauthorizedError("All fields must be filled out"));
       }
 
-      // Fetch user along with related artist information
+      // Fetch user along with related artist or venue information
       const user = await prisma.users.findUnique({
         where: { email },
         include: {
@@ -30,7 +30,6 @@ router.post(
             include: {
               artist: {
                 include: {
-                  // Include pitches if you want all pitch details here
                   artist_pitches: {
                     include: {
                       pitches: {
@@ -50,6 +49,11 @@ router.post(
               },
             },
           },
+          venue_users: {
+            include: {
+              venue: true, // Include any additional venue relationships here
+            },
+          },
         },
       });
 
@@ -62,16 +66,19 @@ router.post(
         return next(new UnauthorizedError("Invalid username or password"));
       }
 
-      const artist = user.artist_users[0]?.artist;
+      const artist = user.artist_users[0]?.artist || null;
+      const venue = user.venue_users[0]?.venue || null;
 
       delete user.password_hash;
       delete user.artist_users;
+      delete user.venue_users;
 
       const tokenPayload = {
         id: user.id,
         email: user.email,
         role: user.role,
         artist, // Add artist info to the token
+        venue,
       };
 
       // Generate token
@@ -81,6 +88,7 @@ router.post(
         user: {
           ...user,
           artist,
+          venue,
         },
       });
     } catch (err) {

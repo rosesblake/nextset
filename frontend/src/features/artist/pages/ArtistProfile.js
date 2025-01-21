@@ -100,21 +100,21 @@ function ArtistProfile() {
             </h3>
             <EditableField
               label="Instagram"
-              value={`https://instagram.com/${currUser.artist.instagram_handle}`}
+              value={currUser.artist.instagram_handle}
               onSave={(newValue) =>
                 handleFieldSave("instagram_handle", newValue)
               }
               link={true}
             />
             <EditableField
-              label="X Handle"
-              value={`https://x.com/${currUser.artist.x_handle}`}
+              label="X"
+              value={currUser.artist.x_handle}
               onSave={(newValue) => handleFieldSave("x_handle", newValue)}
               link={true}
             />
             <EditableField
               label="Facebook URL"
-              value={`https://${currUser.artist.facebook_url}`}
+              value={currUser.artist.facebook_url}
               onSave={(newValue) => handleFieldSave("facebook_url", newValue)}
               link={true}
             />

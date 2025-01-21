@@ -4,7 +4,7 @@ function ArtistMessage() {
   // Hardcoded data for demonstration
   const artistName = "John Doe";
   const message =
-    "Hey there! Just finished some new tracks. Let me know if you're up to collaborate.";
+    "Hey there! I got your request to play at our venue and i wanted to reach out for more details";
 
   const handleReply = () => {
     console.log("Reply clicked");
@@ -12,7 +12,7 @@ function ArtistMessage() {
   };
 
   return (
-    <div className="mx-80 my-10 p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition">
+    <div className="mx-80 my-10 p-10 bg-gray-100 rounded-lg shadow-sm hover:shadow-md transition">
       <h2 className="text-lg font-bold text-nextsetAccent">{artistName}</h2>
       <p className="text-sm text-gray-500 mt-2">{message}</p>
 

@@ -37,6 +37,7 @@ function Register() {
             spotify_url: data.spotify_url,
             spotify_popularity: data.spotify_popularity,
             spotify_followers: data.spotify_followers,
+            created_by: user.id,
           },
           user
         );
@@ -46,7 +47,7 @@ function Register() {
           artist_id: artistRes.artist.id,
           artist: artistRes.artist,
         };
-        navigate("/artist/home");
+        navigate("/artist/dashboard");
       } else if (accountType === "venue") {
         const venueRes = await NextSetApi.registerVenue(
           {
@@ -56,6 +57,7 @@ function Register() {
             city: data.city,
             state: data.state,
             zip_code: parseInt(data.zip_code),
+            created_by: user.id,
           },
           user
         );

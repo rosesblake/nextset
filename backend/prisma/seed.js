@@ -1,22 +1,35 @@
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
+const bcrypt = require("bcrypt");
 
 async function main() {
   // Clear existing data
   await prisma.venue_blocked_dates.deleteMany();
+  await prisma.events.deleteMany();
+  await prisma.venue_users.deleteMany();
   await prisma.venues.deleteMany();
   await prisma.artist_users.deleteMany();
   await prisma.artists.deleteMany();
   await prisma.users.deleteMany();
 
+  const hashed_password = await bcrypt.hash("DevsOnly1995", 10);
   // Create a user
   const user = await prisma.users.create({
     data: {
-      password_hash: "hashed_password",
-      email: "john.doe@example.com",
+      password_hash: hashed_password,
+      email: "devArtist@gmail.com",
       access_level: "ADMIN",
-      account_type: "Artist",
-      full_name: "John Doe",
+      account_type: "artist",
+      full_name: "Testing Dev",
+    },
+  });
+  const user2 = await prisma.users.create({
+    data: {
+      password_hash: hashed_password,
+      email: "devVenue@gmail.com",
+      access_level: "ADMIN",
+      account_type: "venue",
+      full_name: "Testing Dev",
     },
   });
 
@@ -75,7 +88,7 @@ async function main() {
         city: "Austin",
         state: "TX",
         zip_code: 78701,
-        created_by: user.id,
+        created_by: user2.id,
       },
       {
         name: "Echo Lounge",
@@ -84,57 +97,66 @@ async function main() {
         city: "Nashville",
         state: "TN",
         zip_code: 37203,
-        created_by: user.id,
-      },
-      {
-        name: "The Sound Vault",
-        capacity: 800,
-        address: "123 Music Row",
-        city: "Austin",
-        state: "TX",
-        zip_code: 78701,
-        created_by: user.id,
-      },
-      {
-        name: "Melody Hall",
-        capacity: 1200,
-        address: "789 Harmony St",
-        city: "Chicago",
-        state: "IL",
-        zip_code: 60605,
-        created_by: user.id,
-      },
-      {
-        name: "The Groove Spot",
-        capacity: 600,
-        address: "345 Rhythm Blvd",
-        city: "Seattle",
-        state: "WA",
-        zip_code: 98101,
-        created_by: user.id,
-      },
-      {
-        name: "Vibe Arena",
-        capacity: 1000,
-        address: "987 Sunset Drive",
-        city: "Los Angeles",
-        state: "CA",
-        zip_code: 90015,
-        created_by: user.id,
+        created_by: user2.id,
       },
     ],
   });
 
   console.log("Venues seeded successfully.");
 
+  // Fetch the venues to seed events
+  const velvetRoom = await prisma.venues.findUnique({
+    where: { name: "The Velvet Room" },
+  });
+  const echoLounge = await prisma.venues.findUnique({
+    where: { name: "Echo Lounge" },
+  });
+
+  //connect user to venue
+  await prisma.venue_users.create({
+    data: {
+      user_id: user2.id,
+      venue_id: velvetRoom.id,
+      role: "Creator",
+    },
+  });
+
+  // Seed events (bookings)
+  if (velvetRoom && echoLounge) {
+    await prisma.events.createMany({
+      data: [
+        {
+          name: "Rock Night",
+          venue_id: velvetRoom.id,
+          event_date: new Date("2025-01-15"),
+          start_time: new Date("2025-01-15T18:00:00"),
+          end_time: new Date("2025-01-15T21:00:00"),
+          description: "A night of rock music featuring John's Band.",
+          ticket_price: 20.0,
+          available_tickets: 150,
+          status: "Scheduled",
+        },
+        {
+          name: "Jazz Evening",
+          venue_id: echoLounge.id,
+          event_date: new Date("2025-01-18"),
+          start_time: new Date("2025-01-18T19:00:00"),
+          end_time: new Date("2025-01-18T22:00:00"),
+          description: "An evening of smooth jazz.",
+          ticket_price: 25.0,
+          available_tickets: 200,
+          status: "Scheduled",
+        },
+      ],
+    });
+
+    console.log("Events (bookings) seeded successfully.");
+  }
+
   // Blocked dates for each venue
   const blockedDatesData = [
     { venueName: "The Velvet Room", dates: ["2025-01-15", "2025-01-20"] },
     { venueName: "Echo Lounge", dates: ["2025-01-18", "2025-01-25"] },
-    { venueName: "The Sound Vault", dates: ["2025-02-10", "2025-02-17"] },
-    { venueName: "Melody Hall", dates: ["2025-03-05", "2025-03-12"] },
-    { venueName: "The Groove Spot", dates: ["2025-01-20", "2025-01-27"] },
-    { venueName: "Vibe Arena", dates: ["2025-04-10", "2025-04-17"] },
   ];
 
   for (const { venueName, dates } of blockedDatesData) {

@@ -13,7 +13,7 @@ router.post(
   "/register",
   artistValidator,
   validate,
-  authenticateJWT, // Verifies JWT and populates res.locals.user
+  authenticateJWT,
   ensureLoggedIn,
   async function (req, res, next) {
     try {
@@ -32,7 +32,6 @@ router.post(
       if (duplicate_check) {
         return next(new BadRequestError("Artist already exists"));
       }
-
       // Create the artist record in the database
       const artist = await prisma.artists.create({
         data: { ...req.body, created_by: user_id },
@@ -95,6 +94,21 @@ router.get(
       return res.json(artist);
     } catch (e) {
       return next(e);
+    }
+  }
+);
+
+//get all artists for list
+router.get(
+  "/",
+  authenticateJWT,
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const artistList = await prisma.artists.findMany();
+      return res.status(200).json(artistList);
+    } catch (e) {
+      next(e);
     }
   }
 );

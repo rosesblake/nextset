@@ -20,7 +20,7 @@ function Login() {
       // Set the logged-in user in context
       setCurrUser(loggedInUser);
       // Redirect to home page after successful login
-      navigate(`/${loggedInUser.account_type}/home`);
+      navigate(`/${loggedInUser.account_type}/dashboard`);
       showMessage("Successfully logged in", "success");
     } catch (e) {
       showMessage(e.message, "error");

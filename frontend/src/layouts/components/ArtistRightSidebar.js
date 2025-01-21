@@ -1,8 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { useUser } from "../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
 
-function RightSidebar({ isCollapsed, toggleSidebars }) {
+function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [activeTab, setActiveTab] = useState("sent");
   const { currUser } = useUser();
   const [pitches, setPitches] = useState(
@@ -87,7 +87,7 @@ function RightSidebar({ isCollapsed, toggleSidebars }) {
                 {sentPitches?.map((pitch) => (
                   <Link
                     key={pitch.pitch_id}
-                    to={`/venue/${pitch.pitches.venue_id}`}
+                    to={`/artist/venue/${pitch.pitches.venue_id}`}
                     className="block"
                   >
                     <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
@@ -117,7 +117,7 @@ function RightSidebar({ isCollapsed, toggleSidebars }) {
                 {resultPitches?.map((pitch) => (
                   <Link
                     key={pitch.pitch_id}
-                    to={`/venue/${pitch.pitches.venue_id}`}
+                    to={`/artist/venue/${pitch.pitches.venue_id}`}
                     className="block"
                   >
                     <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
@@ -149,4 +149,4 @@ function RightSidebar({ isCollapsed, toggleSidebars }) {
   );
 }
 
-export { RightSidebar };
+export { ArtistRightSidebar };
