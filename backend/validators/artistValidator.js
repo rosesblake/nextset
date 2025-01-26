@@ -128,6 +128,8 @@ const artistValidator = [
     .isEmail()
     .withMessage("Email must be a valid email address"),
 
+  body("bio").optional().isString().withMessage("Bio must be a string"),
+
   body("created_by")
     .isInt({ min: 1 })
     .withMessage("Created by must be a valid user ID"),

@@ -145,8 +145,16 @@ class NextSetApi {
     }
   }
 
+  static async getVenuePitches(venue_id) {
+    return await this.request(`venues/${venue_id}/pitches`);
+  }
+
   static async getArtistPitches(artist_id) {
     return await this.request(`pitches/${artist_id}`);
+  }
+
+  static async updatePitchStatus(pitch_id, status) {
+    return await this.request(`pitches/${pitch_id}/update`, status, "patch");
   }
 
   static async loginUser(user) {

@@ -104,6 +104,7 @@ model pitches {
   avg_ticket_sales Int?
   support_acts     String?         @db.VarChar(30)
   date             DateTime        @db.Date
+  role             String          
   content          String
   status           String          @db.VarChar(15)
   artist_pitches   artist_pitches[]

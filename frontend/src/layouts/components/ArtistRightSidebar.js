@@ -24,12 +24,12 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   }, [currUser]);
 
   const sentPitches = pitches.filter(
-    (pitch) => pitch.pitches.status === "PENDING"
+    (pitch) => pitch.pitches.status === "pending"
   );
 
   const resultPitches = pitches.filter(
     (pitch) =>
-      pitch.pitches.status === "APPROVED" || pitch.pitches.status === "DENIED"
+      pitch.pitches.status === "accepted" || pitch.pitches.status === "declined"
   );
 
   return (
@@ -66,9 +66,9 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
               Sent
             </button>
             <button
-              onClick={() => setActiveTab("approvedDenied")}
+              onClick={() => setActiveTab("acceptedDeclined")}
               className={`w-1/2 py-3 text-lg font-semibold transition-all ${
-                activeTab === "approvedDenied"
+                activeTab === "acceptedDeclined"
                   ? "bg-nextsetAccent text-white rounded-t-lg shadow-md"
                   : "text-nextsetAccent hover:bg-gray-800 hover:text-white"
               }`}
@@ -108,10 +108,10 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
             </div>
           )}
 
-          {activeTab === "approvedDenied" && (
+          {activeTab === "acceptedDeclined" && (
             <div>
               <h3 className="text-xl font-bold text-nextsetAccent mb-4">
-                Approved/Denied Pitches
+                Accepted/Declined Pitches
               </h3>
               <div className="space-y-3">
                 {resultPitches?.map((pitch) => (
@@ -130,7 +130,7 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
                       </p>
                       <p
                         className={`text-sm ${
-                          pitch.pitches.status === "APPROVED"
+                          pitch.pitches.status === "accepted"
                             ? "text-green-400"
                             : "text-red-400"
                         }`}

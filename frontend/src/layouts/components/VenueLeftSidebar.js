@@ -58,14 +58,6 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
             </li>
             <li>
               <Link
-                to="/venue/bookings"
-                className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
-              >
-                <span>Bookings</span>
-              </Link>
-            </li>
-            <li>
-              <Link
                 to="/venue/explore"
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >

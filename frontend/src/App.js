@@ -19,7 +19,6 @@ import { VenueList } from "./features/artist/pages/VenueList";
 import { ArtistVenueView } from "./features/artist/pages/ArtistVenueView";
 import { VenueProfile } from "./features/venue/pages/VenueProfile";
 import { Spinner } from "./shared/components/Spinner";
-import { VenueBooking } from "./features/venue/pages/VenueBooking";
 import { ArtistList } from "./features/venue/pages/ArtistList";
 
 function App() {
@@ -101,7 +100,6 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<VenueDashboard />} />
           <Route path="profile" element={<VenueProfile />} />
-          <Route path="bookings" element={<VenueBooking />} />
           <Route path="explore" element={<ArtistList />} />
         </Route>
 

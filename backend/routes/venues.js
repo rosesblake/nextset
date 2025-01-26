@@ -84,11 +84,47 @@ router.get("/:id", authenticateJWT, ensureLoggedIn, async (req, res, next) => {
       blocked_dates: blockedDates.map((date) => date.blocked_date),
     };
 
-    return res.json(updatedVenue);
+    return res.status(200).json(updatedVenue);
   } catch (e) {
     return next(e);
   }
 });
+router.get(
+  "/:id/pitches",
+  authenticateJWT,
+  ensureLoggedIn,
+  async (req, res, next) => {
+    try {
+      const venue_id = parseInt(req.params.id);
+
+      const pitches = await prisma.pitches.findMany({
+        where: { venue_id: venue_id },
+        include: {
+          artist_pitches: {
+            include: {
+              artists: {
+                select: {
+                  name: true,
+                  bio: true,
+                  genre: true,
+                  instagram_handle: true,
+                  x_handle: true,
+                  facebook_url: true,
+                  spotify_url: true,
+                  spotify_photo: true,
+                  live_show_url: true,
+                  hometown: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return res.status(200).json(pitches);
+    } catch (e) {}
+  }
+);
 
 router.get(
   "/:id/bookings",

@@ -1,62 +1,179 @@
-import React from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
 import { useUser } from "../../../contexts/UserContext";
+import { NextSetApi } from "../../../services/api";
 
 function VenueDashboard() {
   const { currUser } = useUser();
-  const navigate = useNavigate();
+  const [pitches, setPitches] = useState([]);
 
-  const handleGoToProfile = () => {
-    navigate("/venue/profile");
-  };
+  useEffect(() => {
+    const fetchPitches = async () => {
+      if (currUser?.venue?.id) {
+        try {
+          const response = await NextSetApi.getVenuePitches(
+            currUser.venue.id,
+            currUser.account_type
+          );
+          setPitches(response);
+        } catch (e) {
+          console.error("error fetching pitches", e);
+        }
+      }
+    };
 
-  const handleManageBlockedDates = () => {
-    navigate("/venue/block-dates");
+    fetchPitches();
+  }, [currUser]);
+
+  const handlePitchStatus = async (pitch_id, status) => {
+    try {
+      await NextSetApi.updatePitchStatus(pitch_id, { status });
+
+      setPitches((prev) =>
+        prev.map((pitch) => pitch.id === pitch_id && { ...pitch, status })
+      );
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-3xl p-6 bg-white rounded-lg shadow-lg">
-        {/* Welcome Section */}
-        {currUser ? (
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-nextsetAccent mb-4">
-              Welcome back, {currUser?.full_name || "Venue Manager"}!
-            </h1>
-            <p className="text-gray-700">
-              Manage your venue, view upcoming bookings, and update details.
-            </p>
-          </div>
-        ) : (
-          <div className="text-center mb-6">
-            <h1 className="text-3xl font-bold text-nextsetAccent mb-4">
-              Please log in to access your dashboard.
-            </h1>
-            <button
-              className="px-6 py-3 text-white bg-nextsetButton hover:bg-nextsetPrimary rounded-md transition duration-300"
-              onClick={() => navigate("/login")}
-            >
-              Log In
-            </button>
-          </div>
-        )}
+    <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
+      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
+        <h2 className="text-2xl font-bold text-nextsetAccent mb-6 text-center">
+          Pitches Received
+        </h2>
+        {pitches.length > 0 ? (
+          <ul className="divide-y divide-gray-200">
+            {pitches.map((pitch) => {
+              const artist = pitch.artist_pitches[0]?.artists; // Assuming one artist per pitch
 
-        {/* Quick Actions */}
-        {currUser && (
-          <div className="mt-6 text-center">
-            <button
-              className="px-6 py-3 mx-2 text-white bg-nextsetButton hover:bg-nextsetPrimary rounded-md transition duration-300"
-              onClick={handleGoToProfile}
-            >
-              Update Venue Profile
-            </button>
-            <button
-              className="px-6 py-3 mx-2 text-white bg-nextsetAccent hover:bg-nextsetButton rounded-md transition duration-300"
-              onClick={handleManageBlockedDates}
-            >
-              Manage Blocked Dates
-            </button>
-          </div>
+              return (
+                <li
+                  key={pitch.id}
+                  className="py-6 px-4 bg-gray-50 rounded-lg shadow-sm mb-4"
+                >
+                  {/* Pitch Content */}
+                  <div className="text-center mb-4">
+                    <p className="font-semibold text-xl text-gray-800">
+                      {pitch.content}
+                    </p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      Proposed Date:{" "}
+                      <span className="font-medium">
+                        {new Date(pitch.date).toLocaleDateString()}
+                      </span>
+                    </p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      Average Tickets Sold:{" "}
+                      <span className="font-medium">
+                        {pitch.avg_ticket_sales}
+                      </span>
+                    </p>
+                    <p className="text-sm text-gray-500 mt-2">
+                      Support Acts:{" "}
+                      <span className="font-medium">
+                        {pitch.support_acts || "N/A"}
+                      </span>
+                    </p>
+                  </div>
+
+                  {/* Artist Details */}
+                  {artist && (
+                    <div className="mt-6 p-6 bg-gray-100 rounded-md text-center shadow-inner">
+                      <h3 className="text-xl font-bold text-nextsetAccent">
+                        Artist: {artist.name}
+                      </h3>
+                      <h4 className="text-md">{artist.role || "Support"}</h4>
+                      <p className="text-gray-700 mt-2">{artist.bio}</p>
+                      <p className="text-sm text-gray-500">
+                        Genre: {artist.genre || "N/A"}
+                      </p>
+                      <div className="mt-4 flex justify-center space-x-6">
+                        {artist.instagram_handle && (
+                          <a
+                            href={`https://instagram.com/${artist.instagram_handle}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
+                          >
+                            Instagram
+                          </a>
+                        )}
+                        {artist.x_handle && (
+                          <a
+                            href={`https://x.com/${artist.x_handle}`}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
+                          >
+                            X (Twitter)
+                          </a>
+                        )}
+                        {artist.facebook_url && (
+                          <a
+                            href={artist.facebook_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
+                          >
+                            Facebook
+                          </a>
+                        )}
+                        {artist.spotify_url && (
+                          <a
+                            href={artist.spotify_url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
+                          >
+                            Spotify
+                          </a>
+                        )}
+                      </div>
+                      {artist.spotify_photo && (
+                        <img
+                          src={artist.spotify_photo}
+                          alt={`${artist.name}`}
+                          className="w-24 h-24 rounded-full mx-auto mt-4 shadow-lg"
+                        />
+                      )}
+                      <p className="text-sm text-nextsetPrimary mt-4">
+                        Hometown: {artist.hometown || "N/A"}
+                      </p>
+                    </div>
+                  )}
+
+                  {/* Action Buttons */}
+                  <div className="mt-6 flex justify-center space-x-4">
+                    {pitch.status === "accepted" ? (
+                      <p>Accepted</p>
+                    ) : (
+                      <>
+                        <button
+                          onClick={() =>
+                            handlePitchStatus(pitch.id, "accepted")
+                          }
+                          className="px-6 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition"
+                        >
+                          Accept
+                        </button>
+                        <button
+                          onClick={() =>
+                            handlePitchStatus(pitch.id, "declined")
+                          }
+                          className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition"
+                        >
+                          Decline
+                        </button>
+                      </>
+                    )}{" "}
+                  </div>
+                </li>
+              );
+            })}
+          </ul>
+        ) : (
+          <p className="text-gray-600 text-center">No pitches received yet.</p>
         )}
       </div>
     </div>

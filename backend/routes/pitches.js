@@ -72,4 +72,29 @@ router.post(
   }
 );
 
+router.patch(
+  "/:id/update",
+  authenticateJWT,
+  ensureLoggedIn,
+  async (req, res, next) => {
+    try {
+      const pitch_id = parseInt(req.params.id);
+      const { status } = req.body;
+
+      if (!["accepted", "declined"].includes(status)) {
+        return res.status(400).json({ error: "Invalid status value" });
+      }
+
+      const updatedPitch = await prisma.pitches.update({
+        where: { id: pitch_id },
+        data: { status },
+      });
+
+      return res.json(updatedPitch);
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
+
 module.exports = router;
