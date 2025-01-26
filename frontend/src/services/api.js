@@ -75,6 +75,23 @@ class NextSetApi {
     }
   }
 
+  static async uploadArtistFile(artistId, fileType, formData) {
+    try {
+      const response = await this.axiosInstance.post(
+        `/artists/${artistId}/upload/${fileType}`,
+        formData,
+        {
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  }
+
   static async registerUser(user) {
     let res = await this.request(`users/register`, user, "post");
     NextSetApi.token = res.token;
@@ -82,65 +99,54 @@ class NextSetApi {
   }
 
   static async registerArtist(artist) {
-    let res = await this.request(`artists/register`, artist, "post");
-    return res;
+    return await this.request(`artists/register`, artist, "post");
   }
 
   static async getArtist(artist_id) {
-    let res = await this.request(`artists/${artist_id}`);
-    return res;
+    return await this.request(`artists/${artist_id}`);
   }
 
   static async allArtists() {
-    let res = await this.request(`artists`);
-    return res;
+    return await this.request(`artists`);
   }
 
   static async updateArtist(artist, data) {
-    let res = await this.request(`artists/${artist.id}`, data, "patch");
-    return res;
+    return await this.request(`artists/${artist.id}`, data, "patch");
   }
 
   static async registerVenue(venue) {
-    let res = await this.request(`venues/register`, venue, "post");
-    return res;
+    return await this.request(`venues/register`, venue, "post");
   }
 
   static async updateVenue(venue, data) {
-    let res = await this.request(`venues/${venue.id}`, data, "patch");
-    return res;
+    return await this.request(`venues/${venue.id}`, data, "patch");
   }
 
   static async allVenues() {
     try {
-      let res = await this.request(`venues`);
-      return res;
+      return await this.request(`venues`);
     } catch (e) {
       throw e;
     }
   }
 
   static async getVenue(venue_id) {
-    let res = await this.request(`venues/${venue_id}`);
-    return res;
+    return await this.request(`venues/${venue_id}`);
   }
   static async getVenueBookings(venue_id) {
-    let res = await this.request(`venues/${venue_id}/bookings`);
-    return res;
+    return await this.request(`venues/${venue_id}/bookings`);
   }
 
   static async sendPitch(data) {
     try {
-      let res = await this.request(`pitches`, data, "post");
-      return res;
+      return await this.request(`pitches`, data, "post");
     } catch (e) {
       throw e;
     }
   }
 
   static async getArtistPitches(artist_id) {
-    let res = await this.request(`pitches/${artist_id}`);
-    return res;
+    return await this.request(`pitches/${artist_id}`);
   }
 
   static async loginUser(user) {
@@ -151,8 +157,7 @@ class NextSetApi {
 
   // Search for artist on Spotify
   static searchSpotifyArtist = async (query) => {
-    let res = await this.request(`spotify/search?query=${query}`);
-    return res;
+    return await this.request(`spotify/search?query=${query}`);
   };
 }
 

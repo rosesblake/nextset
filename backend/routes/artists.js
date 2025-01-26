@@ -7,7 +7,11 @@ const router = express.Router();
 const { UnauthorizedError, BadRequestError } = require("../expressError");
 const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { artistValidator } = require("../validators/artistValidator");
+const { uploadValidator } = require("../validators/uploadValidator");
 const { validate } = require("../middleware/validate");
+const { upload } = require("../middleware/upload");
+const fs = require("fs");
+const path = require("path");
 
 router.post(
   "/register",
@@ -56,6 +60,65 @@ router.post(
 
       return res.status(201).json({ artist });
     } catch (e) {
+      return next(e);
+    }
+  }
+);
+
+router.post(
+  "/:id/upload/:fileType",
+  authenticateJWT,
+  ensureLoggedIn,
+  uploadValidator,
+  upload.single("file"),
+  async function (req, res, next) {
+    try {
+      const { id, fileType } = req.params;
+
+      // Fetch the artist from the database
+      const artist = await prisma.artists.findUnique({
+        where: { id: parseInt(id, 10) },
+      });
+
+      if (!artist) {
+        return res.status(404).json({ error: "Artist not found" });
+      }
+
+      // Check and delete the old file asynchronously
+      const oldFileUrl = artist[fileType];
+      if (oldFileUrl) {
+        const oldFilePath = path.join(
+          __dirname,
+          "../uploads/artists",
+          path.basename(oldFileUrl)
+        );
+
+        // Use fs.promises for asynchronous deletion
+        fs.promises.unlink(oldFilePath).catch((err) => {
+          console.error(`Error deleting old file: ${err.message}`);
+        });
+      }
+
+      // Generate the new file URL
+      const fileUrl = `${req.protocol}://${req.get("host")}/uploads/artists/${
+        req.file.filename
+      }`;
+
+      // Update the artist record with the new file URL
+      const updatedArtist = await prisma.artists.update({
+        where: { id: parseInt(id, 10) },
+        data: {
+          [fileType]: fileUrl, // Dynamically update the correct field (e.g., epk, w9, etc.)
+        },
+      });
+
+      return res.status(200).json({
+        message: `${fileType} uploaded successfully.`,
+        url: fileUrl,
+        artist: updatedArtist,
+      });
+    } catch (e) {
+      console.error("Error uploading file:", e);
       return next(e);
     }
   }

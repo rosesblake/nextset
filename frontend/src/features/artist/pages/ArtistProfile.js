@@ -1,12 +1,37 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { useUser } from "../../../contexts/UserContext";
-import { useNavigate } from "react-router-dom";
 import { EditableField } from "../../../shared/components/EditableField";
 import { NextSetApi } from "../../../services/api";
+import { FileUploadField } from "../../../shared/components/FileUploadField";
 
 function ArtistProfile() {
   const { currUser, setCurrUser } = useUser();
-  const navigate = useNavigate();
+  const [files, setFiles] = useState({
+    epk: null,
+    w9: null,
+    rider: null,
+    stage_plot: null,
+  });
+
+  // Fetch artist data on component mount
+  useEffect(() => {
+    const fetchArtistData = async () => {
+      try {
+        const artist = await NextSetApi.getArtist(currUser.artist.id);
+        setFiles({
+          epk: artist.epk || null,
+          w9: artist.w9 || null,
+          rider: artist.rider || null,
+          stage_plot: artist.stage_plot || null,
+        });
+        setCurrUser((prev) => ({ ...prev, artist })); // Update user context
+      } catch (e) {
+        console.error("Error fetching artist data:", e);
+      }
+    };
+
+    fetchArtistData();
+  }, [currUser.artist.id, setCurrUser]);
 
   const handleFieldSave = async (field, newValue) => {
     try {
@@ -21,15 +46,31 @@ function ArtistProfile() {
     }
   };
 
-  if (!currUser.artist) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-xl font-semibold text-gray-600">
-          Loading artist profile...
-        </p>
-      </div>
-    );
-  }
+  const handleFileUpload = async (fileType, file) => {
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await NextSetApi.uploadArtistFile(
+        currUser.artist.id,
+        fileType,
+        formData
+      );
+
+      // Update the file URL in state
+      setFiles((prevFiles) => ({
+        ...prevFiles,
+        [fileType]: response.url,
+      }));
+
+      console.log(`${fileType} uploaded successfully:`, response);
+    } catch (e) {
+      console.error(
+        `Error uploading ${fileType}:`,
+        e.response?.data?.error || e.message
+      );
+    }
+  };
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-10">
@@ -61,6 +102,11 @@ function ArtistProfile() {
             value={currUser.artist.genre}
             onSave={(newValue) => handleFieldSave("genre", newValue)}
           />
+          <EditableField
+            label="bio"
+            value={currUser.artist.bio}
+            onSave={(newValue) => handleFieldSave("bio", newValue)}
+          />
         </div>
 
         <div className="mb-8">
@@ -90,6 +136,11 @@ function ArtistProfile() {
               label="Phone"
               value={currUser.artist.phone}
               onSave={(newValue) => handleFieldSave("phone", newValue)}
+            />
+            <EditableField
+              label="Website"
+              value={currUser.artist.website}
+              onSave={(newValue) => handleFieldSave("website", newValue)}
             />
           </div>
 
@@ -124,17 +175,42 @@ function ArtistProfile() {
               onSave={(newValue) => handleFieldSave("spotify_url", newValue)}
               link={true}
             />
+            <EditableField
+              label="Live Video"
+              value={currUser.artist.live_show_url}
+              onSave={(newValue) => handleFieldSave("live_show_url", newValue)}
+              link={true}
+            />
           </div>
         </div>
 
-        {/* Quick Actions */}
-        <div className="flex justify-center space-x-4">
-          <button
-            className="px-6 py-3 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
-            onClick={() => navigate("/artist/home")}
-          >
-            Back to Home
-          </button>
+        {/* Upload Files Section */}
+        <div className="p-4 bg-gray-50 rounded-lg shadow-sm mb-6">
+          <h3 className="text-lg font-bold text-nextsetAccent mb-4">
+            Upload Files
+          </h3>
+          <div className="space-y-4">
+            <FileUploadField
+              label="Electronic Press Kit (EPK)"
+              onUpload={(file) => handleFileUpload("epk", file)}
+              currentFileUrl={files.epk}
+            />
+            <FileUploadField
+              label="W-9"
+              onUpload={(file) => handleFileUpload("w9", file)}
+              currentFileUrl={files.w9}
+            />
+            <FileUploadField
+              label="Rider"
+              onUpload={(file) => handleFileUpload("rider", file)}
+              currentFileUrl={files.rider}
+            />
+            <FileUploadField
+              label="Stage Plot"
+              onUpload={(file) => handleFileUpload("stage_plot", file)}
+              currentFileUrl={files.stage_plot}
+            />
+          </div>
         </div>
       </div>
     </div>

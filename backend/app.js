@@ -3,6 +3,7 @@
 const express = require("express");
 const session = require("express-session");
 const cors = require("cors");
+const path = require("path");
 
 const { NotFoundError, BadRequestError } = require("./expressError");
 
@@ -30,6 +31,9 @@ app.use(
     cookie: { secure: false },
   })
 );
+
+app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+
 //custom routes
 app.use("/auth", authRoutes);
 app.use("/users", usersRoutes);
