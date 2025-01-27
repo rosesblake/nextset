@@ -5,7 +5,7 @@ import { NextSetApi } from "../../../services/api";
 import { useMessage } from "../../../contexts/MessageContext";
 import { useUser } from "../../../contexts/UserContext";
 
-function VenueCard({ venue, artist }) {
+function VenueCard({ venue, artist, pitches }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const { showMessage } = useMessage();
   const { currUser, setCurrUser } = useUser();
@@ -51,12 +51,18 @@ function VenueCard({ venue, artist }) {
             </p>
           </div>
         </Link>
-        <button
-          className="px-4 py-2 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
-          onClick={openModal}
-        >
-          Pitch
-        </button>
+        {!pitches ? (
+          <button
+            className="px-4 py-2 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
+            onClick={openModal}
+          >
+            Pitch
+          </button>
+        ) : (
+          <p className="px-4 py-2 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition">
+            Pitched
+          </p>
+        )}
       </div>
 
       {isModalOpen && (

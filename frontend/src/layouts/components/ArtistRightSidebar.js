@@ -24,7 +24,7 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   }, [currUser]);
 
   const sentPitches = pitches.filter(
-    (pitch) => pitch.pitches.status === "pending"
+    (pitch) => pitch.pitches.status === "PENDING"
   );
 
   const resultPitches = pitches.filter(

@@ -8,11 +8,24 @@ function VenueList() {
   const [loading, setLoading] = useState(true);
   const { currUser } = useUser();
 
+  const [pitches, setPitches] = useState([]);
+
+  // Temporary upcoming gigs data
+  const upcomingGigs = [
+    { id: 1, venue: "The Velvet Room", date: "Jan 15, 2025" },
+    { id: 2, venue: "Blue Note Stage", date: "Jan 20, 2025" },
+  ];
+
   useEffect(() => {
     async function fetchVenues() {
       try {
         const allVenues = await NextSetApi.allVenues();
         setVenues(allVenues.venues);
+
+        const artistPitches = await NextSetApi.getArtistPitches(
+          currUser.artist.id
+        );
+        setPitches(artistPitches);
       } catch (e) {
         console.error("Error fetching venues:", e);
       } finally {
@@ -21,7 +34,7 @@ function VenueList() {
     }
 
     fetchVenues();
-  }, []);
+  }, [currUser.artist.id]);
 
   if (loading) {
     return (
@@ -39,7 +52,14 @@ function VenueList() {
         </h1>
         <ul className="space-y-4">
           {venues.map((venue) => (
-            <VenueCard key={venue.id} venue={venue} artist={currUser.artist} />
+            <VenueCard
+              key={venue.id}
+              venue={venue}
+              artist={currUser.artist}
+              pitches={pitches.some(
+                (pitch) => pitch.pitches.venue_id === venue.id
+              )}
+            />
           ))}
         </ul>
       </div>

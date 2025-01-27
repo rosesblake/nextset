@@ -29,7 +29,9 @@ function VenueDashboard() {
       await NextSetApi.updatePitchStatus(pitch_id, { status });
 
       setPitches((prev) =>
-        prev.map((pitch) => pitch.id === pitch_id && { ...pitch, status })
+        prev.map((pitch) =>
+          pitch.id === pitch_id ? { ...pitch, status } : pitch
+        )
       );
     } catch (e) {
       console.error(e);
@@ -45,7 +47,7 @@ function VenueDashboard() {
         {pitches.length > 0 ? (
           <ul className="divide-y divide-gray-200">
             {pitches.map((pitch) => {
-              const artist = pitch.artist_pitches[0]?.artists; // Assuming one artist per pitch
+              const artist = pitch.artist_pitches[0]?.artists;
 
               return (
                 <li
@@ -146,7 +148,13 @@ function VenueDashboard() {
                   {/* Action Buttons */}
                   <div className="mt-6 flex justify-center space-x-4">
                     {pitch.status === "accepted" ? (
-                      <p>Accepted</p>
+                      <p className="px-6 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
+                        Accepted
+                      </p>
+                    ) : pitch.status === "declined" ? (
+                      <p className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition">
+                        Declined
+                      </p>
                     ) : (
                       <>
                         <button

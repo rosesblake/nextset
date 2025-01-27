@@ -9,6 +9,7 @@ function ArtistDashboard() {
   const navigate = useNavigate();
   const [venues, setVenues] = useState();
   const [loading, setLoading] = useState(true);
+  const [pitches, setPitches] = useState([]);
 
   // Temporary upcoming gigs data
   const upcomingGigs = [
@@ -21,6 +22,11 @@ function ArtistDashboard() {
       try {
         const allVenues = await NextSetApi.allVenues();
         setVenues(allVenues.venues);
+
+        const artistPitches = await NextSetApi.getArtistPitches(
+          currUser.artist.id
+        );
+        setPitches(artistPitches);
       } catch (e) {
         console.error("Error fetching venues:", e);
       } finally {
@@ -29,7 +35,7 @@ function ArtistDashboard() {
     }
 
     fetchVenues();
-  }, []);
+  }, [currUser.artist.id]);
 
   if (loading) {
     return (
@@ -61,11 +67,14 @@ function ArtistDashboard() {
             Recommended Venues
           </h2>
           <ul className="space-y-4">
-            {venues?.slice(0, 2).map((venue) => (
+            {venues?.slice(0, 3).map((venue) => (
               <VenueCard
                 key={venue.id}
                 venue={venue}
                 artist={currUser.artist}
+                pitches={pitches.some(
+                  (pitch) => pitch.pitches.venue_id === venue.id
+                )}
               />
             ))}
           </ul>

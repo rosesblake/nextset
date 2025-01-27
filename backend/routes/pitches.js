@@ -54,6 +54,7 @@ router.post(
           avg_ticket_sales: parseInt(req.body.avg_ticket_sales),
           support_acts: req.body.support_acts,
           status: "PENDING",
+          role: req.body.role,
         },
       });
       //link artist and pitch
@@ -66,6 +67,28 @@ router.post(
       });
 
       return res.status(201).json({ pitch });
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
+
+router.get(
+  "/:artist_id",
+  authenticateJWT,
+  ensureLoggedIn,
+  async (req, res, next) => {
+    try {
+      const artist_id = parseInt(req.params.artist_id);
+
+      const artistPitches = await prisma.artist_pitches.findMany({
+        where: { artist_id: artist_id },
+        include: {
+          pitches: true,
+        },
+      });
+
+      return res.status(200).json(artistPitches);
     } catch (e) {
       return next(e);
     }

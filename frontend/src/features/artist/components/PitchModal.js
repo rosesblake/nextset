@@ -7,6 +7,7 @@ function PitchModal({ venue, selectedDate, artist, onClose, onSubmit }) {
     content: "",
     avg_ticket_sales: "",
     support_acts: "",
+    role: "Headliner", // Default role
   };
 
   const { formData, handleChange, handleSubmit } = useForm(
@@ -32,6 +33,15 @@ function PitchModal({ venue, selectedDate, artist, onClose, onSubmit }) {
 
   const handleDatePickerToggle = () => {
     setIsDatePickerOpen((prev) => !prev);
+  };
+
+  const toggleRole = () => {
+    handleChange({
+      target: {
+        name: "role",
+        value: formData.role === "Headliner" ? "Support" : "Headliner",
+      },
+    });
   };
 
   return (
@@ -107,6 +117,23 @@ function PitchModal({ venue, selectedDate, artist, onClose, onSubmit }) {
               placeholder="Support Acts (could use spotify api here if we want and send venue spotify links)"
               className="w-full border rounded-md p-2 mt-3"
             ></textarea>
+          </div>
+
+          {/* Role Toggle */}
+          <div className="mb-4">
+            <div className="flex items-center">
+              <span className="mr-2">Headliner</span>
+              <label className="relative inline-flex items-center cursor-pointer">
+                <input
+                  type="checkbox"
+                  className="sr-only peer"
+                  checked={formData.role === "Support"}
+                  onChange={toggleRole}
+                />
+                <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:bg-nextsetAccent peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+              </label>
+              <span className="ml-2">Support</span>
+            </div>
           </div>
 
           <div className="mt-6 flex justify-end space-x-4">
