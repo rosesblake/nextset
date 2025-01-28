@@ -4,10 +4,10 @@ const useForm = (initialState, onSubmit) => {
   const [formData, setFormData] = useState(initialState);
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
+    const { name, value, type, checked } = e.target;
     setFormData((data) => ({
       ...data,
-      [name]: value,
+      [name]: type === "checkbox" ? checked : value,
     }));
   };
 

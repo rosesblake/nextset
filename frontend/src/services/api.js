@@ -157,6 +157,10 @@ class NextSetApi {
     return await this.request(`pitches/${pitch_id}/update`, status, "patch");
   }
 
+  static async confirmPitch(pitch_id, data) {
+    return await this.request(`pitches/${pitch_id}/confirm`, data, "patch");
+  }
+
   static async loginUser(user) {
     let res = await this.request(`auth/login`, user, "post");
     NextSetApi.token = res.token;

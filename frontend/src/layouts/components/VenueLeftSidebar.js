@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
+import { VenueBookings } from "../../features/venue/pages/VenueBookings";
 
 function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();
@@ -54,6 +55,14 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
                 <span>Dashboard</span>
+              </Link>
+            </li>
+            <li>
+              <Link
+                to="/venue/bookings"
+                className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
+              >
+                <span>Bookings</span>
               </Link>
             </li>
             <li>

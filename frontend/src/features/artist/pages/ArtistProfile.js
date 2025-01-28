@@ -62,7 +62,7 @@ function ArtistProfile() {
         ...prevFiles,
         [fileType]: response.url,
       }));
-
+      setCurrUser({ ...currUser, artist: response.artist });
       console.log(`${fileType} uploaded successfully:`, response);
     } catch (e) {
       console.error(
@@ -103,7 +103,7 @@ function ArtistProfile() {
             onSave={(newValue) => handleFieldSave("genre", newValue)}
           />
           <EditableField
-            label="bio"
+            label="Bio"
             value={currUser.artist.bio}
             onSave={(newValue) => handleFieldSave("bio", newValue)}
           />

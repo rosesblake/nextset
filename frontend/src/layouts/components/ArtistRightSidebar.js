@@ -1,10 +1,13 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
+import { useModal } from "../../contexts/ModalContext";
+import { PitchConfirmationModal } from "../../features/artist/components/PitchConfirmationModal";
 
 function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [activeTab, setActiveTab] = useState("sent");
   const { currUser } = useUser();
+  const { openModal, closeModal } = useModal();
   const [pitches, setPitches] = useState(
     currUser?.artist?.artist_pitches ?? []
   );
@@ -23,13 +26,23 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
     fetchPitches();
   }, [currUser]);
 
-  const sentPitches = pitches.filter(
-    (pitch) => pitch.pitches.status === "PENDING"
+  const handleOpenModal = (pitch) => {
+    openModal(<PitchConfirmationModal pitch={pitch} closeModal={closeModal} />);
+  };
+
+  const sentPitches = useMemo(
+    () => pitches.filter((pitch) => pitch.pitches.status === "pending"),
+    [pitches]
   );
 
-  const resultPitches = pitches.filter(
-    (pitch) =>
-      pitch.pitches.status === "accepted" || pitch.pitches.status === "declined"
+  const resultPitches = useMemo(
+    () =>
+      pitches.filter(
+        (pitch) =>
+          pitch.pitches.status === "accepted" ||
+          pitch.pitches.status === "declined"
+      ),
+    [pitches]
   );
 
   return (
@@ -115,30 +128,33 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
               </h3>
               <div className="space-y-3">
                 {resultPitches?.map((pitch) => (
-                  <Link
+                  <div
                     key={pitch.pitch_id}
-                    to={`/artist/venue/${pitch.pitches.venue_id}`}
-                    className="block"
+                    className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300"
                   >
-                    <div className="bg-gray-800 p-4 rounded-lg shadow hover:shadow-lg transition duration-300">
-                      <h4 className="text-lg text-nextsetAccent font-semibold">
-                        {pitch.pitches.venues?.name || "Unknown Venue"}
-                      </h4>
-                      <p className="text-sm text-gray-300">
-                        {pitch.pitches.venues?.city || "Unknown City"},{" "}
-                        {pitch.pitches.venues?.state || "Unknown State"}
-                      </p>
-                      <p
-                        className={`text-sm ${
-                          pitch.pitches.status === "accepted"
-                            ? "text-green-400"
-                            : "text-red-400"
-                        }`}
-                      >
-                        {pitch.pitches.status}
-                      </p>
-                    </div>
-                  </Link>
+                    <h4 className="text-lg text-nextsetAccent font-semibold">
+                      {pitch.pitches.venues?.name || "Unknown Venue"}
+                    </h4>
+                    <p className="text-sm text-gray-300">
+                      {pitch.pitches.venues?.city || "Unknown City"},{" "}
+                      {pitch.pitches.venues?.state || "Unknown State"}
+                    </p>
+                    <p
+                      className={`text-sm ${
+                        pitch.pitches.status === "accepted"
+                          ? "text-green-400"
+                          : "text-red-400"
+                      }`}
+                    >
+                      {pitch.pitches.status}
+                    </p>
+                    <button
+                      onClick={() => handleOpenModal(pitch)}
+                      className="px-4 py-2 mt-4 bg-nextsetButton hover:bg-nextsetAccent text-white rounded-md"
+                    >
+                      Finalize Booking
+                    </button>
+                  </div>
                 ))}
               </div>
             </div>

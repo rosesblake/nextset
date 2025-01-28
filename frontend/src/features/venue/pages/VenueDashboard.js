@@ -14,7 +14,7 @@ function VenueDashboard() {
             currUser.venue.id,
             currUser.account_type
           );
-          setPitches(response);
+          setPitches(response.filter((pitch) => pitch.status !== "confirmed"));
         } catch (e) {
           console.error("error fetching pitches", e);
         }
@@ -174,7 +174,7 @@ function VenueDashboard() {
                           Decline
                         </button>
                       </>
-                    )}{" "}
+                    )}
                   </div>
                 </li>
               );

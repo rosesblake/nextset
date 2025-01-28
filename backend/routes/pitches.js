@@ -6,6 +6,9 @@ const prisma = new PrismaClient();
 const router = express.Router();
 const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { pitchValidator } = require("../validators/pitchValidator");
+const {
+  confirmPitchValidator,
+} = require("../validators/confirmPitchValidator");
 const { validate } = require("../middleware/validate");
 const { BadRequestError } = require("../expressError");
 
@@ -53,7 +56,7 @@ router.post(
           content: req.body.content,
           avg_ticket_sales: parseInt(req.body.avg_ticket_sales),
           support_acts: req.body.support_acts,
-          status: "PENDING",
+          status: "pending",
           role: req.body.role,
         },
       });
@@ -101,7 +104,7 @@ router.patch(
   ensureLoggedIn,
   async (req, res, next) => {
     try {
-      const pitch_id = parseInt(req.params.id);
+      const pitch_id = parseInt(req.params.id, 10);
       const { status } = req.body;
 
       if (!["accepted", "declined"].includes(status)) {
@@ -113,7 +116,33 @@ router.patch(
         data: { status },
       });
 
-      return res.json(updatedPitch);
+      return res.status(200).json(updatedPitch);
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
+
+router.patch(
+  "/:id/confirm",
+  authenticateJWT,
+  ensureLoggedIn,
+  confirmPitchValidator,
+  async (req, res, next) => {
+    try {
+      const pitch_id = parseInt(req.params.id, 10);
+      const { data } = req.body;
+
+      if (!data || Object.keys(data).length === 0) {
+        throw new BadRequestError("Please submit all required documents");
+      }
+
+      const confirmedPitch = await prisma.pitches.update({
+        where: { id: pitch_id },
+        data,
+      });
+
+      return res.status(200).json(confirmedPitch);
     } catch (e) {
       return next(e);
     }

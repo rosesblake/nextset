@@ -6,16 +6,19 @@ import reportWebVitals from "./reportWebVitals";
 import { UserProvider } from "./contexts/UserContext";
 import { MessageProvider } from "./contexts/MessageContext";
 import { BrowserRouter } from "react-router-dom";
+import { ModalProvider } from "./contexts/ModalContext";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
-      <UserProvider>
-        <MessageProvider>
-          <App />
-        </MessageProvider>
-      </UserProvider>
+      <MessageProvider>
+        <UserProvider>
+          <ModalProvider>
+            <App />
+          </ModalProvider>
+        </UserProvider>
+      </MessageProvider>
     </BrowserRouter>
   </React.StrictMode>
 );

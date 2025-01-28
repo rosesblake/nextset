@@ -20,6 +20,7 @@ import { ArtistVenueView } from "./features/artist/pages/ArtistVenueView";
 import { VenueProfile } from "./features/venue/pages/VenueProfile";
 import { Spinner } from "./shared/components/Spinner";
 import { ArtistList } from "./features/venue/pages/ArtistList";
+import { VenueBookings } from "./features/venue/pages/VenueBookings";
 
 function App() {
   const { currUser, logout, isLoading } = useUser();
@@ -100,6 +101,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<VenueDashboard />} />
           <Route path="profile" element={<VenueProfile />} />
+          <Route path="bookings" element={<VenueBookings />} />
           <Route path="explore" element={<ArtistList />} />
         </Route>
 
