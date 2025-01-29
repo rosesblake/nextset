@@ -8,19 +8,23 @@ const pitchValidator = [
     .notEmpty()
     .withMessage("Venue ID is required"),
 
-  // Average Ticket Sales: Optional, must be a positive integer
-  body("avg_ticket_sales")
-    .optional()
-    .isInt({ min: 0 })
-    .withMessage("Average ticket sales must be a positive integer"),
-
-  // Support Acts: Optional, must be a string and up to 30 characters
+  // Support Acts: Must be an array (if provided)
   body("support_acts")
     .optional()
+    .isArray()
+    .withMessage("Support acts must be an array"),
+  body("support_acts.*.name")
+    .optional()
     .isString()
-    .withMessage("Support acts must be a string")
-    .isLength({ max: 30 })
-    .withMessage("Support acts cannot exceed 30 characters"),
+    .withMessage("Each support act must have a valid name"),
+  body("support_acts.*.spotify_id")
+    .optional()
+    .isString()
+    .withMessage("Each support act must have a valid Spotify ID"),
+  body("support_acts.*.spotify_url")
+    .optional()
+    .isURL()
+    .withMessage("Each support act must have a valid Spotify URL"),
 
   // Date: Must be a valid ISO 8601 date and not empty
   body("date")
@@ -35,6 +39,11 @@ const pitchValidator = [
     .withMessage("Content must be a string")
     .notEmpty()
     .withMessage("Content is required"),
+
+  // Role: Must be "Headliner" or "Support"
+  body("role")
+    .isIn(["Headliner", "Support"])
+    .withMessage("Role must be either 'Headliner' or 'Support'"),
 ];
 
 module.exports = { pitchValidator };

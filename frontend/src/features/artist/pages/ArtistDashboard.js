@@ -10,12 +10,7 @@ function ArtistDashboard() {
   const [venues, setVenues] = useState();
   const [loading, setLoading] = useState(true);
   const [pitches, setPitches] = useState([]);
-
-  // Temporary upcoming gigs data
-  const upcomingGigs = [
-    { id: 1, venue: "The Velvet Room", date: "Jan 15, 2025" },
-    { id: 2, venue: "Blue Note Stage", date: "Jan 20, 2025" },
-  ];
+  const [upcomingGigs, setUpcomingGigs] = useState([]);
 
   useEffect(() => {
     async function fetchVenues() {
@@ -27,6 +22,9 @@ function ArtistDashboard() {
           currUser.artist.id
         );
         setPitches(artistPitches);
+        setUpcomingGigs(
+          artistPitches.filter((pitch) => pitch.pitches?.status === "confirmed")
+        );
       } catch (e) {
         console.error("Error fetching venues:", e);
       } finally {
@@ -35,7 +33,7 @@ function ArtistDashboard() {
     }
 
     fetchVenues();
-  }, [currUser.artist.id]);
+  }, [currUser]);
 
   if (loading) {
     return (
@@ -44,7 +42,6 @@ function ArtistDashboard() {
       </div>
     );
   }
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-10">
       <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
@@ -97,14 +94,23 @@ function ArtistDashboard() {
             <ul className="space-y-4">
               {upcomingGigs.map((gig) => (
                 <li
-                  key={gig.id}
+                  key={gig.pitch_id}
                   className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition"
                 >
                   <div className="flex justify-between">
                     <span className="text-nextsetAccent font-medium">
-                      {gig.venue}
+                      {gig.pitches.venues.name}
                     </span>
-                    <span className="text-gray-500">{gig.date}</span>
+                    <span className="text-gray-400 font-medium">
+                      {gig.pitches.venues.city}, {gig.pitches.venues.state}
+                    </span>
+                    <span className="text-gray-500">
+                      {new Date(gig.pitches.date).toLocaleDateString("en-US", {
+                        year: "numeric",
+                        month: "long",
+                        day: "numeric",
+                      })}
+                    </span>
                   </div>
                 </li>
               ))}

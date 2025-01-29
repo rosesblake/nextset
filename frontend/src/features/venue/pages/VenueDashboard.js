@@ -65,18 +65,22 @@ function VenueDashboard() {
                         {new Date(pitch.date).toLocaleDateString()}
                       </span>
                     </p>
-                    <p className="text-sm text-gray-500 mt-2">
-                      Average Tickets Sold:{" "}
-                      <span className="font-medium">
-                        {pitch.avg_ticket_sales}
-                      </span>
-                    </p>
-                    <p className="text-sm text-gray-500 mt-2">
+                    <div className="text-sm text-gray-500 font-bold mt-2">
                       Support Acts:{" "}
-                      <span className="font-medium">
-                        {pitch.support_acts || "N/A"}
-                      </span>
-                    </p>
+                      <div className="font-medium ">
+                        {pitch.support_acts?.map((act) => (
+                          <div key={act.spotify_id}>
+                            <a
+                              href={act.spotify_url}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                            >
+                              {act.name}
+                            </a>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
                   </div>
 
                   {/* Artist Details */}
@@ -93,7 +97,7 @@ function VenueDashboard() {
                       <div className="mt-4 flex justify-center space-x-6">
                         {artist.instagram_handle && (
                           <a
-                            href={`https://instagram.com/${artist.instagram_handle}`}
+                            href={artist.instagram_handle}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
@@ -103,7 +107,7 @@ function VenueDashboard() {
                         )}
                         {artist.x_handle && (
                           <a
-                            href={`https://x.com/${artist.x_handle}`}
+                            href={artist.x_handle}
                             target="_blank"
                             rel="noopener noreferrer"
                             className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
@@ -149,7 +153,7 @@ function VenueDashboard() {
                   <div className="mt-6 flex justify-center space-x-4">
                     {pitch.status === "accepted" ? (
                       <p className="px-6 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
-                        Accepted
+                        Awaiting Confirmation
                       </p>
                     ) : pitch.status === "declined" ? (
                       <p className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition">

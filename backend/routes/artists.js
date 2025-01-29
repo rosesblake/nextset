@@ -67,9 +67,10 @@ router.post(
 
 router.post(
   "/:id/upload/:fileType",
+  uploadValidator,
+  validate,
   authenticateJWT,
   ensureLoggedIn,
-  uploadValidator,
   upload.single("file"),
   async function (req, res, next) {
     try {

@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 import { useModal } from "../../contexts/ModalContext";
 import { PitchConfirmationModal } from "../../features/artist/components/PitchConfirmationModal";
+import { NextSetApi } from "../../services/api";
 
 function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [activeTab, setActiveTab] = useState("sent");
@@ -14,9 +15,10 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
 
   useEffect(() => {
     async function fetchPitches() {
-      const artistPitches = currUser?.artist?.artist_pitches;
-      if (!artistPitches) return;
       try {
+        const artistPitches = await NextSetApi.getArtistPitches(
+          currUser.artist.id
+        );
         setPitches(artistPitches);
       } catch (error) {
         console.error("Error fetching artist pitches:", error.message);

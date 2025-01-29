@@ -102,7 +102,7 @@ model pitches {
   id               Int             @id @default(autoincrement())
   venue_id         Int
   avg_ticket_sales Int?
-  support_acts     String?         @db.VarChar(30)
+  support_acts     Json?        
   date             DateTime        @db.Date
   role             String          
   content          String

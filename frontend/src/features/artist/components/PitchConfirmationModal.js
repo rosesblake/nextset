@@ -31,7 +31,9 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
             payload[key] = currUser.artist[key];
           }
         });
-        await NextSetApi.confirmPitch(pitch.pitch_id, { data: payload });
+        const res = await NextSetApi.confirmPitch(pitch.pitch_id, {
+          data: payload,
+        });
         //update user context so that the change is instantanious
         setCurrUser((prevUser) => ({
           ...prevUser,
@@ -44,7 +46,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
             ),
           },
         }));
-
+        console.log(res);
         closeModal();
         showMessage("Booking Confirmed", "success");
       } catch (e) {
@@ -52,7 +54,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
       }
     }
   );
-  console.log(currUser);
+
   const documents = {
     w9: currUser.artist.w9,
     rider: currUser.artist.rider,
@@ -99,10 +101,24 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
           </h3>
           <p className="text-gray-600">{pitch.pitches.role}</p>
           <p className="text-gray-600">{pitch.pitches.content}</p>
-          <p className="text-gray-600">
+          <div className="text-gray-600 font-bold">
             Support:{" "}
-            <span className="font-medium">{pitch.pitches.support_acts}</span>
-          </p>
+            <ul className="font-medium">
+              {pitch.pitches.support_acts.map((act) => {
+                return (
+                  <li key={act.spotify_id}>
+                    <a
+                      href={act.spotify_url}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {act.name}
+                    </a>
+                  </li>
+                );
+              })}
+            </ul>
+          </div>
         </div>
         {/* Document Selection */}
         <form onSubmit={handleSubmit}>

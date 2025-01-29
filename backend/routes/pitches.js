@@ -10,17 +10,18 @@ const {
   confirmPitchValidator,
 } = require("../validators/confirmPitchValidator");
 const { validate } = require("../middleware/validate");
+const { validationResult } = require("express-validator");
 const { BadRequestError } = require("../expressError");
 
 router.post(
   "/",
+  pitchValidator,
+  validate,
   authenticateJWT,
   ensureLoggedIn,
-  validate,
-  pitchValidator,
   async (req, res, next) => {
     try {
-      //make sure date is available
+      // Ensure the date is available
       const venue = await prisma.venues.findUnique({
         where: { id: req.body.venue_id },
         select: { blocked_dates: true },
@@ -29,7 +30,7 @@ router.post(
         throw new BadRequestError("Date unavailable for this venue.");
       }
 
-      //duplicate check
+      // Duplicate check
       const duplicate = await prisma.pitches.findFirst({
         where: {
           venue_id: req.body.venue_id,
@@ -48,24 +49,23 @@ router.post(
         );
       }
 
-      //create the pitch
+      // Create the pitch
       const pitch = await prisma.pitches.create({
         data: {
           venue_id: req.body.venue_id,
           date: req.body.date,
           content: req.body.content,
-          avg_ticket_sales: parseInt(req.body.avg_ticket_sales),
-          support_acts: req.body.support_acts,
+          support_acts: req.body.support_acts, // Ensure this is valid JSON
           status: "pending",
           role: req.body.role,
         },
       });
-      //link artist and pitch
-      const artistId = req.body.artist_id;
+
+      // Link artist and pitch
       await prisma.artist_pitches.create({
         data: {
           pitch_id: pitch.id,
-          artist_id: artistId,
+          artist_id: req.body.artist_id,
         },
       });
 
@@ -87,7 +87,11 @@ router.get(
       const artistPitches = await prisma.artist_pitches.findMany({
         where: { artist_id: artist_id },
         include: {
-          pitches: true,
+          pitches: {
+            include: {
+              venues: true,
+            },
+          },
         },
       });
 
@@ -127,7 +131,6 @@ router.patch(
   "/:id/confirm",
   authenticateJWT,
   ensureLoggedIn,
-  confirmPitchValidator,
   async (req, res, next) => {
     try {
       const pitch_id = parseInt(req.params.id, 10);

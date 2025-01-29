@@ -34,7 +34,7 @@ function VenueList() {
     }
 
     fetchVenues();
-  }, [currUser.artist.id]);
+  }, [currUser]);
 
   if (loading) {
     return (

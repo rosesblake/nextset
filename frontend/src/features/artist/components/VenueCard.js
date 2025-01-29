@@ -1,17 +1,15 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
-import { PitchModal } from "./PitchModal";
-import { NextSetApi } from "../../../services/api";
+import { useModal } from "../../../contexts/ModalContext";
 import { useMessage } from "../../../contexts/MessageContext";
 import { useUser } from "../../../contexts/UserContext";
+import { PitchModal } from "./PitchModal";
+import { NextSetApi } from "../../../services/api";
 
 function VenueCard({ venue, artist, pitches }) {
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const { openModal, closeModal } = useModal();
   const { showMessage } = useMessage();
   const { currUser, setCurrUser } = useUser();
-
-  const openModal = () => setIsModalOpen(true);
-  const closeModal = () => setIsModalOpen(false);
 
   const handleSubmitPitch = async (pitchData) => {
     try {
@@ -20,16 +18,25 @@ function VenueCard({ venue, artist, pitches }) {
         date: new Date(pitchData.date).toISOString(),
       });
 
-      // Fetch updated artist data
       const updatedArtist = await NextSetApi.getArtist(artist.id);
       setCurrUser({ ...currUser, artist: updatedArtist });
-
       closeModal();
       showMessage("Submission successful!", "success");
     } catch (e) {
+      console.error(e);
       closeModal();
       showMessage(e.message, "error");
     }
+  };
+
+  const handleOpenPitchModal = () => {
+    openModal(
+      <PitchModal
+        venue={venue}
+        artist={currUser.artist}
+        onSubmit={handleSubmitPitch}
+      />
+    );
   };
 
   return (
@@ -54,7 +61,7 @@ function VenueCard({ venue, artist, pitches }) {
         {!pitches ? (
           <button
             className="px-4 py-2 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
-            onClick={openModal}
+            onClick={handleOpenPitchModal}
           >
             Pitch
           </button>
@@ -64,15 +71,6 @@ function VenueCard({ venue, artist, pitches }) {
           </p>
         )}
       </div>
-
-      {isModalOpen && (
-        <PitchModal
-          venue={venue}
-          artist={currUser.artist}
-          onClose={closeModal}
-          onSubmit={handleSubmitPitch}
-        />
-      )}
     </div>
   );
 }

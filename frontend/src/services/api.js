@@ -138,11 +138,7 @@ class NextSetApi {
   }
 
   static async sendPitch(data) {
-    try {
-      return await this.request(`pitches`, data, "post");
-    } catch (e) {
-      throw e;
-    }
+    return await this.request(`pitches`, data, "post");
   }
 
   static async getVenuePitches(venue_id) {
