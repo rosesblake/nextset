@@ -1,14 +1,13 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 import { useUser } from "../../../contexts/UserContext";
 import { NextSetApi } from "../../../services/api";
 import { VenueCard } from "../components/VenueCard";
 
 function ArtistDashboard() {
-  const { currUser } = useUser();
+  const { currUser, isLoading } = useUser();
   const navigate = useNavigate();
   const [venues, setVenues] = useState();
-  const [loading, setLoading] = useState(true);
   const [pitches, setPitches] = useState([]);
   const [upcomingGigs, setUpcomingGigs] = useState([]);
 
@@ -16,32 +15,39 @@ function ArtistDashboard() {
     async function fetchVenues() {
       try {
         const allVenues = await NextSetApi.allVenues();
-        setVenues(allVenues.venues);
-
         const artistPitches = await NextSetApi.getArtistPitches(
           currUser.artist.id
         );
+
+        setVenues(allVenues.venues);
         setPitches(artistPitches);
         setUpcomingGigs(
           artistPitches.filter((pitch) => pitch.pitches?.status === "confirmed")
         );
       } catch (e) {
         console.error("Error fetching venues:", e);
-      } finally {
-        setLoading(false);
       }
     }
 
     fetchVenues();
   }, [currUser]);
 
-  if (loading) {
+  //filter out confirmed venues.
+  const recommendedVenues = venues?.slice(0, 3).filter((venue) => {
+    const venuePitches = pitches.filter(
+      (pitch) => pitch.pitches.venue_id === venue.id
+    );
+    return !venuePitches.some((pitch) => pitch.pitches?.status === "confirmed");
+  });
+
+  if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-gray-100">
         <p className="text-xl font-semibold text-gray-600">Loading...</p>
       </div>
     );
   }
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-10">
       <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
@@ -64,16 +70,17 @@ function ArtistDashboard() {
             Recommended Venues
           </h2>
           <ul className="space-y-4">
-            {venues?.slice(0, 3).map((venue) => (
-              <VenueCard
-                key={venue.id}
-                venue={venue}
-                artist={currUser.artist}
-                pitches={pitches.some(
-                  (pitch) => pitch.pitches.venue_id === venue.id
-                )}
-              />
-            ))}
+            {recommendedVenues?.length > 0 &&
+              recommendedVenues.map((venue) => (
+                <VenueCard
+                  key={venue.id}
+                  venue={venue}
+                  artist={currUser.artist}
+                  pitches={pitches.some(
+                    (pitch) => pitch.pitches.venue_id === venue.id
+                  )}
+                />
+              ))}
           </ul>
           <div className="text-right mt-4">
             <button
@@ -90,29 +97,34 @@ function ArtistDashboard() {
           <h2 className="text-2xl font-semibold text-nextsetPrimary mb-4">
             Upcoming Gigs
           </h2>
-          {upcomingGigs.length > 0 ? (
+          {upcomingGigs?.length > 0 ? (
             <ul className="space-y-4">
               {upcomingGigs.map((gig) => (
-                <li
+                <Link
+                  to={`/artist/venue/${gig.pitches.venue_id}`}
                   key={gig.pitch_id}
-                  className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition"
                 >
-                  <div className="flex justify-between">
-                    <span className="text-nextsetAccent font-medium">
-                      {gig.pitches.venues.name}
-                    </span>
-                    <span className="text-gray-400 font-medium">
-                      {gig.pitches.venues.city}, {gig.pitches.venues.state}
-                    </span>
-                    <span className="text-gray-500">
-                      {new Date(gig.pitches.date).toLocaleDateString("en-US", {
-                        year: "numeric",
-                        month: "long",
-                        day: "numeric",
-                      })}
-                    </span>
-                  </div>
-                </li>
+                  <li className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition">
+                    <div className="flex justify-between">
+                      <span className="text-nextsetAccent font-medium">
+                        {gig.pitches.venues.name}
+                      </span>
+                      <span className="text-gray-400 font-medium">
+                        {gig.pitches.venues.city}, {gig.pitches.venues.state}
+                      </span>
+                      <span className="text-gray-500">
+                        {new Date(gig.pitches.date).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
+                      </span>
+                    </div>
+                  </li>
+                </Link>
               ))}
             </ul>
           ) : (

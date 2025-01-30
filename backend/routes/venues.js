@@ -106,6 +106,7 @@ router.get(
                 select: {
                   name: true,
                   bio: true,
+                  website: true,
                   genre: true,
                   instagram_handle: true,
                   x_handle: true,
@@ -118,6 +119,9 @@ router.get(
               },
             },
           },
+        },
+        orderBy: {
+          date: "asc",
         },
       });
 

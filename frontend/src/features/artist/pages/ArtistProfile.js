@@ -63,7 +63,6 @@ function ArtistProfile() {
         [fileType]: response.url,
       }));
       setCurrUser({ ...currUser, artist: response.artist });
-      console.log(`${fileType} uploaded successfully:`, response);
     } catch (e) {
       console.error(
         `Error uploading ${fileType}:`,

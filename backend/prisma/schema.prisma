@@ -21,6 +21,7 @@ model artists {
   instagram_handle          String?         @db.VarChar(50)
   x_handle                  String?         @db.VarChar(50)
   facebook_url              String?
+  tiktok                    String?
   rating_social_media       Float?
   spotify_id                String?
   spotify_url               String?         

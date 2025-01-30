@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useUser } from "../../../contexts/UserContext";
 import { NextSetApi } from "../../../services/api";
+import { ArtistPitchCard } from "../components/ArtistPitchCard";
 
 function VenueDashboard() {
   const { currUser } = useUser();
@@ -46,143 +47,13 @@ function VenueDashboard() {
         </h2>
         {pitches.length > 0 ? (
           <ul className="divide-y divide-gray-200">
-            {pitches.map((pitch) => {
-              const artist = pitch.artist_pitches[0]?.artists;
-
-              return (
-                <li
-                  key={pitch.id}
-                  className="py-6 px-4 bg-gray-50 rounded-lg shadow-sm mb-4"
-                >
-                  {/* Pitch Content */}
-                  <div className="text-center mb-4">
-                    <p className="font-semibold text-xl text-gray-800">
-                      {pitch.content}
-                    </p>
-                    <p className="text-sm text-gray-500 mt-2">
-                      Proposed Date:{" "}
-                      <span className="font-medium">
-                        {new Date(pitch.date).toLocaleDateString()}
-                      </span>
-                    </p>
-                    <div className="text-sm text-gray-500 font-bold mt-2">
-                      Support Acts:{" "}
-                      <div className="font-medium ">
-                        {pitch.support_acts?.map((act) => (
-                          <div key={act.spotify_id}>
-                            <a
-                              href={act.spotify_url}
-                              target="_blank"
-                              rel="noopener noreferrer"
-                            >
-                              {act.name}
-                            </a>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  </div>
-
-                  {/* Artist Details */}
-                  {artist && (
-                    <div className="mt-6 p-6 bg-gray-100 rounded-md text-center shadow-inner">
-                      <h3 className="text-xl font-bold text-nextsetAccent">
-                        Artist: {artist.name}
-                      </h3>
-                      <h4 className="text-md">{artist.role || "Support"}</h4>
-                      <p className="text-gray-700 mt-2">{artist.bio}</p>
-                      <p className="text-sm text-gray-500">
-                        Genre: {artist.genre || "N/A"}
-                      </p>
-                      <div className="mt-4 flex justify-center space-x-6">
-                        {artist.instagram_handle && (
-                          <a
-                            href={artist.instagram_handle}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
-                          >
-                            Instagram
-                          </a>
-                        )}
-                        {artist.x_handle && (
-                          <a
-                            href={artist.x_handle}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
-                          >
-                            X (Twitter)
-                          </a>
-                        )}
-                        {artist.facebook_url && (
-                          <a
-                            href={artist.facebook_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
-                          >
-                            Facebook
-                          </a>
-                        )}
-                        {artist.spotify_url && (
-                          <a
-                            href={artist.spotify_url}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            className="text-nextsetAccent font-semibold hover:underline hover:text-nextsetButton transition"
-                          >
-                            Spotify
-                          </a>
-                        )}
-                      </div>
-                      {artist.spotify_photo && (
-                        <img
-                          src={artist.spotify_photo}
-                          alt={`${artist.name}`}
-                          className="w-24 h-24 rounded-full mx-auto mt-4 shadow-lg"
-                        />
-                      )}
-                      <p className="text-sm text-nextsetPrimary mt-4">
-                        Hometown: {artist.hometown || "N/A"}
-                      </p>
-                    </div>
-                  )}
-
-                  {/* Action Buttons */}
-                  <div className="mt-6 flex justify-center space-x-4">
-                    {pitch.status === "accepted" ? (
-                      <p className="px-6 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition">
-                        Awaiting Confirmation
-                      </p>
-                    ) : pitch.status === "declined" ? (
-                      <p className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition">
-                        Declined
-                      </p>
-                    ) : (
-                      <>
-                        <button
-                          onClick={() =>
-                            handlePitchStatus(pitch.id, "accepted")
-                          }
-                          className="px-6 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition"
-                        >
-                          Accept
-                        </button>
-                        <button
-                          onClick={() =>
-                            handlePitchStatus(pitch.id, "declined")
-                          }
-                          className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition"
-                        >
-                          Decline
-                        </button>
-                      </>
-                    )}
-                  </div>
-                </li>
-              );
-            })}
+            {pitches.map((pitch) => (
+              <ArtistPitchCard
+                key={pitch.id}
+                pitch={pitch}
+                handlePitchStatus={handlePitchStatus}
+              />
+            ))}
           </ul>
         ) : (
           <p className="text-gray-600 text-center">No pitches received yet.</p>

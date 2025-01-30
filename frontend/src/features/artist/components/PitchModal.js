@@ -1,13 +1,21 @@
 import React, { useState } from "react";
 import { useForm } from "../../../hooks/useForm";
 import DatePicker from "react-date-picker";
-import { SpotifyDropdown } from "../../auth/components/SpotifyDropdown"; // Reuse the dropdown component
+import { SpotifyDropdown } from "../../auth/components/SpotifyDropdown";
 import { NextSetApi } from "../../../services/api";
+import { ArtistPitchPreview } from "./ArtistPitchPreview";
 
-function PitchModal({ venue, artist, onSubmit }) {
+function PitchModal({
+  venue,
+  artist,
+  onSubmit,
+  openModal,
+  closeModal,
+  showMessage,
+}) {
   const initialState = {
     content: "",
-    support_acts: [], // Store selected support acts as an array
+    support_acts: [],
     role: "Headliner",
   };
 
@@ -31,6 +39,7 @@ function PitchModal({ venue, artist, onSubmit }) {
 
   const [date, setDate] = useState(null);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
   const [spotifyResults, setSpotifyResults] = useState([]);
 
   const handleDateChange = (newDate) => {
@@ -43,8 +52,9 @@ function PitchModal({ venue, artist, onSubmit }) {
   };
 
   const handleSearch = async (value) => {
+    setSearchInput(value); // Update input state
     if (!value) {
-      setSpotifyResults([]);
+      setSpotifyResults([]); // Clear results if input is empty
       return;
     }
     try {
@@ -64,6 +74,8 @@ function PitchModal({ venue, artist, onSubmit }) {
         },
       });
     }
+    setSearchInput("");
+    setSpotifyResults([]);
   };
 
   const handleRemoveSupportAct = (artistId) => {
@@ -82,6 +94,26 @@ function PitchModal({ venue, artist, onSubmit }) {
         value: formData.role === "Headliner" ? "Support" : "Headliner",
       },
     });
+  };
+
+  const handlePitchPreviewModal = (e) => {
+    e.preventDefault();
+    if (!formData.content || !date) {
+      closeModal();
+      return showMessage("Please fill out all required fields", "error");
+    }
+    closeModal();
+    openModal(
+      <ArtistPitchPreview
+        closeModal={closeModal}
+        openModal={openModal}
+        handleSubmit={handleSubmit}
+        formData={formData}
+        date={date}
+        onSubmit={onSubmit}
+        venue={venue}
+      />
+    );
   };
 
   return (
@@ -107,7 +139,7 @@ function PitchModal({ venue, artist, onSubmit }) {
           <span className="ml-2">Support</span>
         </div>
       </div>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={handlePitchPreviewModal}>
         {/* Date Picker */}
         <div className="mb-4">
           <label className="block text-nextsetPrimary font-semibold mb-2">
@@ -158,13 +190,15 @@ function PitchModal({ venue, artist, onSubmit }) {
             type="text"
             placeholder="Search artists on Spotify"
             className="w-full border rounded-md p-2"
+            value={searchInput}
             onChange={(e) => handleSearch(e.target.value)}
           />
+
           <SpotifyDropdown
             results={spotifyResults}
             onSelect={(artist) => {
               handleAddSupportAct(artist);
-              setSpotifyResults([]); // Clear search results after selection
+              setSpotifyResults([]);
             }}
           />
           <ul className="mt-2">
@@ -208,7 +242,7 @@ function PitchModal({ venue, artist, onSubmit }) {
             type="submit"
             className="px-4 py-2 bg-nextsetAccent text-white rounded hover:bg-nextsetButton"
           >
-            Submit
+            Review
           </button>
         </div>
       </form>

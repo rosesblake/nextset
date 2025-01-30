@@ -12,6 +12,7 @@ function VenueCard({ venue, artist, pitches }) {
   const { currUser, setCurrUser } = useUser();
 
   const handleSubmitPitch = async (pitchData) => {
+    if (!pitchData) return closeModal();
     try {
       await NextSetApi.sendPitch({
         ...pitchData,
@@ -35,6 +36,9 @@ function VenueCard({ venue, artist, pitches }) {
         venue={venue}
         artist={currUser.artist}
         onSubmit={handleSubmitPitch}
+        openModal={openModal}
+        closeModal={closeModal}
+        showMessage={showMessage}
       />
     );
   };

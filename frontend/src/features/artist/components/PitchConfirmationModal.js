@@ -31,7 +31,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
             payload[key] = currUser.artist[key];
           }
         });
-        const res = await NextSetApi.confirmPitch(pitch.pitch_id, {
+        await NextSetApi.confirmPitch(pitch.pitch_id, {
           data: payload,
         });
         //update user context so that the change is instantanious
@@ -46,7 +46,6 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
             ),
           },
         }));
-        console.log(res);
         closeModal();
         showMessage("Booking Confirmed", "success");
       } catch (e) {
