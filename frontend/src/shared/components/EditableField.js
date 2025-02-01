@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 
-function EditableField({ label, value, onSave, link = false }) {
+function EditableField({ label, value, onSave, link = false, png }) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
 
@@ -21,22 +21,27 @@ function EditableField({ label, value, onSave, link = false }) {
     }
   };
 
+  const icon = png
+    ? `/images/${label.toLowerCase()}_icon.png`
+    : `/images/${label.toLowerCase()}_icon.svg`;
+
   return (
     <div className="flex justify-between items-center mb-2">
       <div className="flex items-center space-x-2">
-        {label && (
+        {label && !link && (
           <span className="text-nextsetButton font-bold">{label}:</span>
         )}
         {!link ? (
-          <span className="text-gray-600">{value}</span>
+          <span>{value}</span>
         ) : (
           <a
             href={value}
-            className="text-nextsetAccent"
+            className="text-nextsetAccent flex flex-row"
             target="_blank"
             rel="noopener noreferrer"
           >
-            {value}
+            <img src={icon} alt={label} className="w-8 h-8 mr-4" />
+            <span>{value}</span>
           </a>
         )}
       </div>

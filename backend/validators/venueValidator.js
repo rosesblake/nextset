@@ -23,8 +23,8 @@ const venueValidator = [
     .withMessage("State must be a string")
     .notEmpty()
     .withMessage("State is required")
-    .isLength({ min: 2, max: 2 })
-    .withMessage("State must be 2 characters"),
+    .isLength({ min: 2, max: 20 })
+    .withMessage("State must be at least 2 characters, max 20"),
 
   body("address")
     .optional()

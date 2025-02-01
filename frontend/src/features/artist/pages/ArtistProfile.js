@@ -157,28 +157,31 @@ function ArtistProfile() {
               link={true}
             />
             <EditableField
-              label="X"
+              label="Twitter"
               value={currUser.artist.x_handle}
               onSave={(newValue) => handleFieldSave("x_handle", newValue)}
               link={true}
+              png
             />
             <EditableField
-              label="Facebook URL"
+              label="Facebook"
               value={currUser.artist.facebook_url}
               onSave={(newValue) => handleFieldSave("facebook_url", newValue)}
               link={true}
+              png
             />
             <EditableField
-              label="Spotify Profile"
+              label="spotify"
               value={currUser.artist.spotify_url}
               onSave={(newValue) => handleFieldSave("spotify_url", newValue)}
               link={true}
             />
             <EditableField
-              label="Live Video"
+              label="youtube"
               value={currUser.artist.live_show_url}
               onSave={(newValue) => handleFieldSave("live_show_url", newValue)}
               link={true}
+              png
             />
           </div>
         </div>
@@ -195,14 +198,14 @@ function ArtistProfile() {
               currentFileUrl={files.epk}
             />
             <FileUploadField
-              label="W-9"
-              onUpload={(file) => handleFileUpload("w9", file)}
-              currentFileUrl={files.w9}
-            />
-            <FileUploadField
               label="Rider"
               onUpload={(file) => handleFileUpload("rider", file)}
               currentFileUrl={files.rider}
+            />
+            <FileUploadField
+              label="W-9"
+              onUpload={(file) => handleFileUpload("w9", file)}
+              currentFileUrl={files.w9}
             />
             <FileUploadField
               label="Stage Plot"

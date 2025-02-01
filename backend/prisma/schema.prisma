@@ -178,7 +178,7 @@ model venues {
   capacity        Int?
   address         String?           @db.VarChar(50)
   city            String?           @db.VarChar(50)
-  state           String?           @db.VarChar(2)
+  state           String?           @db.VarChar(20)
   zip_code        Int?             
   events          events[]
   pitches         pitches[]

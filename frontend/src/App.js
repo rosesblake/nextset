@@ -14,7 +14,7 @@ import { VenueLayout } from "./layouts/VenueLayout";
 import { ArtistDashboard } from "./features/artist/pages/ArtistDashboard";
 import { VenueDashboard } from "./features/venue/pages/VenueDashboard";
 import { ArtistProfile } from "./features/artist/pages/ArtistProfile";
-import { ArtistMessage } from "./features/artist/pages/ArtistMessage";
+import { GigDetails } from "./features/artist/pages/GigDetails";
 import { VenueList } from "./features/artist/pages/VenueList";
 import { ArtistVenueView } from "./features/artist/pages/ArtistVenueView";
 import { VenueProfile } from "./features/venue/pages/VenueProfile";
@@ -81,7 +81,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ArtistDashboard />} />
           <Route path="profile" element={<ArtistProfile />} />
-          <Route path="messages" element={<ArtistMessage />} />
+          <Route path="gigs" element={<GigDetails />} />
           <Route path="venue/list" element={<VenueList />} />
           <Route path="venue/:id" element={<ArtistVenueView />} />
         </Route>

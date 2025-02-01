@@ -69,14 +69,14 @@ function ArtistLeftSidebar({ isCollapsed, toggleSidebars }) {
                 <span>Venues</span>
               </Link>
             </li>
-            {/* <li>
+            <li>
               <Link
-                to="/artist/messages"
+                to="/artist/gigs"
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
-                <span>Messages</span>
+                <span>Bookings</span>
               </Link>
-            </li> */}
+            </li>
 
             <li>
               <button
