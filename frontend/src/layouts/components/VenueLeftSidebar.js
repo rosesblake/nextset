@@ -1,7 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
-import { VenueBookings } from "../../features/venue/pages/VenueBookings";
 
 function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();

@@ -10,12 +10,6 @@ function VenueList() {
 
   const [pitches, setPitches] = useState([]);
 
-  // Temporary upcoming gigs data
-  const upcomingGigs = [
-    { id: 1, venue: "The Velvet Room", date: "Jan 15, 2025" },
-    { id: 2, venue: "Blue Note Stage", date: "Jan 20, 2025" },
-  ];
-
   useEffect(() => {
     async function fetchVenues() {
       try {

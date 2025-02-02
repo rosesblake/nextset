@@ -89,6 +89,15 @@ function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
                 />
               </a>
             )}
+            {artist.tiktok && (
+              <a href={artist.tiktok} target="_blank" rel="noopener noreferrer">
+                <img
+                  src="/images/tiktok_icon.png"
+                  alt="Tiktok"
+                  className="w-8 h-8"
+                />
+              </a>
+            )}
             {artist.x_handle && (
               <a
                 href={artist.x_handle}
@@ -137,6 +146,19 @@ function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
                 <img
                   src="/images/youtube_icon.png"
                   alt="YouTube"
+                  className="w-8 h-8"
+                />
+              </a>
+            )}
+            {artist.soundcloud && (
+              <a
+                href={artist.soundcloud}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <img
+                  src="/images/soundcloud_icon.png"
+                  alt="Soundcloud"
                   className="w-8 h-8"
                 />
               </a>

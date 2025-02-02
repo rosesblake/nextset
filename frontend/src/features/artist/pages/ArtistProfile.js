@@ -157,6 +157,13 @@ function ArtistProfile() {
               link={true}
             />
             <EditableField
+              label="Tiktok"
+              value={currUser.artist.tiktok}
+              onSave={(newValue) => handleFieldSave("tiktok", newValue)}
+              link={true}
+              png
+            />
+            <EditableField
               label="Twitter"
               value={currUser.artist.x_handle}
               onSave={(newValue) => handleFieldSave("x_handle", newValue)}
@@ -180,6 +187,13 @@ function ArtistProfile() {
               label="youtube"
               value={currUser.artist.live_show_url}
               onSave={(newValue) => handleFieldSave("live_show_url", newValue)}
+              link={true}
+              png
+            />
+            <EditableField
+              label="soundcloud"
+              value={currUser.artist.soundcloud}
+              onSave={(newValue) => handleFieldSave("soundcloud", newValue)}
               link={true}
               png
             />

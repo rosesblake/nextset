@@ -4,6 +4,7 @@ import DatePicker from "react-date-picker";
 import { SpotifyDropdown } from "../../auth/components/SpotifyDropdown";
 import { NextSetApi } from "../../../services/api";
 import { ArtistPitchPreview } from "./ArtistPitchPreview";
+import { Trash2 } from "lucide-react";
 
 function PitchModal({
   venue,
@@ -207,23 +208,27 @@ function PitchModal({
                 key={act.id}
                 className="flex items-center justify-between bg-gray-100 p-2 rounded-md mb-2"
               >
-                <span className="font-semibold text-nextsetPrimary">
-                  {act.name}
-                </span>
                 <a
                   href={act.spotify_url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-sm text-nextsetAccent"
+                  className="flex flex-row"
                 >
-                  View on Spotify
+                  <img
+                    src="/images/spotify_icon.svg"
+                    className="w-5 mr-2"
+                    alt="Spotify"
+                  />
+                  <span className="font-semibold text-nextsetPrimary">
+                    {act.name}
+                  </span>
                 </a>
                 <button
                   type="button"
-                  className="text-red-500 hover:text-red-700 ml-4 text-sm"
+                  className="text-red-700"
                   onClick={() => handleRemoveSupportAct(act.id)}
                 >
-                  Remove
+                  <Trash2 size={20} />
                 </button>
               </li>
             ))}
