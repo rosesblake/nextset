@@ -49,7 +49,7 @@ function ArtistPitchPreview({
         </h2>
 
         <div className="bg-gray-100 rounded-lg shadow-sm p-4">
-          <ArtistPitchCard pitch={pitch} preview />
+          <ArtistPitchCard pitch={pitch} preview closeModal={closeModal} />
         </div>
 
         <div className="mt-6 flex justify-center space-x-4">

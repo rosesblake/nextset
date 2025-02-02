@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useUser } from "../../../contexts/UserContext";
 import { useForm } from "../../../hooks/useForm";
 import { NextSetApi } from "../../../services/api";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useMessage } from "../../../contexts/MessageContext";
 import { ErrorDisplay } from "../../../shared/forms/ErrorDisplay";
 
@@ -10,6 +10,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
   const { currUser, setCurrUser } = useUser();
   const { showMessage } = useMessage();
   const [errorMessage, setErrorMessage] = useState([]);
+  const navigate = useNavigate();
 
   const initialState = {
     status: "confirmed",
@@ -47,6 +48,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
           },
         }));
         closeModal();
+        navigate("/artist/bookings");
         showMessage("Booking Confirmed", "success");
       } catch (e) {
         setErrorMessage([{ msg: e.message }]);

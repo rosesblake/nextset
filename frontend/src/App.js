@@ -81,7 +81,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ArtistDashboard />} />
           <Route path="profile" element={<ArtistProfile />} />
-          <Route path="gigs" element={<GigDetails />} />
+          <Route path="bookings" element={<GigDetails />} />
           <Route path="venue/list" element={<VenueList />} />
           <Route path="venue/:id" element={<ArtistVenueView />} />
         </Route>

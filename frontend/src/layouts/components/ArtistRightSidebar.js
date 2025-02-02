@@ -4,6 +4,7 @@ import { useUser } from "../../contexts/UserContext";
 import { useModal } from "../../contexts/ModalContext";
 import { PitchConfirmationModal } from "../../features/artist/components/PitchConfirmationModal";
 import { NextSetApi } from "../../services/api";
+import { BellRing } from "lucide-react";
 
 function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [activeTab, setActiveTab] = useState("sent");
@@ -12,6 +13,7 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [pitches, setPitches] = useState(
     currUser?.artist?.artist_pitches ?? []
   );
+  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
 
   useEffect(() => {
     async function fetchPitches() {
@@ -20,6 +22,12 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
           currUser.artist.id
         );
         setPitches(artistPitches);
+
+        const hasAcceptedPitches = artistPitches.some(
+          (pitch) => pitch.pitches.status === "accepted"
+        );
+
+        setAwaitingConfirmation(hasAcceptedPitches);
       } catch (error) {
         console.error("Error fetching artist pitches:", error.message);
       }
@@ -30,6 +38,11 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
 
   const handleOpenModal = (pitch) => {
     openModal(<PitchConfirmationModal pitch={pitch} closeModal={closeModal} />);
+    setAwaitingConfirmation(false);
+  };
+
+  const handleTabSwitch = (tab) => {
+    setActiveTab(tab);
   };
 
   const sentPitches = useMemo(
@@ -71,7 +84,7 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
           {/* Tabs */}
           <div className="flex justify-between border-b border-gray-700 mb-6">
             <button
-              onClick={() => setActiveTab("sent")}
+              onClick={() => handleTabSwitch("sent")}
               className={`w-1/2 py-3 text-lg font-semibold transition-all ${
                 activeTab === "sent"
                   ? "bg-nextsetAccent text-white rounded-t-lg shadow-md"
@@ -80,16 +93,26 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
             >
               Sent
             </button>
-            <button
-              onClick={() => setActiveTab("acceptedDeclined")}
-              className={`w-1/2 py-3 text-lg font-semibold transition-all ${
-                activeTab === "acceptedDeclined"
-                  ? "bg-nextsetAccent text-white rounded-t-lg shadow-md"
-                  : "text-nextsetAccent hover:bg-gray-800 hover:text-white"
-              }`}
-            >
-              Results
-            </button>
+
+            <div className="relative w-1/2">
+              <button
+                onClick={() => handleTabSwitch("results")}
+                className={`w-full py-3 text-lg font-semibold transition-all ${
+                  activeTab === "results"
+                    ? "bg-nextsetAccent text-white rounded-t-lg shadow-md"
+                    : "text-nextsetAccent hover:bg-gray-800 hover:text-white"
+                }`}
+              >
+                Results
+              </button>
+
+              {awaitingConfirmation && (
+                <BellRing
+                  size={20}
+                  className="absolute top-1 right-1 text-red-500 animate-pulse fill-current"
+                />
+              )}
+            </div>
           </div>
 
           {/* Content */}
@@ -123,7 +146,7 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
             </div>
           )}
 
-          {activeTab === "acceptedDeclined" && (
+          {activeTab === "results" && (
             <div>
               <h3 className="text-xl font-bold text-nextsetAccent mb-4">
                 Accepted/Declined Pitches

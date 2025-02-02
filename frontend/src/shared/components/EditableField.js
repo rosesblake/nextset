@@ -1,6 +1,7 @@
+import { Pencil, Plus, Save } from "lucide-react";
 import React, { useState } from "react";
 
-function EditableField({ label, value, onSave, link = false, png }) {
+function EditableField({ label, value, onSave, link, linkOnly, png }) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
 
@@ -40,7 +41,9 @@ function EditableField({ label, value, onSave, link = false, png }) {
             target="_blank"
             rel="noopener noreferrer"
           >
-            <img src={icon} alt={label} className="w-8 h-8 mr-4" />
+            {!linkOnly && (
+              <img src={icon} alt={label} className="w-8 h-8 mr-4" />
+            )}
             <span>{value}</span>
           </a>
         )}
@@ -52,7 +55,7 @@ function EditableField({ label, value, onSave, link = false, png }) {
             onClick={() => setIsEditing(true)}
             className="text-sm text-nextsetAccent hover:underline"
           >
-            {value ? "Edit" : "Add"}
+            {value ? <Pencil size={18} /> : <Plus size={18} />}
           </button>
         ) : (
           <div className="flex items-center space-x-2">
@@ -69,7 +72,7 @@ function EditableField({ label, value, onSave, link = false, png }) {
               onMouseDown={handleSave}
               className="text-sm text-nextsetAccent hover:underline"
             >
-              Save
+              <Save size={20} />
             </button>
           </div>
         )}

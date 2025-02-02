@@ -211,10 +211,24 @@ function ArtistProfile() {
               onUpload={(file) => handleFileUpload("epk", file)}
               currentFileUrl={files.epk}
             />
+            <EditableField
+              label="epk"
+              value={currUser.artist.epk}
+              onSave={(newValue) => handleFieldSave("epk", newValue)}
+              link={true}
+              linkOnly={true}
+            />
             <FileUploadField
               label="Rider"
               onUpload={(file) => handleFileUpload("rider", file)}
               currentFileUrl={files.rider}
+            />
+            <EditableField
+              label="rider"
+              value={currUser.artist.rider}
+              onSave={(newValue) => handleFieldSave("rider", newValue)}
+              link={true}
+              linkOnly={true}
             />
             <FileUploadField
               label="W-9"

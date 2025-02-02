@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { generatePdfThumbnail } from "../../utils/pdfUtils";
+import { ImageUp } from "lucide-react";
 
 export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
   const [isUploading, setIsUploading] = useState(false);
@@ -68,11 +69,17 @@ export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
         {/* Custom Upload Button */}
         <label
           htmlFor={`file-input-${label}`}
-          className={`px-6 py-3 bg-nextsetButton text-white rounded-md cursor-pointer hover:bg-nextsetAccent transition ${
+          className={`px-4 py-2 bg-nextsetButton text-white rounded-md cursor-pointer hover:bg-nextsetAccent transition ${
             isUploading ? "opacity-50 cursor-not-allowed" : ""
           }`}
         >
-          {isUploading ? "Uploading..." : "Choose File"}
+          {isUploading ? (
+            "Uploading..."
+          ) : (
+            <div className="flex flex-row gap-2 justify-center">
+              <ImageUp size={20} /> <span className="text-sm">Upload File</span>
+            </div>
+          )}
         </label>
 
         {/* Thumbnail or File Link */}

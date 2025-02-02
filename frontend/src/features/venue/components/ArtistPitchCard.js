@@ -1,4 +1,5 @@
 import React from "react";
+import { SocialLinks } from "../../artist/components/SocialLinks";
 
 function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
   const artist = pitch.artist_pitches[0]?.artists;
@@ -8,7 +9,6 @@ function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
       key={pitch.id}
       className="bg-gray-100 rounded-lg shadow-md mb-6 overflow-hidden"
     >
-      {/* Pitch Content (White Background, Top Section) */}
       <div className="p-6 text-center">
         <h3 className="text-2xl font-bold text-nextsetPrimary">
           {pitch.content}
@@ -51,10 +51,9 @@ function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
         )}
       </div>
 
-      {/* Artist Info (Soft Gray Background) */}
+      {/* Artist Info */}
       {artist && (
         <div className="p-6 bg-gray-50 text-center">
-          {/* Artist Photo & Name */}
           {artist.spotify_photo && (
             <img
               src={artist.spotify_photo}
@@ -75,95 +74,8 @@ function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
           </p>
 
           {/* Social Media & Music Links */}
-          <div className="mt-4 flex flex-wrap justify-center gap-4">
-            {artist.instagram_handle && (
-              <a
-                href={artist.instagram_handle}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="/images/instagram_icon.svg"
-                  alt="Instagram"
-                  className="w-8 h-8"
-                />
-              </a>
-            )}
-            {artist.tiktok && (
-              <a href={artist.tiktok} target="_blank" rel="noopener noreferrer">
-                <img
-                  src="/images/tiktok_icon.png"
-                  alt="Tiktok"
-                  className="w-8 h-8"
-                />
-              </a>
-            )}
-            {artist.x_handle && (
-              <a
-                href={artist.x_handle}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="/images/twitter_icon.png"
-                  alt="Twitter/X"
-                  className="w-8 h-8"
-                />
-              </a>
-            )}
-            {artist.facebook_url && (
-              <a
-                href={artist.facebook_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="/images/facebook_icon.png"
-                  alt="Facebook"
-                  className="w-8 h-8"
-                />
-              </a>
-            )}
-            {artist.spotify_url && (
-              <a
-                href={artist.spotify_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="/images/spotify_icon.svg"
-                  alt="Spotify"
-                  className="w-8 h-8"
-                />
-              </a>
-            )}
-            {artist.live_show_url && (
-              <a
-                href={artist.live_show_url}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="/images/youtube_icon.png"
-                  alt="YouTube"
-                  className="w-8 h-8"
-                />
-              </a>
-            )}
-            {artist.soundcloud && (
-              <a
-                href={artist.soundcloud}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                <img
-                  src="/images/soundcloud_icon.png"
-                  alt="Soundcloud"
-                  className="w-8 h-8"
-                />
-              </a>
-            )}
-          </div>
+          <SocialLinks artist={artist} preview={preview} />
+
           {!preview && (
             <div className="mt-6 flex justify-center space-x-4">
               {pitch.status === "accepted" ? (
@@ -192,7 +104,6 @@ function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
               )}
             </div>
           )}
-          {/* Action Buttons */}
         </div>
       )}
     </li>

@@ -71,7 +71,7 @@ function ArtistLeftSidebar({ isCollapsed, toggleSidebars }) {
             </li>
             <li>
               <Link
-                to="/artist/gigs"
+                to="/artist/bookings"
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
                 <span>Bookings</span>
