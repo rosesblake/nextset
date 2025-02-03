@@ -41,13 +41,6 @@ app.use("/venues", venuesRoutes);
 app.use("/pitches", pitchesRoutes);
 app.use("/spotify", spotifyRoutes);
 
-// Serve React frontend
-app.use(express.static(path.join(__dirname, "frontend/build")));
-
-app.get("*", (req, res) => {
-  res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
-});
-
 //handle 404 errors
 app.use(function (req, res, next) {
   return next(new NotFoundError());
