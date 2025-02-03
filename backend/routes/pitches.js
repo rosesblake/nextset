@@ -76,6 +76,23 @@ router.post(
   }
 );
 
+router.post(
+  "/requirements",
+  authenticateJWT,
+  ensureLoggedIn,
+  async (req, res, next) => {
+    try {
+      const requiredDocs = await prisma.pitch_required_docs.create({
+        data: req.body,
+      });
+
+      return res.status(201).json({ requiredDocs });
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
+
 router.get(
   "/:artist_id",
   authenticateJWT,
@@ -90,6 +107,7 @@ router.get(
           pitches: {
             include: {
               venues: true,
+              pitch_required_docs: true,
             },
           },
         },

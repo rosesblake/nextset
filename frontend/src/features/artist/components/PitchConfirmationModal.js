@@ -5,6 +5,7 @@ import { NextSetApi } from "../../../services/api";
 import { Link, useNavigate } from "react-router-dom";
 import { useMessage } from "../../../contexts/MessageContext";
 import { ErrorDisplay } from "../../../shared/forms/ErrorDisplay";
+import { Asterisk } from "lucide-react";
 
 const PitchConfirmationModal = ({ pitch, closeModal }) => {
   const { currUser, setCurrUser } = useUser();
@@ -24,29 +25,52 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
     initialState,
     async (data) => {
       try {
+        // Ensure pitch_required_docs exists to prevent `.map()` error
+        const requiredDocsObj = pitch.pitches?.pitch_required_docs || {};
+
+        // Extract required documents, ignoring `id` and `pitch_id`
+        const requiredDocs = Object.keys(requiredDocsObj)
+          .filter((key) => key.endsWith("_required") && requiredDocsObj[key])
+          .map((key) => key.replace("_required", "")); // Convert `w9_required` -> `w9`
+
+        // Find missing required documents
+        const missingDocs = requiredDocs.filter((doc) => !data[doc]);
+
+        if (missingDocs.length > 0) {
+          setErrorMessage([
+            {
+              msg: `Missing Required Documents: ${missingDocs
+                .map((doc) => doc.toUpperCase())
+                .join(", ")}`,
+            },
+          ]);
+          return; // Prevent submission if required docs are missing
+        }
+
         const payload = { status: data.status };
 
-        // Add selected documents to the payload
+        // Attach selected documents to payload
         Object.entries(data).forEach(([key, value]) => {
           if (value && currUser.artist[key]) {
             payload[key] = currUser.artist[key];
           }
         });
-        await NextSetApi.confirmPitch(pitch.pitch_id, {
-          data: payload,
-        });
-        //update user context so that the change is instantanious
+
+        await NextSetApi.confirmPitch(pitch.pitch_id, { data: payload });
+
+        // Instantly update user context
         setCurrUser((prevUser) => ({
           ...prevUser,
           artist: {
             ...prevUser.artist,
-            artist_pitches: prevUser.artist.artist_pitches.map((p) =>
+            artist_pitches: prevUser.artist.artist_pitches?.map((p) =>
               p.pitch_id === pitch.pitch_id
                 ? { ...p, pitches: { ...p.pitches, status: "confirmed" } }
                 : p
             ),
           },
         }));
+
         closeModal();
         navigate("/artist/bookings");
         showMessage("Booking Confirmed", "success");
@@ -73,6 +97,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
         >
           ✕
         </button>
+
         {/* Artist Photo */}
         {currUser.artist.photo && (
           <div className="flex justify-center mb-6">
@@ -83,6 +108,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
             />
           </div>
         )}
+
         {/* Header */}
         <h2 className="text-3xl font-bold text-center text-nextsetAccent mb-4">
           Pitch Confirmation
@@ -95,6 +121,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
           in {pitch.pitches.venues.city}, {pitch.pitches.venues.state}! Let’s
           confirm your details:
         </p>
+
         {/* Artist Details */}
         <div className="mb-6 text-center">
           <h3 className="text-xl font-semibold text-nextsetAccent">
@@ -105,60 +132,70 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
           <div className="text-gray-600 font-bold">
             Support:{" "}
             <ul className="font-medium">
-              {pitch.pitches.support_acts.map((act) => {
-                return (
-                  <li key={act.spotify_id}>
-                    <a
-                      href={act.spotify_url}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {act.name}
-                    </a>
-                  </li>
-                );
-              })}
+              {pitch.pitches.support_acts.map((act) => (
+                <li key={act.spotify_id}>
+                  <a
+                    href={act.spotify_url}
+                    rel="noopener noreferrer"
+                    target="_blank"
+                  >
+                    {act.name}
+                  </a>
+                </li>
+              ))}
             </ul>
           </div>
         </div>
+
         {/* Document Selection */}
         <form onSubmit={handleSubmit}>
           <div className="mb-8">
-            <h3 className="text-xl font-semibold text-nextsetAccent mb-4">
+            <h3 className="text-xl font-semibold text-nextsetAccent">
               Select Documents to Send:
             </h3>
             <ul className="list-none space-y-3">
-              {Object.entries(documents).map(([key, url]) =>
-                url ? (
-                  <li key={key} className="flex items-center space-x-3">
-                    <input
-                      type="checkbox"
-                      name={key}
-                      checked={formData[key]}
-                      onChange={handleChange}
-                      className="form-checkbox h-6 w-6 text-nextsetAccent"
-                    />
-                    <a
-                      href={url}
-                      className="text-nextsetButton font-medium underline"
-                      target="_blank"
-                      rel="noopener noreferrer"
+              {Object.entries(documents).map(([key, url]) => (
+                <li key={key} className="flex items-center space-x-2">
+                  {url ? (
+                    <>
+                      <input
+                        type="checkbox"
+                        name={key}
+                        checked={formData[key]}
+                        onChange={handleChange}
+                        className="form-checkbox h-6 w-6 text-nextsetAccent"
+                      />
+                      <a
+                        href={url}
+                        className="text-nextsetButton font-medium underline"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        {key.replace("_", " ").toUpperCase()}
+                      </a>
+                    </>
+                  ) : (
+                    <Link
+                      to="/artist/profile"
+                      onClick={closeModal}
+                      className="flex items-center space-x-1 text-gray-500 italic"
                     >
-                      {key.replace("_", " ").toUpperCase()}
-                    </a>
-                  </li>
-                ) : (
-                  <Link to="/artist/profile" onClick={closeModal}>
-                    <li key={key} className="text-gray-500 italic">
-                      Upload {key.replace("_", " ").toUpperCase()}
-                      <span className="text-red-500">*</span>
-                    </li>
-                  </Link>
-                )
-              )}
+                      <span>Upload {key.replace("_", " ").toUpperCase()}</span>
+                    </Link>
+                  )}
+
+                  {pitch.pitches?.pitch_required_docs?.[`${key}_required`] && (
+                    <span className="text-red-500 flex items-center">
+                      <Asterisk size={18} />
+                    </span>
+                  )}
+                </li>
+              ))}
             </ul>
           </div>
+
           <ErrorDisplay errors={errorMessage} />
+
           {/* Submit Button */}
           <div className="flex justify-center">
             <button

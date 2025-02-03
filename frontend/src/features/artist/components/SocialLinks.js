@@ -1,11 +1,12 @@
 import { CircleAlert } from "lucide-react";
 import { Link } from "react-router-dom";
 import React, { useEffect, useState, useMemo } from "react";
+import { useModal } from "../../../contexts/ModalContext";
 
 function SocialLinks({ artist, preview }) {
   const [isHovered, setIsHovered] = useState(false);
   const [missingSocials, setMissingSocials] = useState([]);
-
+  const { closeModal } = useModal();
   // Required social media links
   const requiredSocials = useMemo(
     () => [
@@ -96,13 +97,17 @@ function SocialLinks({ artist, preview }) {
         </a>
       )}
 
-      {missingSocials.length > 0 && preview && (
+      {missingSocials.length > 1 && preview && (
         <div
           className="relative flex items-center"
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
         >
-          <Link to={`/artist/profile`} className="flex items-center">
+          <Link
+            to={`/artist/profile`}
+            onClick={closeModal}
+            className="flex items-center"
+          >
             <CircleAlert size={30} className="text-red-500" />
           </Link>
           {isHovered && (

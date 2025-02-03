@@ -141,6 +141,10 @@ class NextSetApi {
     return await this.request(`pitches`, data, "post");
   }
 
+  static async updatePitchRequiredDocs(data) {
+    return await this.request(`pitches/requirements`, data, "post");
+  }
+
   static async getVenuePitches(venue_id) {
     return await this.request(`venues/${venue_id}/pitches`);
   }

@@ -1,7 +1,7 @@
 import React from "react";
 import { SocialLinks } from "../../artist/components/SocialLinks";
 
-function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
+function ArtistPitchCard({ pitch, openDocsModal, handlePitchStatus, preview }) {
   const artist = pitch.artist_pitches[0]?.artists;
 
   return (
@@ -89,7 +89,7 @@ function ArtistPitchCard({ pitch, handlePitchStatus, preview }) {
               ) : (
                 <>
                   <button
-                    onClick={() => handlePitchStatus(pitch.id, "accepted")}
+                    onClick={() => openDocsModal(pitch, "accepted")}
                     className="px-6 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition"
                   >
                     Accept

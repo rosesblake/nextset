@@ -14,42 +14,42 @@ model amenities {
 }
 
 model artists {
-  id                        Int             @id @default(autoincrement())
-  name                      String          @db.VarChar(50)
-  bio                       String?         @db.VarChar(120)
-  genre                     String?         @db.VarChar(20)
-  instagram_handle          String?         @db.VarChar(50)
-  x_handle                  String?         @db.VarChar(50)
-  facebook_url              String?
-  tiktok                    String?
-  soundcloud                String?
-  rating_social_media       Float?
-  spotify_id                String?
-  spotify_url               String?         
-  spotify_followers         Int?
-  spotify_popular_cities    Json?           @db.Json
-  spotify_popularity        Int?         
-  spotify_photo             String?
-  rating_streams            Float?
-  live_show_url             String?
-  w9                        String?
-  stage_plot                String?
-  rider                     String?
-  epk                       String?
-  manager                   String?         @db.VarChar(50)
-  record_label              String?         @db.VarChar(50)
-  tour_booking_agent        String?         @db.VarChar(50)
-  tour_manager              String?         @db.VarChar(50)
-  phone                     String?         @db.VarChar(15)
-  hometown                  String?         @db.VarChar(30)
-  email                     String?
-  website                   String?
-  created_by                Int
-  created_at                DateTime?       @default(now()) @db.Timestamp(6)
-  event_artists             event_artists[]
-  members                   members[]
-  artist_pitches            artist_pitches[]
-  tokens                    tokens[]
+  id                     Int              @id @default(autoincrement())
+  name                   String           @db.VarChar(50)
+  bio                    String?          @db.VarChar(120)
+  genre                  String?          @db.VarChar(20)
+  instagram_handle       String?          @db.VarChar(50)
+  x_handle               String?          @db.VarChar(50)
+  facebook_url           String?
+  tiktok                 String?
+  soundcloud             String?
+  rating_social_media    Float?
+  spotify_id             String?
+  spotify_url            String?
+  spotify_followers      Int?
+  spotify_popular_cities Json?            @db.Json
+  spotify_popularity     Int?
+  spotify_photo          String?
+  rating_streams         Float?
+  live_show_url          String?
+  w9                     String?
+  stage_plot             String?
+  rider                  String?
+  epk                    String?
+  manager                String?          @db.VarChar(50)
+  record_label           String?          @db.VarChar(50)
+  tour_booking_agent     String?          @db.VarChar(50)
+  tour_manager           String?          @db.VarChar(50)
+  phone                  String?          @db.VarChar(15)
+  hometown               String?          @db.VarChar(30)
+  email                  String?
+  website                String?
+  created_by             Int
+  created_at             DateTime?        @default(now()) @db.Timestamp(6)
+  event_artists          event_artists[]
+  members                members[]
+  artist_pitches         artist_pitches[]
+  tokens                 tokens[]
 
   creator users          @relation("ArtistCreator", fields: [created_by], references: [id])
   users   artist_users[]
@@ -101,20 +101,32 @@ model artist_pitches {
 }
 
 model pitches {
-  id               Int             @id @default(autoincrement())
-  venue_id         Int
-  avg_ticket_sales Int?
-  support_acts     Json?        
-  date             DateTime        @db.Date
-  role             String          
-  content          String
-  status           String          @db.VarChar(15)
-  artist_pitches   artist_pitches[]
-  venues           venues          @relation(fields: [venue_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
-  w9               String?         @db.VarChar(255)
-  stage_plot       String?         @db.VarChar(255)
-  rider            String?         @db.VarChar(255)
-  epk              String?         @db.VarChar(255)
+  id                  Int                  @id @default(autoincrement())
+  venue_id            Int
+  avg_ticket_sales    Int?
+  support_acts        Json?
+  date                DateTime             @db.Date
+  role                String
+  content             String
+  status              String               @db.VarChar(15)
+  artist_pitches      artist_pitches[]
+  venues              venues               @relation(fields: [venue_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
+  w9                  String?              @db.VarChar(255)
+  stage_plot          String?              @db.VarChar(255)
+  rider               String?              @db.VarChar(255)
+  epk                 String?              @db.VarChar(255)
+  pitch_required_docs pitch_required_docs?
+}
+
+model pitch_required_docs {
+  id                  Int     @id @default(autoincrement())
+  pitch_id            Int     @unique @db.Integer
+  w9_required         Boolean @default(false)
+  rider_required      Boolean @default(false)
+  epk_required        Boolean @default(false)
+  stage_plot_required Boolean @default(false)
+
+  pitches pitches @relation(fields: [pitch_id], references: [id], onDelete: Cascade, onUpdate: NoAction)
 }
 
 model schedules {
@@ -167,33 +179,31 @@ model venue_amenities {
 model venue_blocked_dates {
   id           Int      @id @default(autoincrement())
   venue        venues   @relation(fields: [venue_id], references: [id])
-  venue_id     Int      // Foreign key to venues
+  venue_id     Int // Foreign key to venues
   blocked_date DateTime // The date when the venue is unavailable
 
   @@unique([venue_id, blocked_date]) // Prevent duplicate entries for the same date
 }
 
 model venues {
-  id              Int               @id @default(autoincrement())
-  name            String            @unique @db.VarChar(50)
+  id              Int                   @id @default(autoincrement())
+  name            String                @unique @db.VarChar(50)
   capacity        Int?
-  address         String?           @db.VarChar(50)
-  city            String?           @db.VarChar(50)
-  state           String?           @db.VarChar(20)
-  zip_code        Int?             
+  address         String?               @db.VarChar(50)
+  city            String?               @db.VarChar(50)
+  state           String?               @db.VarChar(20)
+  zip_code        Int?
   events          events[]
   pitches         pitches[]
   schedules       schedules[]
   venue_amenities venue_amenities[]
   blocked_dates   venue_blocked_dates[] // Relation to blocked dates
   created_by      Int
-  created_at      DateTime?         @default(now()) @db.Timestamp(6)
+  created_at      DateTime?             @default(now()) @db.Timestamp(6)
 
   creator users         @relation("VenueCreator", fields: [created_by], references: [id])
   users   venue_users[]
 }
-
-
 
 model artist_users {
   user_id   Int
