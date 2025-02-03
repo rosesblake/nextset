@@ -63,7 +63,14 @@ function PitchModal({
         "error"
       );
     }
-  }, [currUser, requiredProfileFields]);
+  }, [
+    currUser,
+    requiredProfileFields,
+    artist,
+    closeModal,
+    navigate,
+    showMessage,
+  ]);
 
   const handleDateChange = (newDate) => {
     setDate(newDate);
