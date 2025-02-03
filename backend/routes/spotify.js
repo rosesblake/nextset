@@ -1,6 +1,5 @@
 const express = require("express");
 const { spotifyApi, getSpotifyToken } = require("../helpers/spotify");
-const { ensureLoggedIn } = require("../middleware/auth");
 const router = express.Router();
 
 // Search Spotify API for artists

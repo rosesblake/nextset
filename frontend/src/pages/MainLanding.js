@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 
 function MainLanding() {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 flex flex-col justify-center items-center">
+    <div className="min-h-screen bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 flex flex-col justify-center items-center py-20 px-10">
       {/* Header Section */}
       <h1 className="text-5xl font-extrabold text-nextsetAccent mb-8 tracking-wide">
         Welcome to NextSet!
