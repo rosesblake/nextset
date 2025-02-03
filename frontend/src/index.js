@@ -5,13 +5,13 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import { UserProvider } from "./contexts/UserContext";
 import { MessageProvider } from "./contexts/MessageContext";
-import { BrowserRouter } from "react-router-dom";
 import { ModalProvider } from "./contexts/ModalContext";
+import { HashRouter } from "react-router-dom";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <BrowserRouter basename="/">
+    <HashRouter>
       <MessageProvider>
         <UserProvider>
           <ModalProvider>
@@ -19,7 +19,7 @@ root.render(
           </ModalProvider>
         </UserProvider>
       </MessageProvider>
-    </BrowserRouter>
+    </HashRouter>
   </React.StrictMode>
 );
 
