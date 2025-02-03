@@ -7,7 +7,6 @@ const path = require("path");
 
 const { NotFoundError, BadRequestError } = require("./expressError");
 
-// const { authenticateJWT } = require("./middleware/auth");
 const authRoutes = require("./routes/auth");
 const usersRoutes = require("./routes/users");
 const artistsRoutes = require("./routes/artists");
@@ -22,7 +21,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(morgan("tiny"));
-// app.use(authenticateJWT);
+
 app.use(
   session({
     secret: process.env.SECRET_KEY,
@@ -41,6 +40,13 @@ app.use("/artists", artistsRoutes);
 app.use("/venues", venuesRoutes);
 app.use("/pitches", pitchesRoutes);
 app.use("/spotify", spotifyRoutes);
+
+// Serve React frontend
+app.use(express.static(path.join(__dirname, "frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "frontend/build", "index.html"));
+});
 
 //handle 404 errors
 app.use(function (req, res, next) {
