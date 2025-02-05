@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 import { useModal } from "../../contexts/ModalContext";
-import { PitchConfirmationModal } from "../../features/artist/components/PitchConfirmationModal";
+import { PitchConfirmationModal } from "../../features/pitch/PitchConfirmationModal";
 import { NextSetApi } from "../../services/api";
 import { BellRing } from "lucide-react";
 
@@ -114,7 +114,6 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
               )}
             </div>
           </div>
-
           {/* Content */}
           {activeTab === "sent" && (
             <div>
@@ -145,7 +144,6 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
               </div>
             </div>
           )}
-
           {activeTab === "results" && (
             <div>
               <h3 className="text-xl font-bold text-nextsetAccent mb-4">

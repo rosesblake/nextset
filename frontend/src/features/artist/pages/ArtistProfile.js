@@ -3,9 +3,12 @@ import { useUser } from "../../../contexts/UserContext";
 import { EditableField } from "../../../shared/components/EditableField";
 import { NextSetApi } from "../../../services/api";
 import { FileUploadField } from "../../../shared/components/FileUploadField";
+import { Spinner } from "../../../shared/components/Spinner";
+import { useLoading } from "../../../contexts/LoadingContext";
 
 function ArtistProfile() {
   const { currUser, setCurrUser } = useUser();
+  const { isLoading, setIsLoading } = useLoading();
   const [files, setFiles] = useState({
     epk: null,
     w9: null,
@@ -17,6 +20,7 @@ function ArtistProfile() {
   useEffect(() => {
     const fetchArtistData = async () => {
       try {
+        setIsLoading(true);
         const artist = await NextSetApi.getArtist(currUser.artist.id);
         setFiles({
           epk: artist.epk || null,
@@ -27,14 +31,17 @@ function ArtistProfile() {
         setCurrUser((prev) => ({ ...prev, artist })); // Update user context
       } catch (e) {
         console.error("Error fetching artist data:", e);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchArtistData();
-  }, [currUser.artist.id, setCurrUser]);
+  }, [currUser.artist.id, setCurrUser, setIsLoading]);
 
   const handleFieldSave = async (field, newValue) => {
     try {
+      setIsLoading(true);
       const data = { [field]: newValue };
       const updatedArtist = await NextSetApi.updateArtist(
         currUser.artist,
@@ -43,6 +50,8 @@ function ArtistProfile() {
       setCurrUser({ ...currUser, artist: updatedArtist });
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -51,6 +60,7 @@ function ArtistProfile() {
     formData.append("file", file);
 
     try {
+      setIsLoading(true);
       const response = await NextSetApi.uploadArtistFile(
         currUser.artist.id,
         fileType,
@@ -68,8 +78,14 @@ function ArtistProfile() {
         `Error uploading ${fileType}:`,
         e.response?.data?.error || e.message
       );
+    } finally {
+      setIsLoading(false);
     }
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-10">

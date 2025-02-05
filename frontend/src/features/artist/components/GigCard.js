@@ -1,7 +1,7 @@
 import React from "react";
 import { MapPin, Users, Mic, Music, FileText } from "lucide-react";
 import { useModal } from "../../../contexts/ModalContext";
-import { EditPitchModal } from "./EditPitchModal";
+import { EditPitchModal } from "../../pitch/EditPitchModal";
 
 function GigCard({ gigs }) {
   const { openModal, closeModal } = useModal();

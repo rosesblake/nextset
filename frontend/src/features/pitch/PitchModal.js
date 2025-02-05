@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from "react";
-import { useForm } from "../../../hooks/useForm";
+import { useForm } from "../../hooks/useForm";
 import DatePicker from "react-date-picker";
-import { SpotifyDropdown } from "../../auth/components/SpotifyDropdown";
-import { NextSetApi } from "../../../services/api";
+import { SpotifyDropdown } from "../auth/components/SpotifyDropdown";
+import { NextSetApi } from "../../services/api";
 import { ArtistPitchPreview } from "./ArtistPitchPreview";
 import { Trash2 } from "lucide-react";
-import { useUser } from "../../../contexts/UserContext";
+import { useUser } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 
 function PitchModal({

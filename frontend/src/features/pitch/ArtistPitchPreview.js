@@ -1,6 +1,6 @@
 import React from "react";
-import { ArtistPitchCard } from "../../venue/components/ArtistPitchCard";
-import { useUser } from "../../../contexts/UserContext";
+import { ArtistPitchCard } from "../venue/components/ArtistPitchCard";
+import { useUser } from "../../contexts/UserContext";
 import { PitchModal } from "./PitchModal";
 
 function ArtistPitchPreview({

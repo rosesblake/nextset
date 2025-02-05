@@ -1,11 +1,15 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import { useUser } from "../../../contexts/UserContext";
 import { NextSetApi } from "../../../services/api";
 import { VenueCard } from "../components/VenueCard";
+import { Spinner } from "../../../shared/components/Spinner";
+import { DashboardBooking } from "../components/DashboardBooking";
+import { useLoading } from "../../../contexts/LoadingContext";
 
 function ArtistDashboard() {
-  const { currUser, isLoading } = useUser();
+  const { currUser } = useUser();
+  const { isLoading, setIsLoading } = useLoading();
   const navigate = useNavigate();
   const [venues, setVenues] = useState();
   const [pitches, setPitches] = useState([]);
@@ -14,11 +18,11 @@ function ArtistDashboard() {
   useEffect(() => {
     async function fetchVenues() {
       try {
+        setIsLoading(true);
         const allVenues = await NextSetApi.allVenues();
         const artistPitches = await NextSetApi.getArtistPitches(
           currUser.artist.id
         );
-
         setVenues(allVenues.venues);
         setPitches(artistPitches);
         setUpcomingGigs(
@@ -26,11 +30,13 @@ function ArtistDashboard() {
         );
       } catch (e) {
         console.error("Error fetching venues:", e);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     fetchVenues();
-  }, [currUser]);
+  }, [currUser, setIsLoading]);
 
   //filter out confirmed venues.
   const recommendedVenues = venues?.slice(0, 3).filter((venue) => {
@@ -41,11 +47,7 @@ function ArtistDashboard() {
   });
 
   if (isLoading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-xl font-semibold text-gray-600">Loading...</p>
-      </div>
-    );
+    return <Spinner />;
   }
 
   return (
@@ -100,31 +102,7 @@ function ArtistDashboard() {
           {upcomingGigs?.length > 0 ? (
             <ul className="space-y-4">
               {upcomingGigs.map((gig) => (
-                <Link
-                  to={`/artist/venue/${gig.pitches.venue_id}`}
-                  key={gig.pitch_id}
-                >
-                  <li className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition">
-                    <div className="flex justify-between">
-                      <span className="text-nextsetAccent font-medium">
-                        {gig.pitches.venues.name}
-                      </span>
-                      <span className="text-gray-400 font-medium">
-                        {gig.pitches.venues.city}, {gig.pitches.venues.state}
-                      </span>
-                      <span className="text-gray-500">
-                        {new Date(gig.pitches.date).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }
-                        )}
-                      </span>
-                    </div>
-                  </li>
-                </Link>
+                <DashboardBooking gig={gig} />
               ))}
             </ul>
           ) : (

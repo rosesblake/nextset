@@ -2,10 +2,12 @@ import React, { useEffect, useState } from "react";
 import { NextSetApi } from "../../../services/api";
 import { VenueCard } from "../components/VenueCard";
 import { useUser } from "../../../contexts/UserContext";
+import { useLoading } from "../../../contexts/LoadingContext";
+import { Spinner } from "../../../shared/components/Spinner";
 
 function VenueList() {
   const [venues, setVenues] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const { isLoading, setIsLoading } = useLoading();
   const { currUser } = useUser();
 
   const [pitches, setPitches] = useState([]);
@@ -13,6 +15,7 @@ function VenueList() {
   useEffect(() => {
     async function fetchVenues() {
       try {
+        setIsLoading(true);
         const allVenues = await NextSetApi.allVenues();
         setVenues(allVenues.venues);
 
@@ -23,19 +26,15 @@ function VenueList() {
       } catch (e) {
         console.error("Error fetching venues:", e);
       } finally {
-        setLoading(false);
+        setIsLoading(false);
       }
     }
 
     fetchVenues();
-  }, [currUser]);
+  }, [currUser, setIsLoading]);
 
-  if (loading) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-100">
-        <p className="text-xl font-semibold text-gray-600">Loading...</p>
-      </div>
-    );
+  if (isLoading) {
+    return <Spinner />;
   }
 
   return (

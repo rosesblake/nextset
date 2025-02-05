@@ -3,25 +3,30 @@ import { NextSetApi } from "../../../services/api";
 import { ArtistCard } from "../components/ArtistCard";
 import { useUser } from "../../../contexts/UserContext";
 import { Spinner } from "../../../shared/components/Spinner";
+import { useLoading } from "../../../contexts/LoadingContext";
 
 function ArtistList() {
   const [artists, setArtists] = useState([]);
-  const { currUser, isLoading } = useUser();
+  const { currUser } = useUser();
+  const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
     async function fetchArtists() {
       try {
+        setIsLoading(true);
         const artistList = await NextSetApi.allArtists();
         setArtists(artistList);
       } catch (e) {
         console.error("Error fetching artists:", e);
+      } finally {
+        setIsLoading(false);
       }
     }
 
     if (currUser?.venue) {
       fetchArtists();
     }
-  }, [currUser]);
+  }, [currUser, setIsLoading]);
 
   if (isLoading) {
     return <Spinner />;

@@ -3,17 +3,20 @@ import { Link } from "react-router-dom";
 import { useModal } from "../../../contexts/ModalContext";
 import { useMessage } from "../../../contexts/MessageContext";
 import { useUser } from "../../../contexts/UserContext";
-import { PitchModal } from "./PitchModal";
+import { PitchModal } from "../../pitch/PitchModal";
 import { NextSetApi } from "../../../services/api";
+import { useLoading } from "../../../contexts/LoadingContext";
 
 function VenueCard({ venue, artist, pitches }) {
   const { openModal, closeModal } = useModal();
   const { showMessage } = useMessage();
   const { currUser, setCurrUser } = useUser();
+  const { setIsLoading } = useLoading();
 
   const handleSubmitPitch = async (pitchData) => {
-    if (!pitchData) return closeModal();
+    closeModal();
     try {
+      setIsLoading(true);
       await NextSetApi.sendPitch({
         ...pitchData,
         date: new Date(pitchData.date).toISOString(),
@@ -21,12 +24,13 @@ function VenueCard({ venue, artist, pitches }) {
 
       const updatedArtist = await NextSetApi.getArtist(artist.id);
       setCurrUser({ ...currUser, artist: updatedArtist });
-      closeModal();
-      showMessage("Submission successful!", "success");
     } catch (e) {
       console.error(e);
       closeModal();
       showMessage(e.message, "error");
+    } finally {
+      setIsLoading(false);
+      showMessage("Submission successful!", "success");
     }
   };
 

@@ -4,16 +4,20 @@ import { NextSetApi } from "../../../services/api";
 import { ArtistPitchCard } from "../components/ArtistPitchCard";
 import { useModal } from "../../../contexts/ModalContext";
 import { RequiredDocs } from "../components/RequiredDocs";
+import { useLoading } from "../../../contexts/LoadingContext";
+import { Spinner } from "../../../shared/components/Spinner";
 
 function VenueDashboard() {
   const { currUser } = useUser();
   const [pitches, setPitches] = useState([]);
   const { openModal, closeModal } = useModal();
+  const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
     const fetchPitches = async () => {
       if (currUser?.venue?.id) {
         try {
+          setIsLoading(true);
           const response = await NextSetApi.getVenuePitches(
             currUser.venue.id,
             currUser.account_type
@@ -21,15 +25,18 @@ function VenueDashboard() {
           setPitches(response.filter((pitch) => pitch.status !== "confirmed"));
         } catch (e) {
           console.error("error fetching pitches", e);
+        } finally {
+          setIsLoading(false);
         }
       }
     };
 
     fetchPitches();
-  }, [currUser]);
+  }, [currUser, setIsLoading]);
 
   const handlePitchStatus = async (pitch_id, data) => {
     try {
+      setIsLoading(true);
       await NextSetApi.updatePitchStatus(pitch_id, { status: data.status });
 
       setPitches((prev) =>
@@ -46,6 +53,8 @@ function VenueDashboard() {
       closeModal();
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -58,6 +67,10 @@ function VenueDashboard() {
       />
     );
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">

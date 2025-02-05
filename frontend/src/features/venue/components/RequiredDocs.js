@@ -1,5 +1,5 @@
 import React from "react";
-import { useForm } from "../../../hooks/useForm"; // Adjust path if needed
+import { useForm } from "../../../hooks/useForm";
 
 const DOCUMENTS = [
   { key: "w9_required", label: "W9" },

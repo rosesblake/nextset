@@ -2,14 +2,18 @@ import React, { useState, useEffect } from "react";
 import { useUser } from "../../../contexts/UserContext";
 import { NextSetApi } from "../../../services/api";
 import { GigCard } from "../components/GigCard";
+import { Spinner } from "../../../shared/components/Spinner";
+import { useLoading } from "../../../contexts/LoadingContext";
 
 function GigDetails() {
   const { currUser } = useUser();
+  const { isLoading, setIsLoading } = useLoading();
   const [gigs, setGigs] = useState([]);
 
   useEffect(() => {
     const fetchGigs = async () => {
       try {
+        setIsLoading(true);
         if (!currUser?.artist?.id) return;
         const gigsData = await NextSetApi.getArtistPitches(currUser.artist.id);
         setGigs(
@@ -17,11 +21,17 @@ function GigDetails() {
         );
       } catch (error) {
         console.error("Error fetching gigs:", error);
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchGigs();
-  }, [currUser]);
+  }, [currUser, setIsLoading]);
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">

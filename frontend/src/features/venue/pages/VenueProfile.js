@@ -4,18 +4,23 @@ import { useNavigate } from "react-router-dom";
 import { EditableField } from "../../../shared/components/EditableField";
 import { NextSetApi } from "../../../services/api";
 import { Spinner } from "../../../shared/components/Spinner";
+import { useLoading } from "../../../contexts/LoadingContext";
 
 function VenueProfile() {
-  const { currUser, setCurrUser, isLoading } = useUser();
+  const { currUser, setCurrUser } = useUser();
   const navigate = useNavigate();
+  const { isLoading, setIsLoading } = useLoading();
 
   const handleFieldSave = async (field, newValue) => {
     try {
+      setIsLoading(true);
       const data = { [field]: newValue };
       const updatedVenue = await NextSetApi.updateVenue(currUser.venue, data);
       setCurrUser({ ...currUser, venue: updatedVenue });
     } catch (e) {
       console.error(e);
+    } finally {
+      setIsLoading(false);
     }
   };
 

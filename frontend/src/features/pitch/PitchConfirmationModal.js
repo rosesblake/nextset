@@ -1,17 +1,19 @@
 import React, { useState } from "react";
-import { useUser } from "../../../contexts/UserContext";
-import { useForm } from "../../../hooks/useForm";
-import { NextSetApi } from "../../../services/api";
+import { useUser } from "../../contexts/UserContext";
+import { useForm } from "../../hooks/useForm";
+import { NextSetApi } from "../../services/api";
 import { Link, useNavigate } from "react-router-dom";
-import { useMessage } from "../../../contexts/MessageContext";
-import { ErrorDisplay } from "../../../shared/forms/ErrorDisplay";
+import { useMessage } from "../../contexts/MessageContext";
+import { ErrorDisplay } from "../../shared/forms/ErrorDisplay";
 import { Asterisk } from "lucide-react";
+import { useLoading } from "../../contexts/LoadingContext";
 
 const PitchConfirmationModal = ({ pitch, closeModal }) => {
   const { currUser, setCurrUser } = useUser();
   const { showMessage } = useMessage();
   const [errorMessage, setErrorMessage] = useState([]);
   const navigate = useNavigate();
+  const { setIsLoading } = useLoading();
 
   const initialState = {
     status: "confirmed",
@@ -25,6 +27,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
     initialState,
     async (data) => {
       try {
+        setIsLoading(true);
         // Ensure pitch_required_docs exists to prevent `.map()` error
         const requiredDocsObj = pitch.pitches?.pitch_required_docs || {};
 
@@ -72,10 +75,12 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
         }));
 
         closeModal();
-        navigate("/artist/bookings");
-        showMessage("Booking Confirmed", "success");
       } catch (e) {
         setErrorMessage([{ msg: e.message }]);
+      } finally {
+        setIsLoading(false);
+        navigate("/artist/bookings");
+        showMessage("Booking Confirmed", "success");
       }
     }
   );
