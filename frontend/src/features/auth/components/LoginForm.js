@@ -24,7 +24,7 @@ function LoginForm({ loginUser }) {
         value={formData.email}
         onChange={handleChange}
         placeholder="Email"
-        autocomplete="username"
+        autoComplete="username"
       />
 
       <InputField
@@ -34,7 +34,7 @@ function LoginForm({ loginUser }) {
         onChange={handleChange}
         placeholder="Password"
         type="password"
-        autocomplete="current-password"
+        autoComplete="current-password"
       />
 
       <div className="space-y-4">

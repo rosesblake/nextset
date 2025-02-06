@@ -53,7 +53,7 @@ router.delete("/delete/:id", async function (req, res, next) {
     const user = await prisma.users.delete({
       where: { id: parseInt(req.params.id) },
     });
-    return res.status(200).json({ user });
+    return res.status(200).json({ user, artists });
   } catch (e) {
     if (e.code === "P2025") {
       return res.status(404).json({ error: "User not found" });

@@ -50,7 +50,6 @@ function ArtistProfile() {
           hometown_lat: newValue.lat,
           hometown_lng: newValue.lng,
         });
-
         setCurrUser((prev) => ({
           ...prev,
           artist: { ...prev.artist, ...updatedArtist },
