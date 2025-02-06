@@ -33,8 +33,13 @@ model artists {
   created_at             DateTime?        @default(now()) @db.Timestamp(6)
   created_by             Int
   genre                  String?          @db.VarChar(20)
+  apple_music_url        String?
   spotify_url            String?
-  hometown               String?          @db.VarChar(30)
+  hometown_city          String?
+  hometown_state         String?
+  hometown_country       String?
+  hometown_lat           Float?
+  hometown_lng           Float?
   spotify_followers      Int?
   spotify_photo          String?
   spotify_popularity     Int?

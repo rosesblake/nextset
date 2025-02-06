@@ -45,4 +45,21 @@ router.post(
   }
 );
 
+router.delete("/delete/:id", async function (req, res, next) {
+  try {
+    const artists = await prisma.artists.deleteMany({
+      where: { created_by: parseInt(req.params.id) },
+    });
+    const user = await prisma.users.delete({
+      where: { id: parseInt(req.params.id) },
+    });
+    return res.status(200).json({ user });
+  } catch (e) {
+    if (e.code === "P2025") {
+      return res.status(404).json({ error: "User not found" });
+    }
+    return next(e);
+  }
+});
+
 module.exports = router;

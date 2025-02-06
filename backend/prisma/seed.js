@@ -56,7 +56,6 @@ async function main() {
       created_by: user.id,
       genre: "Rock",
       spotify_url: "https://open.spotify.com/johnband",
-      hometown: "Austin",
       spotify_followers: 12000,
       spotify_photo: "path/to/photo.jpg",
       spotify_popularity: 80,
