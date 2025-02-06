@@ -185,7 +185,7 @@ router.patch(
   async function (req, res, next) {
     try {
       const artistId = parseInt(req.params.id, 10);
-
+      console.log(req.body);
       // Update the artist in the database with the provided fields
       const updatedArtist = await prisma.artists.update({
         where: { id: artistId },

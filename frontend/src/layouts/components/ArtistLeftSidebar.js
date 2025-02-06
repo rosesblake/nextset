@@ -37,7 +37,7 @@ function ArtistLeftSidebar({ isCollapsed, toggleSidebars }) {
                 <img
                   src={currUser.artist.spotify_photo || "/default-profile.png"}
                   alt={currUser.artist.name}
-                  className="w-12 h-12 rounded-full shadow-md"
+                  className="w-12 h-12 rounded-full shadow-md object-cover"
                 />
                 <div className="flex flex-col">
                   <span className="text-xl font-semibold">

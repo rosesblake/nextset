@@ -13,6 +13,7 @@ const artistsRoutes = require("./routes/artists");
 const venuesRoutes = require("./routes/venues");
 const pitchesRoutes = require("./routes/pitches");
 const spotifyRoutes = require("./routes/spotify");
+const locationsRoutes = require("./routes/locations");
 
 const morgan = require("morgan");
 
@@ -40,6 +41,7 @@ app.use("/artists", artistsRoutes);
 app.use("/venues", venuesRoutes);
 app.use("/pitches", pitchesRoutes);
 app.use("/spotify", spotifyRoutes);
+app.use("/locations", locationsRoutes);
 
 //handle 404 errors
 app.use(function (req, res, next) {

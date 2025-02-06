@@ -167,10 +167,21 @@ class NextSetApi {
     return res;
   }
 
+  static async deleteUser(user_id) {
+    return await this.request(`users/delete/${user_id}`, {}, "delete");
+  }
+
   // Search for artist on Spotify
   static searchSpotifyArtist = async (query) => {
     return await this.request(`spotify/search?query=${query}`);
   };
+
+  static async getLocationDetails(hometown) {
+    const response = await this.request(
+      `locations/details?hometown=${encodeURIComponent(hometown)}`
+    );
+    return response;
+  }
 }
 
 NextSetApi.initializeInterceptors();

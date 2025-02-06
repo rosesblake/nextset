@@ -4,7 +4,7 @@ const InputField = ({
   value,
   onChange,
   placeholder,
-  autocomplete,
+  autoComplete,
   type = "text",
   inputName,
 }) => {
@@ -20,7 +20,7 @@ const InputField = ({
         value={value}
         onChange={onChange}
         placeholder={placeholder}
-        autoComplete={autocomplete}
+        autoComplete={autoComplete}
         className="mt-1 block w-full px-4 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-nextsetButton focus:border-nextsetPrimary"
       />
     </div>

@@ -17,7 +17,7 @@ function ArtistCard({ artist }) {
             {artist.genre || "Genre not specified"}
           </p>
           <p className="text-sm text-gray-500">
-            {artist.hometown || "Hometown not specified"}
+            {artist.hometown_city}, {artist.hometown_state}
           </p>
         </div>
       </div>

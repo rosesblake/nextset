@@ -30,7 +30,6 @@ function App() {
   useEffect(() => {
     NextSetApi.initializeInterceptors(logout);
   }, [logout]);
-
   if (isLoading) {
     return <Spinner />;
   }

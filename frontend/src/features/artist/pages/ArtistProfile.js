@@ -42,12 +42,25 @@ function ArtistProfile() {
   const handleFieldSave = async (field, newValue) => {
     try {
       setIsLoading(true);
-      const data = { [field]: newValue };
-      const updatedArtist = await NextSetApi.updateArtist(
-        currUser.artist,
-        data
-      );
-      setCurrUser({ ...currUser, artist: updatedArtist });
+      if (field === "hometown" && typeof newValue === "object") {
+        const updatedArtist = await NextSetApi.updateArtist(currUser.artist, {
+          hometown_city: newValue.city,
+          hometown_state: newValue.state,
+          hometown_country: newValue.country,
+          hometown_lat: newValue.lat,
+          hometown_lng: newValue.lng,
+        });
+        setCurrUser((prev) => ({
+          ...prev,
+          artist: { ...prev.artist, ...updatedArtist },
+        }));
+      } else {
+        const updatedArtist = await NextSetApi.updateArtist(currUser.artist, {
+          [field]: newValue,
+        });
+
+        setCurrUser((prev) => ({ ...prev, artist: updatedArtist }));
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -95,7 +108,7 @@ function ArtistProfile() {
           <img
             src={currUser.artist.spotify_photo}
             alt={currUser.artist.name}
-            className="w-36 h-36 rounded-full shadow-md mx-auto mb-4"
+            className="w-36 h-36 rounded-full shadow-md mx-auto mb-4 object-cover"
           />
           <h1 className="text-3xl font-bold text-nextsetAccent mb-2">
             {currUser.artist.name}
@@ -109,9 +122,10 @@ function ArtistProfile() {
           </h3>
           <EditableField
             label="Hometown"
-            value={currUser.artist.hometown}
+            value={`${currUser.artist.hometown_city}, ${currUser.artist.hometown_state}`}
             onSave={(newValue) => handleFieldSave("hometown", newValue)}
           />
+
           <EditableField
             label="Genre"
             value={currUser.artist.genre}

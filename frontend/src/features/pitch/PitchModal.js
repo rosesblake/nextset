@@ -48,10 +48,7 @@ function PitchModal({
 
   const navigate = useNavigate();
 
-  const requiredProfileFields = useMemo(
-    () => ["bio", "genre", "hometown", "name"],
-    []
-  );
+  const requiredProfileFields = useMemo(() => ["bio", "genre", "name"], []);
 
   useEffect(() => {
     const missing = requiredProfileFields.filter((key) => !artist[key]);
