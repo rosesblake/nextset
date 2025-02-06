@@ -62,7 +62,8 @@ function ArtistBookingCard({ artist, booking, pdfThumbnails }) {
             {artist.name}
           </h3>
           <p className="text-sm text-gray-500">
-            {artist.genre || "N/A"} | {artist.hometown || "N/A"}
+            {artist.genre || "N/A"} | {artist.hometown_city},{" "}
+            {artist.hometown_state}
           </p>
 
           {/* Bio */}

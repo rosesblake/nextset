@@ -18,7 +18,7 @@ function SharedFields({ formData, onChange }) {
         type="email"
         value={formData.email}
         onChange={onChange}
-        autocomplete="username"
+        autoComplete="username"
       />
       <InputField
         id="password"
@@ -27,7 +27,7 @@ function SharedFields({ formData, onChange }) {
         type="password"
         value={formData.password}
         onChange={onChange}
-        autocomplete="current-password"
+        autoComplete="current-password"
       />
     </>
   );

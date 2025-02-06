@@ -16,7 +16,7 @@ function Register() {
 
   const handleRegister = async (data) => {
     try {
-      // Step 1: Register User
+      const locationDetails = data.pendingLocationData;
       const userRes = await NextSetApi.registerUser({
         full_name: data.full_name,
         email: data.email,
@@ -24,58 +24,85 @@ function Register() {
         account_type: accountType,
       });
 
-      let { user } = userRes;
+      let { user, token } = userRes;
+      let registrationSuccess = false;
 
-      // Step 2: Register Account Type
       if (accountType === "artist") {
-        const artistRes = await NextSetApi.registerArtist(
-          {
-            name: data.artist_name,
-            hometown: data.hometown,
-            spotify_id: data.spotify_id,
-            spotify_photo: data.spotify_photo,
-            spotify_url: data.spotify_url,
-            spotify_popularity: data.spotify_popularity,
-            spotify_followers: data.spotify_followers,
-            created_by: user.id,
-          },
-          user
-        );
+        try {
+          const artistRes = await NextSetApi.registerArtist(
+            {
+              name: data.name,
+              hometown_city: locationDetails.city || "",
+              hometown_state: locationDetails.state || "",
+              hometown_country: locationDetails.country || "",
+              hometown_lat: locationDetails.lat || 0,
+              hometown_lng: locationDetails.lng || 0,
+              spotify_id: data.spotify_id,
+              spotify_photo: data.spotify_photo,
+              spotify_url: data.spotify_url,
+              spotify_popularity: data.spotify_popularity,
+              spotify_followers: data.spotify_followers,
+              created_by: user.id,
+            },
+            user
+          );
 
-        user = {
-          ...user,
-          artist_id: artistRes.artist.id,
-          artist: artistRes.artist,
-        };
-        navigate("/artist/dashboard");
+          user = {
+            ...user,
+            artist_id: artistRes.artist.id,
+            artist: artistRes.artist,
+          };
+          registrationSuccess = true;
+          navigate("/artist/dashboard");
+        } catch (artistError) {
+          console.error(artistError);
+          showMessage(
+            artistError.message || "Artist registration failed",
+            "error"
+          );
+        }
       } else if (accountType === "venue") {
-        const venueRes = await NextSetApi.registerVenue(
-          {
-            name: data.venue_name,
-            capacity: parseInt(data.capacity),
-            address: data.address,
-            city: data.city,
-            state: data.state,
-            zip_code: parseInt(data.zip_code),
-            created_by: user.id,
-          },
-          user
-        );
-        user = { ...user, venue_id: venueRes.venue.id, venue: venueRes.venue };
+        try {
+          const venueRes = await NextSetApi.registerVenue(
+            {
+              name: data.venue_name,
+              capacity: parseInt(data.capacity),
+              address: data.address,
+              city: data.city,
+              state: data.state,
+              zip_code: parseInt(data.zip_code),
+              created_by: user.id,
+            },
+            user
+          );
 
-        navigate("/venue/dashboard");
+          user = {
+            ...user,
+            venue_id: venueRes.venue.id,
+            venue: venueRes.venue,
+          };
+          registrationSuccess = true;
+          navigate("/venue/dashboard");
+        } catch (venueError) {
+          showMessage(
+            venueError.message || "Venue registration failed",
+            "error"
+          );
+        }
       }
 
-      // Step 3: Store Token and Updated User
-      const { token } = userRes;
+      if (!registrationSuccess && user?.id) {
+        return await NextSetApi.deleteUser(user.id);
+      }
+
       localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
       setCurrUser(user);
       showMessage("Registration successful", "success");
       setErrorMessage([]);
     } catch (e) {
-      showMessage(e.message, "error");
-      setErrorMessage(e.errors);
+      console.error(e);
+      showMessage(e.message || "An unexpected error occurred", "error");
+      setErrorMessage(e.errors || []);
     }
   };
 

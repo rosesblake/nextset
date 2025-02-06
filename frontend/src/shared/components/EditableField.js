@@ -1,18 +1,24 @@
 import { Pencil, Plus, Save } from "lucide-react";
 import React, { useState } from "react";
+import { LocationInput } from "../../utils/LocationInput";
 
 function EditableField({ label, value, onSave, link, linkOnly, png }) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
+  const [pendingLocationData, setPendingLocationData] = useState(null);
 
   const handleSave = () => {
-    if (inputValue.trim() !== value) {
-      onSave(inputValue); // Save only if the value has changed
+    if (label === "Hometown" && pendingLocationData) {
+      onSave(pendingLocationData);
+    } else if (
+      label === "Hometown" &&
+      !pendingLocationData &&
+      inputValue.trim()
+    ) {
+      onSave({ city: inputValue }); // Fallback if no location data selected
+    } else if (inputValue.trim() !== value) {
+      onSave(inputValue); // Handle text input
     }
-    setIsEditing(false);
-  };
-
-  const handleBlur = () => {
     setIsEditing(false);
   };
 
@@ -21,10 +27,6 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
       handleSave();
     }
   };
-
-  const icon = png
-    ? `/images/${label.toLowerCase()}_icon.png`
-    : `/images/${label.toLowerCase()}_icon.svg`;
 
   return (
     <div className="flex justify-between items-center mb-2">
@@ -42,7 +44,15 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
             rel="noopener noreferrer"
           >
             {!linkOnly && (
-              <img src={icon} alt={label} className="w-8 h-8 mr-4" />
+              <img
+                src={
+                  png
+                    ? `/images/${label.toLowerCase()}_icon.png`
+                    : `/images/${label.toLowerCase()}_icon.svg`
+                }
+                alt={label}
+                className="w-8 h-8 mr-4"
+              />
             )}
             <span>{value}</span>
           </a>
@@ -59,15 +69,27 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
           </button>
         ) : (
           <div className="flex items-center space-x-2">
-            <input
-              type="text"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              onBlur={handleBlur}
-              className="border border-gray-300 rounded-md p-1 text-sm"
-              onKeyDown={handleKeyDown}
-              autoFocus
-            />
+            {label === "Hometown" ? (
+              <LocationInput
+                value={inputValue}
+                onChange={(locationData) => {
+                  if (locationData) {
+                    setPendingLocationData(locationData);
+                    setInputValue(locationData.city); // Sync with inputValue
+                  }
+                }}
+                onKeyDown={handleKeyDown}
+              />
+            ) : (
+              <input
+                type="text"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                onKeyDown={handleKeyDown}
+                className="border border-gray-300 rounded-md p-1 text-sm"
+                autoFocus
+              />
+            )}
             <button
               onMouseDown={handleSave}
               className="text-sm text-nextsetAccent hover:underline"
