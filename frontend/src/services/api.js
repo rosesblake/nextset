@@ -92,6 +92,14 @@ class NextSetApi {
     }
   }
 
+  static async deleteArtistFile(artistId, fileType) {
+    return await this.request(
+      `artists/files/${artistId}`,
+      { fileType },
+      "delete"
+    );
+  }
+
   static async registerUser(user) {
     let res = await this.request(`users/register`, user, "post");
     NextSetApi.token = res.token;

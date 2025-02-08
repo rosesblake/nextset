@@ -2,6 +2,30 @@ import { Pencil, Plus, Save } from "lucide-react";
 import React, { useState } from "react";
 import { LocationInput } from "../../utils/LocationInput";
 
+// Common genres
+const commonGenres = [
+  "Pop",
+  "Rock",
+  "Hip Hop",
+  "R&B",
+  "Jazz",
+  "Classical",
+  "Country",
+  "Electronic",
+  "Reggae",
+  "Blues",
+  "Folk",
+  "Metal",
+  "Punk",
+  "Soul",
+  "Funk",
+  "Indie",
+  "Latin",
+  "Gospel",
+  "Alternative",
+  "EDM",
+];
+
 function EditableField({ label, value, onSave, link, linkOnly, png }) {
   const [isEditing, setIsEditing] = useState(false);
   const [inputValue, setInputValue] = useState(value || "");
@@ -17,7 +41,7 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
     ) {
       onSave({ city: inputValue }); // Fallback if no location data selected
     } else if (inputValue.trim() !== value) {
-      onSave(inputValue); // Handle text input
+      onSave(inputValue); // Handle text or genre input
     }
     setIsEditing(false);
   };
@@ -80,6 +104,22 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
                 }}
                 onKeyDown={handleKeyDown}
               />
+            ) : label === "Genre" ? (
+              <select
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                className="border border-gray-300 rounded-md p-1 text-sm"
+                autoFocus
+              >
+                <option value="" disabled>
+                  Select a genre
+                </option>
+                {commonGenres.map((genre) => (
+                  <option key={genre} value={genre}>
+                    {genre}
+                  </option>
+                ))}
+              </select>
             ) : (
               <input
                 type="text"

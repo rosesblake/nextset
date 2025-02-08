@@ -185,7 +185,6 @@ router.patch(
   async function (req, res, next) {
     try {
       const artistId = parseInt(req.params.id, 10);
-      console.log(req.body);
       // Update the artist in the database with the provided fields
       const updatedArtist = await prisma.artists.update({
         where: { id: artistId },
@@ -212,6 +211,32 @@ router.patch(
       return res.status(200).json(updatedArtist);
     } catch (e) {
       console.error("Error updating artist:", e.message);
+      return next(e);
+    }
+  }
+);
+
+router.delete(
+  "/files/:artistId",
+  authenticateJWT,
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const artistId = parseInt(req.params.artistId, 10);
+      const { fileType } = req.body;
+
+      await prisma.artists.update({
+        where: { id: artistId },
+        data: {
+          [fileType]: null,
+        },
+      });
+
+      return res.status(200).json({
+        message: `${fileType.toUpperCase()} file deleted successfully.`,
+      });
+    } catch (e) {
+      console.error("Error:", e);
       return next(e);
     }
   }

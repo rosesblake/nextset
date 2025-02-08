@@ -5,16 +5,19 @@ import { NextSetApi } from "../../../services/api";
 import { FileUploadField } from "../../../shared/components/FileUploadField";
 import { Spinner } from "../../../shared/components/Spinner";
 import { useLoading } from "../../../contexts/LoadingContext";
+import { useMessage } from "../../../contexts/MessageContext";
 
 function ArtistProfile() {
   const { currUser, setCurrUser } = useUser();
   const { isLoading, setIsLoading } = useLoading();
+  const { showMessage } = useMessage();
   const [files, setFiles] = useState({
     epk: null,
     w9: null,
     rider: null,
     stage_plot: null,
   });
+  const scrollPositionRef = React.useRef(0);
 
   // Fetch artist data on component mount
   useEffect(() => {
@@ -40,6 +43,7 @@ function ArtistProfile() {
   }, [currUser.artist.id, setCurrUser, setIsLoading]);
 
   const handleFieldSave = async (field, newValue) => {
+    scrollPositionRef.current = window.scrollY;
     try {
       setIsLoading(true);
       if (field === "hometown" && typeof newValue === "object") {
@@ -65,6 +69,9 @@ function ArtistProfile() {
       console.error(e);
     } finally {
       setIsLoading(false);
+      setTimeout(() => {
+        window.scrollTo(0, scrollPositionRef.current);
+      }, 0);
     }
   };
 
@@ -72,6 +79,7 @@ function ArtistProfile() {
     const formData = new FormData();
     formData.append("file", file);
 
+    scrollPositionRef.current = window.scrollY;
     try {
       setIsLoading(true);
       const response = await NextSetApi.uploadArtistFile(
@@ -93,6 +101,43 @@ function ArtistProfile() {
       );
     } finally {
       setIsLoading(false);
+      setTimeout(() => {
+        window.scrollTo(0, scrollPositionRef.current);
+      }, 0);
+    }
+  };
+
+  const handleDeleteFile = async (fileType) => {
+    scrollPositionRef.current = window.scrollY;
+
+    try {
+      setIsLoading(true);
+      const res = await NextSetApi.deleteArtistFile(
+        currUser.artist.id,
+        fileType
+      );
+      showMessage(res.message, "success");
+
+      // Clear the deleted file from state
+      setFiles((prevFiles) => ({
+        ...prevFiles,
+        [fileType]: null,
+      }));
+
+      setCurrUser((prevUser) => ({
+        ...prevUser,
+        artist: {
+          ...prevUser.artist,
+          [fileType]: null,
+        },
+      }));
+    } catch (e) {
+      console.error("Error deleting file", e.message);
+    } finally {
+      setIsLoading(false);
+      setTimeout(() => {
+        window.scrollTo(0, scrollPositionRef.current);
+      }, 0);
     }
   };
 
@@ -148,6 +193,11 @@ function ArtistProfile() {
               label="Manager"
               value={currUser.artist.manager}
               onSave={(newValue) => handleFieldSave("manager", newValue)}
+            />
+            <EditableField
+              label=" Record Label"
+              value={currUser.artist.record_label}
+              onSave={(newValue) => handleFieldSave("record_label", newValue)}
             />
             <EditableField
               label="Booking Agent"
@@ -214,6 +264,14 @@ function ArtistProfile() {
               link={true}
             />
             <EditableField
+              label="apple"
+              value={currUser.artist.apple_music_url}
+              onSave={(newValue) =>
+                handleFieldSave("apple_music_url", newValue)
+              }
+              link={true}
+            />
+            <EditableField
               label="youtube"
               value={currUser.artist.live_show_url}
               onSave={(newValue) => handleFieldSave("live_show_url", newValue)}
@@ -240,6 +298,8 @@ function ArtistProfile() {
               label="Electronic Press Kit (EPK)"
               onUpload={(file) => handleFileUpload("epk", file)}
               currentFileUrl={files.epk}
+              deleteFile={handleDeleteFile}
+              fileType="epk"
             />
             <EditableField
               label="epk"
@@ -252,6 +312,8 @@ function ArtistProfile() {
               label="Rider"
               onUpload={(file) => handleFileUpload("rider", file)}
               currentFileUrl={files.rider}
+              deleteFile={handleDeleteFile}
+              fileType="rider"
             />
             <EditableField
               label="rider"
@@ -264,11 +326,15 @@ function ArtistProfile() {
               label="W-9"
               onUpload={(file) => handleFileUpload("w9", file)}
               currentFileUrl={files.w9}
+              deleteFile={handleDeleteFile}
+              fileType="w9"
             />
             <FileUploadField
               label="Stage Plot"
               onUpload={(file) => handleFileUpload("stage_plot", file)}
               currentFileUrl={files.stage_plot}
+              deleteFile={handleDeleteFile}
+              fileType="stage_plot"
             />
           </div>
         </div>

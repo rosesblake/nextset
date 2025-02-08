@@ -49,7 +49,6 @@ function ArtistDashboard() {
   if (isLoading) {
     return <Spinner />;
   }
-
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-10">
       <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
@@ -102,7 +101,7 @@ function ArtistDashboard() {
           {upcomingGigs?.length > 0 ? (
             <ul className="space-y-4">
               {upcomingGigs.map((gig) => (
-                <DashboardBooking gig={gig} />
+                <DashboardBooking gig={gig} key={gig.pitch_id} />
               ))}
             </ul>
           ) : (

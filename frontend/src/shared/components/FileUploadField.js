@@ -1,8 +1,14 @@
 import React, { useState, useEffect } from "react";
 import { generatePdfThumbnail } from "../../utils/pdfUtils";
-import { ImageUp } from "lucide-react";
+import { ImageUp, Trash2 } from "lucide-react";
 
-export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
+export const FileUploadField = ({
+  label,
+  onUpload,
+  currentFileUrl,
+  deleteFile,
+  fileType,
+}) => {
   const [isUploading, setIsUploading] = useState(false);
   const [thumbnail, setThumbnail] = useState(null);
 
@@ -10,12 +16,11 @@ export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
     const loadThumbnail = async () => {
       try {
         if (!currentFileUrl) {
-          setThumbnail(null); // Reset thumbnail if no file URL
+          setThumbnail(null);
           return;
         }
 
         if (currentFileUrl.endsWith(".pdf")) {
-          // Generate thumbnail for PDF
           const thumbnailUrl = await generatePdfThumbnail(currentFileUrl);
           setThumbnail(thumbnailUrl);
         } else if (
@@ -23,10 +28,9 @@ export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
           currentFileUrl.endsWith(".jpeg") ||
           currentFileUrl.endsWith(".png")
         ) {
-          // For image files, use the file itself as the thumbnail
           setThumbnail(currentFileUrl);
         } else {
-          setThumbnail(null); // Unsupported file type
+          setThumbnail(null);
         }
       } catch (error) {
         console.error("Error loading thumbnail:", error);
@@ -43,7 +47,7 @@ export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
 
     setIsUploading(true);
     try {
-      await onUpload(file); // Call the provided `onUpload` function
+      await onUpload(file);
     } catch (error) {
       console.error(`Error uploading ${label}:`, error);
     } finally {
@@ -57,7 +61,6 @@ export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
         {label}
       </label>
       <div className="flex items-center space-x-4">
-        {/* Hidden File Input */}
         <input
           type="file"
           id={`file-input-${label}`}
@@ -66,7 +69,6 @@ export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
           disabled={isUploading}
         />
 
-        {/* Custom Upload Button */}
         <label
           htmlFor={`file-input-${label}`}
           className={`px-4 py-2 bg-nextsetButton text-white rounded-md cursor-pointer hover:bg-nextsetAccent transition ${
@@ -82,7 +84,6 @@ export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
           )}
         </label>
 
-        {/* Thumbnail or File Link */}
         {thumbnail ? (
           <a href={currentFileUrl} target="_blank" rel="noopener noreferrer">
             <img
@@ -101,6 +102,15 @@ export const FileUploadField = ({ label, onUpload, currentFileUrl }) => {
             View File
           </a>
         ) : null}
+
+        {currentFileUrl && (
+          <button
+            onClick={() => deleteFile(fileType)}
+            className="p-2 bg-red-400 hover:bg-red-500 text-white rounded-full transition"
+          >
+            <Trash2 size={18} />
+          </button>
+        )}
       </div>
     </div>
   );
