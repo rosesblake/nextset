@@ -52,6 +52,7 @@ function VenueDashboard() {
 
       closeModal();
     } catch (e) {
+      closeModal();
       console.error(e);
     } finally {
       setIsLoading(false);

@@ -9,9 +9,9 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        nextsetPrimary: "#232330", // Muted Deep Navy
+        nextsetPrimary: "#1A1A2E", // Dark Indigo Black
         nextsetAccent: "#D4A97A", // Lighter Warm Taupe for Better Contrast
-        nextsetButton: "#6B7480", // Softer Slate Gray for Harmony
+        nextsetButton: "#4E4E50", // Smooth Graphite Gray
       },
     },
   },

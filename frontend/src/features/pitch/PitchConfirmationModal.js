@@ -28,15 +28,12 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
     async (data) => {
       try {
         setIsLoading(true);
-        // Ensure pitch_required_docs exists to prevent `.map()` error
         const requiredDocsObj = pitch.pitches?.pitch_required_docs || {};
 
-        // Extract required documents, ignoring `id` and `pitch_id`
         const requiredDocs = Object.keys(requiredDocsObj)
           .filter((key) => key.endsWith("_required") && requiredDocsObj[key])
-          .map((key) => key.replace("_required", "")); // Convert `w9_required` -> `w9`
+          .map((key) => key.replace("_required", ""));
 
-        // Find missing required documents
         const missingDocs = requiredDocs.filter((doc) => !data[doc]);
 
         if (missingDocs.length > 0) {
@@ -47,12 +44,11 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
                 .join(", ")}`,
             },
           ]);
-          return; // Prevent submission if required docs are missing
+          return;
         }
 
         const payload = { status: data.status };
 
-        // Attach selected documents to payload
         Object.entries(data).forEach(([key, value]) => {
           if (value && currUser.artist[key]) {
             payload[key] = currUser.artist[key];
@@ -61,7 +57,6 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
 
         await NextSetApi.confirmPitch(pitch.pitch_id, { data: payload });
 
-        // Instantly update user context
         setCurrUser((prevUser) => ({
           ...prevUser,
           artist: {
@@ -75,12 +70,13 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
         }));
 
         closeModal();
+
+        navigate("/artist/bookings");
+        showMessage("Booking Confirmed", "success");
       } catch (e) {
         setErrorMessage([{ msg: e.message }]);
       } finally {
         setIsLoading(false);
-        navigate("/artist/bookings");
-        showMessage("Booking Confirmed", "success");
       }
     }
   );
@@ -93,119 +89,117 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
   };
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50">
-      <div className="bg-white p-8 rounded-lg shadow-lg max-w-lg w-full relative">
-        {/* Close Button */}
+    <div className="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center z-50 p-4">
+      <div className="bg-white p-6 rounded-xl shadow-2xl w-full max-w-2xl relative overflow-hidden transform transition-all scale-100">
         <button
           onClick={closeModal}
-          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold"
+          className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 text-2xl font-bold transition"
         >
           ✕
         </button>
 
-        {/* Artist Photo */}
         {currUser.artist.photo && (
-          <div className="flex justify-center mb-6">
+          <div className="flex justify-center mb-4">
             <img
               src={currUser.artist.photo}
-              alt={`${currUser.artist.name}`}
-              className="w-28 h-28 rounded-full object-cover border-4 border-nextsetPrimary"
+              alt={currUser.artist.name}
+              className="w-24 h-24 rounded-full shadow-lg mx-auto"
             />
           </div>
         )}
 
-        {/* Header */}
-        <h2 className="text-3xl font-bold text-center text-nextsetAccent mb-4">
+        <h2 className="text-2xl font-bold text-nextsetAccent text-center mb-4">
           Pitch Confirmation
         </h2>
-        <p className="text-center text-gray-600 mb-6">
+
+        <p className="text-center text-gray-600 mb-4">
           You've been accepted to play at{" "}
-          <span className="font-semibold text-nextsetButton">
+          <span className="font-bold text-nextsetButton">
             {pitch.pitches.venues.name}
           </span>{" "}
-          in {pitch.pitches.venues.city}, {pitch.pitches.venues.state}! Let’s
-          confirm your details:
+          in {pitch.pitches.venues.city}, {pitch.pitches.venues.state}{" "}
+          <span className="font-bold">
+            {new Date(pitch.pitches.date).toLocaleDateString("en-US", {
+              weekday: "long",
+              year: "numeric",
+              day: "numeric",
+              month: "long",
+            })}
+          </span>
+          ! Confirm your details:
         </p>
 
-        {/* Artist Details */}
-        <div className="mb-6 text-center">
+        <div className="text-center mb-4">
           <h3 className="text-xl font-semibold text-nextsetAccent">
             {currUser.artist.name}
           </h3>
           <p className="text-gray-600">{pitch.pitches.role}</p>
           <p className="text-gray-600">{pitch.pitches.content}</p>
-          <div className="text-gray-600 font-bold">
-            Support:{" "}
-            <ul className="font-medium">
-              {pitch.pitches.support_acts.map((act) => (
-                <li key={act.spotify_id}>
-                  <a
-                    href={act.spotify_url}
-                    rel="noopener noreferrer"
-                    target="_blank"
-                  >
-                    {act.name}
-                  </a>
-                </li>
-              ))}
-            </ul>
+
+          <div className="flex justify-center gap-2 mt-2">
+            {pitch.pitches.support_acts.map((act) => (
+              <a
+                key={act.spotify_id}
+                href={act.spotify_url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full hover:bg-nextsetAccent hover:text-white transition"
+              >
+                {act.name}
+              </a>
+            ))}
           </div>
         </div>
 
-        {/* Document Selection */}
-        <form onSubmit={handleSubmit}>
-          <div className="mb-8">
-            <h3 className="text-xl font-semibold text-nextsetAccent">
-              Select Documents to Send:
-            </h3>
-            <ul className="list-none space-y-3">
-              {Object.entries(documents).map(([key, url]) => (
-                <li key={key} className="flex items-center space-x-2">
-                  {url ? (
-                    <>
-                      <input
-                        type="checkbox"
-                        name={key}
-                        checked={formData[key]}
-                        onChange={handleChange}
-                        className="form-checkbox h-6 w-6 text-nextsetAccent"
-                      />
-                      <a
-                        href={url}
-                        className="text-nextsetButton font-medium underline"
-                        target="_blank"
-                        rel="noopener noreferrer"
-                      >
-                        {key.replace("_", " ").toUpperCase()}
-                      </a>
-                    </>
-                  ) : (
-                    <Link
-                      to="/artist/profile"
-                      onClick={closeModal}
-                      className="flex items-center space-x-1 text-gray-500 italic"
-                    >
-                      <span>Upload {key.replace("_", " ").toUpperCase()}</span>
-                    </Link>
-                  )}
-
-                  {pitch.pitches?.pitch_required_docs?.[`${key}_required`] && (
-                    <span className="text-red-500 flex items-center">
-                      <Asterisk size={18} />
-                    </span>
-                  )}
-                </li>
-              ))}
-            </ul>
-          </div>
+        <form onSubmit={handleSubmit} className="space-y-4">
+          {Object.entries(documents).map(([key, url]) => (
+            <div key={key} className="flex items-center space-x-2">
+              {url ? (
+                <>
+                  <input
+                    type="checkbox"
+                    name={key}
+                    checked={formData[key]}
+                    onChange={handleChange}
+                    className="form-checkbox h-5 w-5 text-nextsetAccent"
+                  />
+                  <a
+                    href={url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="bg-gray-200 text-gray-700 text-xs font-semibold px-3 py-1 rounded-full hover:bg-nextsetAccent hover:text-white transition"
+                  >
+                    {key.replace("_", " ").toUpperCase()}
+                  </a>
+                </>
+              ) : (
+                <Link
+                  to="/artist/profile"
+                  onClick={closeModal}
+                  className="text-gray-500 italic"
+                >
+                  Upload {key.replace("_", " ").toUpperCase()}
+                </Link>
+              )}
+              {pitch.pitches?.pitch_required_docs?.[`${key}_required`] && (
+                <Asterisk size={18} className="text-red-500" />
+              )}
+            </div>
+          ))}
 
           <ErrorDisplay errors={errorMessage} />
 
-          {/* Submit Button */}
-          <div className="flex justify-center">
+          <div className="flex justify-center space-x-4">
+            <button
+              type="button"
+              onClick={closeModal}
+              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+            >
+              Cancel
+            </button>
             <button
               type="submit"
-              className="px-6 py-2 bg-nextsetAccent text-white rounded-md hover:bg-nextsetPrimary shadow-lg transition"
+              className="px-4 py-2 bg-nextsetAccent text-white rounded hover:bg-nextsetButton"
             >
               Confirm & Submit
             </button>

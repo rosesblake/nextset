@@ -17,6 +17,7 @@ function SocialLinks({ artist, preview }) {
       "spotify_url",
       "soundcloud",
       "live_show_url",
+      "apple_music_url",
     ],
     []
   );
@@ -65,15 +66,6 @@ function SocialLinks({ artist, preview }) {
           />
         </a>
       )}
-      {artist.spotify_url && (
-        <a href={artist.spotify_url} target="_blank" rel="noopener noreferrer">
-          <img
-            src="/images/spotify_icon.svg"
-            alt="Spotify"
-            className="w-8 h-8"
-          />
-        </a>
-      )}
       {artist.live_show_url && (
         <a
           href={artist.live_show_url}
@@ -85,6 +77,24 @@ function SocialLinks({ artist, preview }) {
             alt="YouTube"
             className="w-8 h-8"
           />
+        </a>
+      )}
+      {artist.spotify_url && (
+        <a href={artist.spotify_url} target="_blank" rel="noopener noreferrer">
+          <img
+            src="/images/spotify_icon.svg"
+            alt="Spotify"
+            className="w-8 h-8"
+          />
+        </a>
+      )}
+      {artist.apple_music_url && (
+        <a
+          href={artist.apple_music_url}
+          target="_blank"
+          rel="noopener noreferrer"
+        >
+          <img src="/images/apple_icon.svg" alt="Apple" className="w-8 h-8" />
         </a>
       )}
       {artist.soundcloud && (

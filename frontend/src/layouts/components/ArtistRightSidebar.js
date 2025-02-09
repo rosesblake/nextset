@@ -135,6 +135,16 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
                         {pitch.pitches.venues?.city || "Unknown City"},{" "}
                         {pitch.pitches.venues?.state || "Unknown State"}
                       </p>
+                      <p className="text-xs text-gray-300">
+                        {new Date(pitch.pitches.date).toLocaleDateString(
+                          "en-US",
+                          {
+                            year: "numeric",
+                            month: "long",
+                            day: "numeric",
+                          }
+                        )}
+                      </p>
                       <p className="text-sm text-yellow-400">
                         Status: {pitch.pitches.status}
                       </p>
