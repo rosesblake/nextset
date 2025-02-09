@@ -16,15 +16,21 @@ function CalendarView() {
         setIsLoading(true);
         let pitches = [];
         if (currUser?.account_type === "venue") {
-          pitches = await NextSetApi.getVenuePitches(currUser.venue_id);
+          pitches = await NextSetApi.getVenuePitches(
+            currUser.venue_id || currUser.venue.id
+          );
           setPitches(pitches);
         } else if (currUser.account_type === "artist") {
-          pitches = await NextSetApi.getArtistPitches(currUser.artist_id);
+          pitches = await NextSetApi.getArtistPitches(
+            currUser.artist_id || currUser.artist.id
+          );
           setPitches(
             pitches?.map((pitch) => {
               return pitch.pitches || [];
             })
           );
+        } else {
+          setPitches([]);
         }
       } catch (e) {
         console.error(e);

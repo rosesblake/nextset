@@ -32,7 +32,7 @@ function App() {
   }, [logout]);
 
   const getSidebarClasses = () => {
-    if (!currUser) return "ml-80 mr-80";
+    if (!currUser) return "";
 
     if (currUser.account_type === "artist") {
       return isCollapsed ? "ml-16 mr-16" : "ml-80 mr-80";

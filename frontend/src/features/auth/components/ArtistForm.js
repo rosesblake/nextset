@@ -65,7 +65,7 @@ function ArtistForm({ onSubmit }) {
     setArtistSpotify(artist);
     handleChange({ target: { name: "name", value: artist.name } });
   };
-
+  console.log(artistSpotify);
   return (
     <FormWrapper title="Register as Artist" handleSubmit={handleSubmit}>
       <InputField
