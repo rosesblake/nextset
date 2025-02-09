@@ -65,7 +65,7 @@ function CalendarView() {
   }
 
   return (
-    <MyCalendar height="100vh" myEventsList={calendarEvents} full={true} />
+    <MyCalendar height="100dvh" myEventsList={calendarEvents} full={true} />
   );
 }
 

@@ -31,10 +31,9 @@ const MyCalendar = ({ myEventsList, height = "450px", full }) => {
   };
 
   return (
-    <div
-      className={`h-[${height}] rounded-xl shadow-md p-4 text-xs text-nextsetPrimary`}
-    >
+    <div className={`rounded-xl shadow-md text-xs text-nextsetPrimary`}>
       <Calendar
+        style={{ height, overflow: "hidden", padding: "15px" }}
         localizer={localizer}
         events={myEventsList}
         startAccessor="start"
