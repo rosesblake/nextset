@@ -79,9 +79,9 @@ function ArtistBookingCard({ artist, booking, pdfThumbnails }) {
 
           {/* Action Buttons - Inside Artist Section */}
           <div className="mt-6 flex justify-center space-x-4">
-            <button className="px-6 py-2 bg-nextsetAccent text-white font-semibold rounded-md hover:bg-nextsetButton transition">
+            {/* <button className="px-6 py-2 bg-nextsetAccent text-white font-semibold rounded-md hover:bg-nextsetButton transition">
               Message Artist
-            </button>
+            </button> */}
           </div>
         </div>
       )}

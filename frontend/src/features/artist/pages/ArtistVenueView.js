@@ -10,14 +10,17 @@ function ArtistVenueView() {
   const navigate = useNavigate();
   const { id: venue_id } = useParams();
   const [venue, setVenue] = useState();
+  const [pitches, setPitches] = useState();
   const { isLoading, setIsLoading } = useLoading();
 
   useEffect(() => {
     const fetchVenue = async () => {
       try {
         setIsLoading(true);
-        const res = await NextSetApi.getVenue(venue_id);
-        setVenue(res);
+        const venue = await NextSetApi.getVenue(venue_id);
+        const pitches = await NextSetApi.getVenuePitches(venue_id);
+        setVenue(venue);
+        setPitches(pitches);
       } catch (e) {
         console.error(e);
       } finally {
@@ -35,7 +38,7 @@ function ArtistVenueView() {
   return (
     <div className="flex items-center justify-center min-h-screen bg-gray-100 p-10">
       <div className="w-full max-w-3xl bg-white p-6 rounded-lg shadow-lg">
-        <ArtistVenueProfile venue={venue} />
+        <ArtistVenueProfile venue={venue} pitches={pitches} />
         {/* Quick Actions */}
         <div className="flex justify-center space-x-4 mt-6">
           <button

@@ -96,7 +96,9 @@ function ArtistPitchCard({ pitch, openDocsModal, handlePitchStatus, preview }) {
                     Accept
                   </button>
                   <button
-                    onClick={() => handlePitchStatus(pitch.id, "declined")}
+                    onClick={() =>
+                      handlePitchStatus(pitch.id, { status: "declined" })
+                    }
                     className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-red-600 transition"
                   >
                     Decline

@@ -127,10 +127,26 @@ router.patch(
   async (req, res, next) => {
     try {
       const pitch_id = parseInt(req.params.id, 10);
-      const { status } = req.body;
+      const { status, venue_id, date } = req.body;
 
-      if (!["accepted", "declined"].includes(status)) {
-        return res.status(400).json({ error: "Invalid status value" });
+      if (!["accepted", "declined", "removed"].includes(status)) {
+        throw new BadRequestError("Invalid Status, Please Try Again.");
+      }
+
+      if (status === "declined" || status === "removed") {
+        const declinedPitch = await prisma.pitches.update({
+          where: { id: pitch_id },
+          data: { status },
+        });
+        return res.status(200).json({ declinedPitch });
+      }
+
+      const blockedDate = await prisma.venue_blocked_dates.findFirst({
+        where: { venue_id, blocked_date: date },
+      });
+
+      if (blockedDate) {
+        throw new BadRequestError("Date already booked");
       }
 
       const updatedPitch = await prisma.pitches.update({
@@ -138,7 +154,11 @@ router.patch(
         data: { status },
       });
 
-      return res.status(200).json(updatedPitch);
+      await prisma.venue_blocked_dates.create({
+        data: { venue_id, blocked_date: date },
+      });
+
+      return res.status(200).json({ updatedPitch });
     } catch (e) {
       return next(e);
     }

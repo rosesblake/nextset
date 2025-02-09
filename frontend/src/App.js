@@ -18,24 +18,33 @@ import { GigDetails } from "./features/artist/pages/GigDetails";
 import { VenueList } from "./features/artist/pages/VenueList";
 import { ArtistVenueView } from "./features/artist/pages/ArtistVenueView";
 import { VenueProfile } from "./features/venue/pages/VenueProfile";
-import { Spinner } from "./shared/components/Spinner";
 import { ArtistList } from "./features/venue/pages/ArtistList";
 import { VenueBookings } from "./features/venue/pages/VenueBookings";
+import { CalendarView } from "./shared/components/CalendarView";
 
 function App() {
-  const { currUser, logout, isLoading } = useUser();
+  const { currUser, logout } = useUser();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const toggleSidebars = () => setIsCollapsed((prev) => !prev);
 
   useEffect(() => {
     NextSetApi.initializeInterceptors(logout);
   }, [logout]);
-  if (isLoading) {
-    return <Spinner />;
-  }
+
+  const getSidebarClasses = () => {
+    if (!currUser) return "ml-80 mr-80";
+
+    if (currUser.account_type === "artist") {
+      return isCollapsed ? "ml-16 mr-16" : "ml-80 mr-80";
+    } else if (currUser.account_type === "venue") {
+      return isCollapsed ? "ml-16" : "ml-80";
+    }
+
+    return "ml-80";
+  };
 
   return (
-    <div className="App">
+    <div className={`App ${getSidebarClasses()}`}>
       {!currUser && <Navbar />}
       <Routes>
         {/* Public Routes */}
@@ -83,6 +92,7 @@ function App() {
           <Route path="bookings" element={<GigDetails />} />
           <Route path="venue/list" element={<VenueList />} />
           <Route path="venue/:id" element={<ArtistVenueView />} />
+          <Route path="calendar" element={<CalendarView />} />
         </Route>
 
         {/* Venue Routes */}
@@ -102,6 +112,7 @@ function App() {
           <Route path="profile" element={<VenueProfile />} />
           <Route path="bookings" element={<VenueBookings />} />
           <Route path="explore" element={<ArtistList />} />
+          <Route path="calendar" element={<CalendarView />} />
         </Route>
 
         {/* Catch-All Route */}

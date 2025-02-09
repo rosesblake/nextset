@@ -55,7 +55,9 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
           }
         });
 
-        await NextSetApi.confirmPitch(pitch.pitch_id, { data: payload });
+        await NextSetApi.confirmPitch(pitch.pitch_id, {
+          data: payload,
+        });
 
         setCurrUser((prevUser) => ({
           ...prevUser,

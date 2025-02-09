@@ -13,10 +13,15 @@ function RequiredDocs({ pitch, status, handlePitchStatus }) {
     acc[doc.key] = pitch?.[doc.key] || false;
     return acc;
   }, {});
-
   const { formData, handleChange, handleSubmit } = useForm(
     initialState,
-    (data) => handlePitchStatus(pitch.id, { status, requirements: { ...data } })
+    (data) =>
+      handlePitchStatus(pitch.id, {
+        status,
+        requirements: { ...data },
+        venue_id: pitch.venue_id,
+        date: pitch.date,
+      })
   );
 
   return (

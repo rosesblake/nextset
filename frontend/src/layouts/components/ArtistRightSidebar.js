@@ -8,7 +8,7 @@ import { BellRing } from "lucide-react";
 
 function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [activeTab, setActiveTab] = useState("sent");
-  const { currUser } = useUser();
+  const { currUser, setCurrUser } = useUser();
   const { openModal, closeModal } = useModal();
   const [pitches, setPitches] = useState(
     currUser?.artist?.artist_pitches ?? []
@@ -39,6 +39,30 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const handleOpenModal = (pitch) => {
     openModal(<PitchConfirmationModal pitch={pitch} closeModal={closeModal} />);
     setAwaitingConfirmation(false);
+  };
+
+  const handleRemovePitch = async (pitch) => {
+    console.log(pitch);
+    try {
+      const res = await NextSetApi.updatePitchStatus(pitch.pitch_id, {
+        status: "removed",
+      });
+
+      setCurrUser((prevUser) => ({
+        ...prevUser,
+        artist: {
+          ...prevUser.artist,
+          artist_pitches: prevUser.artist.artist_pitches?.map((p) =>
+            p.pitch_id === pitch.pitch_id
+              ? { ...p, pitches: { ...p.pitches, status: "removed" } }
+              : p
+          ),
+        },
+      }));
+      console.log(res);
+    } catch (e) {
+      return console.error(e.message);
+    }
   };
 
   const handleTabSwitch = (tab) => {
@@ -106,7 +130,7 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
                 Results
               </button>
 
-              {awaitingConfirmation && (
+              {resultPitches?.length > 0 && (
                 <BellRing
                   size={20}
                   className="absolute top-1 right-1 text-red-500 animate-pulse fill-current"
@@ -181,12 +205,21 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
                     >
                       {pitch.pitches.status}
                     </p>
-                    <button
-                      onClick={() => handleOpenModal(pitch)}
-                      className="px-4 py-2 mt-4 bg-nextsetButton hover:bg-nextsetAccent text-white rounded-md"
-                    >
-                      Finalize Booking
-                    </button>
+                    {pitch.pitches.status === "accepted" ? (
+                      <button
+                        onClick={() => handleOpenModal(pitch)}
+                        className="px-4 py-2 mt-4 bg-nextsetButton hover:bg-nextsetAccent text-white rounded-md"
+                      >
+                        Finalize Booking
+                      </button>
+                    ) : (
+                      <button
+                        onClick={() => handleRemovePitch(pitch)}
+                        className="px-4 py-2 mt-4 bg-nextsetButton hover:bg-nextsetAccent text-white rounded-md"
+                      >
+                        Remove
+                      </button>
+                    )}
                   </div>
                 ))}
               </div>

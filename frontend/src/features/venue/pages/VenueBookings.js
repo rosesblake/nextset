@@ -95,6 +95,7 @@ function VenueBookings() {
 
             return (
               <ArtistBookingCard
+                key={booking.id}
                 artist={artist}
                 booking={booking}
                 pdfThumbnails={pdfThumbnails}

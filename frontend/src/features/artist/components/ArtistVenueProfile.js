@@ -1,14 +1,19 @@
 import React from "react";
-import Calendar from "react-calendar";
+import { MyCalendar } from "../../../shared/components/MyCalendar";
 
-function ArtistVenueProfile({ venue }) {
-  // Define the 6-month range
-  const today = new Date();
-  const sixMonthsFromToday = new Date(
-    today.getFullYear(),
-    today.getMonth() + 6,
-    today.getDate()
-  );
+function ArtistVenueProfile({ venue, pitches }) {
+  //show only confirmed shows
+  const bookedEvents = pitches?.filter((pitch) => pitch.status === "confirmed");
+
+  const calendarEvents = [
+    ...bookedEvents?.map((pitch) => ({
+      title: pitch.artist_pitches[0].artists.name.toLowerCase(),
+      start: new Date(pitch.date),
+      end: new Date(pitch.date),
+      allDay: true,
+      type: "blocked",
+    })),
+  ];
 
   return (
     <div>
@@ -52,22 +57,7 @@ function ArtistVenueProfile({ venue }) {
           Available Dates
         </h3>
         <div className="flex justify-center">
-          <Calendar
-            className="w-full max-w-2xl border border-gray-300 rounded-lg shadow-lg p-4"
-            tileClassName={({ date }) =>
-              "hover:bg-nextsetAccent hover:text-white rounded-lg text-lg"
-            }
-            tileDisabled={({ date }) =>
-              venue.blocked_dates?.some(
-                (blockedDate) =>
-                  new Date(blockedDate).toDateString() === date.toDateString()
-              )
-            }
-            nextLabel="›"
-            prevLabel="‹"
-            minDate={today} // Set the minimum date to today
-            maxDate={sixMonthsFromToday} // Set the maximum date to 6 months from today
-          />
+          <MyCalendar myEventsList={calendarEvents} height="450px" />
         </div>
       </div>
     </div>

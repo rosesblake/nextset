@@ -6,12 +6,14 @@ import { useModal } from "../../../contexts/ModalContext";
 import { RequiredDocs } from "../components/RequiredDocs";
 import { useLoading } from "../../../contexts/LoadingContext";
 import { Spinner } from "../../../shared/components/Spinner";
+import { useMessage } from "../../../contexts/MessageContext";
 
 function VenueDashboard() {
   const { currUser } = useUser();
   const [pitches, setPitches] = useState([]);
   const { openModal, closeModal } = useModal();
   const { isLoading, setIsLoading } = useLoading();
+  const { showMessage } = useMessage();
 
   useEffect(() => {
     const fetchPitches = async () => {
@@ -37,19 +39,25 @@ function VenueDashboard() {
   const handlePitchStatus = async (pitch_id, data) => {
     try {
       setIsLoading(true);
-      await NextSetApi.updatePitchStatus(pitch_id, { status: data.status });
+      const res = await NextSetApi.updatePitchStatus(pitch_id, {
+        status: data.status,
+        venue_id: data.venue_id,
+        date: data.date,
+      });
 
       setPitches((prev) =>
         prev.map((pitch) =>
           pitch.id === pitch_id ? { ...pitch, status: data.status } : pitch
         )
       );
+      if (data.status !== "declined") {
+        await NextSetApi.updatePitchRequiredDocs({
+          pitch_id: pitch_id,
+          ...data.requirements,
+        });
+      }
 
-      await NextSetApi.updatePitchRequiredDocs({
-        pitch_id: pitch_id,
-        ...data.requirements,
-      });
-
+      showMessage(`Successfully ${data.status} pitch`, "success");
       closeModal();
     } catch (e) {
       closeModal();
@@ -86,6 +94,7 @@ function VenueDashboard() {
                 key={pitch.id}
                 pitch={pitch}
                 openDocsModal={openDocsModal}
+                handlePitchStatus={handlePitchStatus}
               />
             ))}
           </ul>

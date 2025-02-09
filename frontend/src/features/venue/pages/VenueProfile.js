@@ -77,24 +77,6 @@ function VenueProfile() {
           />
         </div>
 
-        {/* Blocked Dates Section */}
-        <div className="p-4 bg-gray-50 rounded-lg shadow-sm mb-6">
-          <h3 className="text-lg font-bold text-nextsetAccent mb-4">
-            Blocked Dates
-          </h3>
-          <ul>
-            {currUser.venue.blocked_dates?.length > 0 ? (
-              currUser.venue.blocked_dates.map((date, idx) => (
-                <li key={idx} className="text-gray-600">
-                  {new Date(date).toLocaleDateString()}
-                </li>
-              ))
-            ) : (
-              <p className="text-gray-500">No blocked dates set.</p>
-            )}
-          </ul>
-        </div>
-
         {/* Quick Actions */}
         <div className="flex justify-center space-x-4">
           <button
@@ -102,6 +84,12 @@ function VenueProfile() {
             onClick={() => navigate("/venue/dashboard")}
           >
             Back to Dashboard
+          </button>
+          <button
+            className="px-6 py-3 bg-nextsetAccent text-white rounded-md hover:bg-nextsetButton transition"
+            onClick={() => navigate("/venue/calendar")}
+          >
+            View Calendar
           </button>
         </div>
       </div>
