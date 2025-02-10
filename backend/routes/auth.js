@@ -24,7 +24,7 @@ router.post(
 
       // Fetch user along with related artist or venue information
       const user = await prisma.users.findUnique({
-        where: { email },
+        where: { email: email.toLowerCase() },
         include: {
           artist_users: {
             include: {

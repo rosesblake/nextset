@@ -25,6 +25,7 @@ import { CalendarView } from "./shared/components/CalendarView";
 function App() {
   const { currUser, logout } = useUser();
   const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 1000);
   const toggleSidebars = () => setIsCollapsed((prev) => !prev);
 
   useEffect(() => {
@@ -34,13 +35,13 @@ function App() {
   const getSidebarClasses = () => {
     if (!currUser) return "";
 
-    if (currUser.account_type === "artist") {
+    if (currUser.account_type === "artist" && !isMobile) {
       return isCollapsed ? "ml-16 mr-16" : "ml-80 mr-80";
-    } else if (currUser.account_type === "venue") {
+    } else if (currUser.account_type === "venue" && !isMobile) {
       return isCollapsed ? "ml-16" : "ml-80";
     }
 
-    return "ml-80";
+    return "";
   };
 
   return (
@@ -82,6 +83,8 @@ function App() {
               <ArtistLayout
                 isCollapsed={isCollapsed}
                 toggleSidebars={toggleSidebars}
+                setIsMobile={setIsMobile}
+                isMobile={isMobile}
               />
             </ProtectedRoute>
           }
