@@ -4,7 +4,7 @@ const express = require("express");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const router = express.Router();
-const { UnauthorizedError } = require("../expressError");
+const { UnauthorizedError, BadRequestError } = require("../expressError");
 const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { venueValidator } = require("../validators/venueValidator");
 const { validate } = require("../middleware/validate");
@@ -52,6 +52,64 @@ router.post(
 
       // Return the venue as a JSON response
       return res.status(201).json({ venue });
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
+
+router.post(
+  "/amenities",
+  authenticateJWT,
+  ensureLoggedIn,
+  async function (req, res, next) {
+    try {
+      const { venue_id, data } = req.body;
+
+      if (!venue_id) {
+        throw next(new BadRequestError("Invalid venue identification."));
+      }
+
+      // Check if the amenity already exists globally
+      const duplicateAmenity = await prisma.amenities.findFirst({
+        where: { name: data.amenity },
+      });
+
+      let newAmenity;
+      if (!duplicateAmenity) {
+        newAmenity = await prisma.amenities.create({
+          data: { name: data.amenity },
+        });
+      }
+
+      const amenityId = duplicateAmenity ? duplicateAmenity.id : newAmenity.id;
+
+      // Check if the amenity is already linked to the venue
+      const existingVenueAmenity = await prisma.venue_amenities.findUnique({
+        where: {
+          venue_id_amenity_id: {
+            venue_id,
+            amenity_id: amenityId,
+          },
+        },
+      });
+
+      if (existingVenueAmenity) {
+        return res.status(200).json(existingVenueAmenity);
+      }
+
+      // Create new venue-amenity link if it doesn't exist
+      const amenity = await prisma.venue_amenities.create({
+        data: {
+          amenity_id: amenityId,
+          venue_id,
+        },
+        include: {
+          amenities: true,
+        },
+      });
+
+      return res.status(200).json(amenity);
     } catch (e) {
       return next(e);
     }
@@ -184,6 +242,42 @@ router.patch(
       });
 
       res.status(200).json(updatedVenue);
+    } catch (e) {
+      return next(e);
+    }
+  }
+);
+
+router.delete(
+  "/amenities/:venueId/:amenityId/delete",
+  authenticateJWT,
+  ensureLoggedIn,
+  async (req, res, next) => {
+    try {
+      const venueId = parseInt(req.params.venueId, 10);
+      const amenityId = parseInt(req.params.amenityId, 10);
+
+      if (isNaN(venueId) || isNaN(amenityId)) {
+        throw new BadRequestError("Invalid venue or amenity ID.");
+      }
+
+      // Delete the association in the venue_amenities table
+      const deletedAssociation = await prisma.venue_amenities.deleteMany({
+        where: {
+          venue_id: venueId,
+          amenity_id: amenityId,
+        },
+      });
+
+      if (deletedAssociation.count === 0) {
+        return res
+          .status(404)
+          .json({ message: "Amenity association not found for this venue." });
+      }
+
+      return res
+        .status(200)
+        .json({ message: "Amenity association deleted successfully." });
     } catch (e) {
       return next(e);
     }

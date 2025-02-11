@@ -145,6 +145,19 @@ class NextSetApi {
     return await this.request(`venues/${venue_id}/bookings`);
   }
 
+  static async addVenueAmenity(venue_id, data) {
+    return await this.request(`venues/amenities`, { venue_id, data }, "post");
+  }
+
+  static async deleteVenueAmenity(venueId, amenityId) {
+    const res = await this.request(
+      `venues/amenities/${venueId}/${amenityId}/delete`,
+      {},
+      "delete"
+    );
+    return res.message;
+  }
+
   static async sendPitch(data) {
     return await this.request(`pitches`, data, "post");
   }

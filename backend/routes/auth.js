@@ -51,7 +51,13 @@ router.post(
           },
           venue_users: {
             include: {
-              venue: true, // Include any additional venue relationships here
+              venue: {
+                include: {
+                  venue_amenities: {
+                    include: { amenities: true },
+                  },
+                },
+              },
             },
           },
         },
