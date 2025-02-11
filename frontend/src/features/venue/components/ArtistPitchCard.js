@@ -68,9 +68,14 @@ function ArtistPitchCard({ pitch, openDocsModal, handlePitchStatus, preview }) {
             {artist.genre || "N/A"} | {artist.hometown_city},{" "}
             {artist.hometown_state}
           </p>
+          {artist.website && (
+            <a href={artist.website} className="text-nextsetAccent text-xs">
+              {artist.website}
+            </a>
+          )}
 
           {/* Bio */}
-          <p className="text-gray-600 mt-4 px-4 leading-relaxed">
+          <p className="text-gray-600 mt-2 px-4 leading-relaxed">
             {artist.bio}
           </p>
 

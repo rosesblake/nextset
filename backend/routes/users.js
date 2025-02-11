@@ -67,7 +67,7 @@ router.patch("/update", hashPassword, async function (req, res, next) {
         return next(new UnauthorizedError("Invalid Password Provided"));
       }
     }
-
+    //update user
     const updatedUser = await prisma.users.update({
       where: { email: currUserEmail },
       data: {
@@ -76,6 +76,8 @@ router.patch("/update", hashPassword, async function (req, res, next) {
       },
     });
 
+    delete updatedUser.password_hash;
+    // find connected artist details
     const newToken = createToken(updatedUser);
 
     return res.status(200).json({ updatedUser, token: newToken });

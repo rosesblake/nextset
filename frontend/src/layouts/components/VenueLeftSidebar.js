@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
+import { Settings } from "lucide-react";
 
 function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();
@@ -27,23 +28,32 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
             NextSet
           </div>
 
-          {/* Venue Name */}
+          {/* Venue Info with Settings Icon */}
           {currUser && currUser.venue && (
-            <Link
-              to="/venue/profile"
-              className="block text-nextsetAccent mb-6 hover:bg-nextsetButton hover:text-white transition duration-200 rounded-lg"
-            >
-              <div className="flex items-center space-x-4 p-3 hover:bg-nextsetButton hover:shadow-lg rounded-lg transition duration-300">
-                <div className="flex flex-col">
-                  <span className="text-xl font-semibold">
-                    {currUser.venue.name}
-                  </span>
-                  <span className="text-sm text-gray-300 hover:text-gray-100">
-                    Manage Venue
-                  </span>
-                </div>
+            <div className="block text-nextsetAccent mb-6 hover:bg-nextsetButton hover:text-white transition duration-200 rounded-lg">
+              <div className="flex items-center justify-between p-3 hover:bg-nextsetButton hover:shadow-lg rounded-lg transition duration-300">
+                <Link to="/venue/profile">
+                  <div className="flex items-center space-x-4">
+                    <div className="flex flex-col">
+                      <span className="text-xl font-semibold">
+                        {currUser.venue.name}
+                      </span>
+                      <span className="text-sm text-gray-300 hover:text-gray-100">
+                        Manage Venue
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+
+                {/* Settings Icon */}
+                <Link
+                  to="/venue/settings"
+                  className="hover:text-nextsetAccent transition"
+                >
+                  <Settings size={28} />
+                </Link>
               </div>
-            </Link>
+            </div>
           )}
 
           {/* Navigation Links */}

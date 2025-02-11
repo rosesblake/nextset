@@ -27,6 +27,7 @@ function SettingsPage() {
     setIsLoading(true);
 
     const updateData = {};
+    //if new email add to updateData
     if (formData.email !== currUser.email) {
       updateData.email = formData.email;
     }
@@ -39,17 +40,29 @@ function SettingsPage() {
       updateData.currentPassword = formData.password;
       updateData.newPassword = formData.newPassword;
     }
+
     try {
       if (Object.keys(updateData).length > 0) {
         const res = await NextSetApi.updateUser(currUser.email, updateData);
-        //update user context and JWT
-        setCurrUser({
-          ...currUser,
-          ...res.updatedUser,
-          artist: currUser.artist,
-        });
-        localStorage.setItem("token", res.token);
 
+        //  Update currUser based on account type
+        if (currUser.accountType === "artist") {
+          setCurrUser({
+            ...currUser,
+            ...res.updatedUser,
+            artist: currUser.artist,
+          });
+        } else if (currUser.accountType === "venue") {
+          setCurrUser({
+            ...currUser,
+            ...res.updatedUser,
+            venue: currUser.venue,
+          });
+        } else {
+          setCurrUser({ ...currUser, ...res.updatedUser });
+        }
+        //update JWT
+        localStorage.setItem("token", res.token);
         showMessage("Profile updated successfully", "success");
       } else {
         showMessage("No changes detected", "info");

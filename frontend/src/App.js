@@ -44,7 +44,6 @@ function App() {
 
     return "";
   };
-  console.log(currUser);
 
   return (
     <div className={`App ${getSidebarClasses()}`}>
@@ -119,6 +118,7 @@ function App() {
           <Route path="bookings" element={<VenueBookings />} />
           <Route path="explore" element={<ArtistList />} />
           <Route path="calendar" element={<CalendarView />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         {/* Catch-All Route */}
