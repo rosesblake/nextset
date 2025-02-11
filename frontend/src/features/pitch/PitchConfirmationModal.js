@@ -176,7 +176,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
                 </>
               ) : (
                 <Link
-                  to="/artist/profile"
+                  to={`/artist/profile?highlight=${key}`}
                   onClick={closeModal}
                   className="text-gray-500 italic"
                 >

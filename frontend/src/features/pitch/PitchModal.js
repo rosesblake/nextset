@@ -54,7 +54,9 @@ function PitchModal({
     const missing = requiredProfileFields.filter((key) => !artist[key]);
     if (missing.length > 0) {
       closeModal();
-      navigate("/artist/profile");
+      navigate(`/artist/profile?highlight=${missing.join(",")}`, {
+        replace: true,
+      });
       showMessage(
         `Please update profile [${missing.join(", ")}] then try again`,
         "error"

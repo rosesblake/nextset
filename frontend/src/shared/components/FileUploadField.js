@@ -56,7 +56,7 @@ export const FileUploadField = ({
   };
 
   return (
-    <div className="mb-6">
+    <div className="mb-6" data-filetype={fileType}>
       <label className="block font-semibold text-nextsetAccent mb-2">
         {label}
       </label>

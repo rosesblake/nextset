@@ -6,6 +6,7 @@ import { FileUploadField } from "../../../shared/components/FileUploadField";
 import { Spinner } from "../../../shared/components/Spinner";
 import { useLoading } from "../../../contexts/LoadingContext";
 import { useMessage } from "../../../contexts/MessageContext";
+import { useLocation } from "react-router-dom";
 
 function ArtistProfile() {
   const { currUser, setCurrUser } = useUser();
@@ -41,6 +42,68 @@ function ArtistProfile() {
 
     fetchArtistData();
   }, [currUser.artist.id, setCurrUser, setIsLoading]);
+
+  const location = useLocation();
+
+  //highlight missing files
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search);
+    const highlight = queryParams.get("highlight");
+
+    if (highlight) {
+      const highlights = highlight.split(",");
+
+      // Ensuring DOM is ready
+      const ensureDomReady = () => {
+        setTimeout(() => {
+          highlights.forEach((key, index) => {
+            const element = document.querySelector(`[data-filetype="${key}"]`);
+
+            if (element) {
+              if (index === 0) {
+                element.scrollIntoView({ behavior: "smooth", block: "center" });
+              }
+
+              element.classList.add(
+                "outline",
+                "outline-4",
+                "outline-red-400",
+                "rounded-xl",
+                "bg-red-50",
+                "shadow-md",
+                "shadow-red-400",
+                "animate-pulse",
+                "transition",
+                "duration-500",
+                "ease-in-out",
+                "p-4"
+              );
+
+              setTimeout(() => {
+                element.classList.remove(
+                  "outline",
+                  "outline-4",
+                  "outline-red-400",
+                  "rounded-xl",
+                  "bg-red-50",
+                  "shadow-md",
+                  "shadow-red-400",
+                  "animate-pulse",
+                  "transition",
+                  "duration-500",
+                  "ease-in-out",
+                  "p-4"
+                );
+              }, 5000);
+            }
+          });
+        }, 150); // Increased delay slightly to ensure rendering is complete
+      };
+
+      // Trigger after DOM updates
+      requestAnimationFrame(ensureDomReady);
+    }
+  }, [location.search]);
 
   const handleFieldSave = async (field, newValue) => {
     scrollPositionRef.current = window.scrollY;

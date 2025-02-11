@@ -53,7 +53,10 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
   };
 
   return (
-    <div className="flex justify-between items-center mb-2">
+    <div
+      className="flex justify-between items-center mb-2"
+      data-filetype={label.toLowerCase()}
+    >
       <div className="flex items-center space-x-2">
         {label && !link && (
           <span className="text-nextsetButton font-bold">{label}:</span>
