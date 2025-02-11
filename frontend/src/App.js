@@ -21,6 +21,7 @@ import { VenueProfile } from "./features/venue/pages/VenueProfile";
 import { ArtistList } from "./features/venue/pages/ArtistList";
 import { VenueBookings } from "./features/venue/pages/VenueBookings";
 import { CalendarView } from "./shared/components/CalendarView";
+import { SettingsPage } from "./shared/components/SettingsPage";
 
 function App() {
   const { currUser, logout } = useUser();
@@ -43,6 +44,7 @@ function App() {
 
     return "";
   };
+  console.log(currUser);
 
   return (
     <div className={`App ${getSidebarClasses()}`}>
@@ -96,6 +98,7 @@ function App() {
           <Route path="venue/list" element={<VenueList />} />
           <Route path="venue/:id" element={<ArtistVenueView />} />
           <Route path="calendar" element={<CalendarView />} />
+          <Route path="settings" element={<SettingsPage />} />
         </Route>
 
         {/* Venue Routes */}

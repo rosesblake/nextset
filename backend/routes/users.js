@@ -1,10 +1,11 @@
 "use strict";
 
 const express = require("express");
+const bcrypt = require("bcrypt");
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const hashPassword = require("../middleware/hashPassword");
-const { BadRequestError } = require("../expressError");
+const { BadRequestError, UnauthorizedError } = require("../expressError");
 const { userValidator } = require("../validators/userValidator");
 const { validate } = require("../middleware/validate");
 const { createToken } = require("../helpers/createTokens");
@@ -40,10 +41,48 @@ router.post(
         user,
       });
     } catch (e) {
-      next(e);
+      return next(e);
     }
   }
 );
+
+router.patch("/update", hashPassword, async function (req, res, next) {
+  try {
+    const { currUserEmail, data, password_hash } = req.body;
+
+    const user = await prisma.users.findFirst({
+      where: { email: currUserEmail },
+    });
+
+    if (!user) {
+      return next(new UnauthorizedError("You are not authorized."));
+    }
+
+    if (data.currentPassword) {
+      const validPassword = await bcrypt.compare(
+        data.currentPassword,
+        user.password_hash
+      );
+      if (!validPassword) {
+        return next(new UnauthorizedError("Invalid Password Provided"));
+      }
+    }
+
+    const updatedUser = await prisma.users.update({
+      where: { email: currUserEmail },
+      data: {
+        ...(data.email && { email: data.email }),
+        ...(password_hash && { password_hash }),
+      },
+    });
+
+    const newToken = createToken(updatedUser);
+
+    return res.status(200).json({ updatedUser, token: newToken });
+  } catch (e) {
+    return next(e);
+  }
+});
 
 router.delete("/delete/:id", async function (req, res, next) {
   try {

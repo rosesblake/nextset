@@ -175,6 +175,10 @@ class NextSetApi {
     return res;
   }
 
+  static async updateUser(currUserEmail, data) {
+    return await this.request(`users/update`, { currUserEmail, data }, "patch");
+  }
+
   static async deleteUser(user_id) {
     return await this.request(`users/delete/${user_id}`, {}, "delete");
   }

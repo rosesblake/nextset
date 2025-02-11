@@ -1,6 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
+import { Settings } from "lucide-react";
 
 function ArtistLeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();
@@ -29,26 +30,37 @@ function ArtistLeftSidebar({ isCollapsed, toggleSidebars }) {
 
           {/* Artist Name */}
           {currUser && currUser.artist && (
-            <Link
-              to="/artist/profile"
-              className="block text-nextsetAccent mb-6 hover:bg-nextsetButton hover:text-white transition duration-200 rounded-lg"
-            >
-              <div className="flex items-center space-x-4 p-3 hover:bg-nextsetButton hover:shadow-lg rounded-lg transition duration-300">
-                <img
-                  src={currUser.artist.spotify_photo || "/default-profile.png"}
-                  alt={currUser.artist.name}
-                  className="w-12 h-12 rounded-full shadow-md object-cover"
-                />
-                <div className="flex flex-col">
-                  <span className="text-xl font-semibold">
-                    {currUser.artist.name}
-                  </span>
-                  <span className="text-sm text-gray-300 hover:text-gray-100">
-                    View Profile
-                  </span>
-                </div>
+            <div className="block text-nextsetAccent mb-6 hover:bg-nextsetButton hover:text-white transition duration-200 rounded-lg">
+              <div className="flex items-center justify-between p-3 hover:bg-nextsetButton hover:shadow-lg rounded-lg transition duration-300">
+                <Link to="/artist/profile">
+                  {/* Profile Picture & Info */}
+                  <div className="flex items-center space-x-4">
+                    <img
+                      src={
+                        currUser.artist.spotify_photo || "/default-profile.png"
+                      }
+                      alt={currUser.artist.name}
+                      className="w-12 h-12 rounded-full shadow-md object-cover"
+                    />
+                    <div className="flex flex-col">
+                      <span className="text-xl font-semibold">
+                        {currUser.artist.name}
+                      </span>
+                      <span className="text-sm text-gray-300 hover:text-gray-100">
+                        View Profile
+                      </span>
+                    </div>
+                  </div>
+                </Link>
+                {/* Settings Icon on the Right */}
+                <Link
+                  to="/artist/settings"
+                  className="hover:text-nextsetAccent transition"
+                >
+                  <Settings size={28} />
+                </Link>
               </div>
-            </Link>
+            </div>
           )}
 
           {/* Navigation Links */}

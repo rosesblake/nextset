@@ -20,6 +20,7 @@ function ArtistForm({ onSubmit }) {
       full_name: "",
       email: "",
       password: "",
+      confirm_password: "",
     },
     (data) => {
       if (!pendingLocationData) {
@@ -27,6 +28,11 @@ function ArtistForm({ onSubmit }) {
           "Please select a valid location from the suggestions.",
           "error"
         );
+        return;
+      }
+
+      if (data.password !== data.confirm_password) {
+        showMessage("Passwords do not match", "error");
         return;
       }
 
@@ -65,7 +71,7 @@ function ArtistForm({ onSubmit }) {
     setArtistSpotify(artist);
     handleChange({ target: { name: "name", value: artist.name } });
   };
-  console.log(artistSpotify);
+
   return (
     <FormWrapper title="Register as Artist" handleSubmit={handleSubmit}>
       <InputField

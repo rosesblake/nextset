@@ -29,6 +29,15 @@ function SharedFields({ formData, onChange }) {
         onChange={onChange}
         autoComplete="current-password"
       />
+      <InputField
+        id="confirm_password"
+        name="confirm_password"
+        placeholder="Confirm Password"
+        type="password"
+        value={formData.confirm_password}
+        onChange={onChange}
+        autoComplete="current-password"
+      />
     </>
   );
 }
