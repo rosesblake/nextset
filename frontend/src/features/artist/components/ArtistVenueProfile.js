@@ -41,15 +41,18 @@ function ArtistVenueProfile({ venue, pitches }) {
       {/* Venue Amenities */}
       <div className="p-4 bg-gray-50 rounded-lg shadow-sm mb-6">
         <h3 className="text-lg font-bold text-nextsetAccent mb-4">Amenities</h3>
-        {venue.venue_amenities && venue.venue_amenities.length > 0 ? (
-          <ul className="list-disc list-inside text-gray-700">
-            {venue.venue_amenities.map((amenity, index) => (
-              <li key={index}>{amenity.name}</li>
-            ))}
-          </ul>
-        ) : (
-          <p className="text-gray-500">No amenities listed.</p>
-        )}
+        <div className="flex flex-wrap gap-3">
+          {venue.venue_amenities?.map((amenity) => (
+            <div
+              key={amenity.amenity_id}
+              className="flex items-center bg-nextsetAccent text-white rounded-2xl px-4 py-1 shadow-md transition-transform transform hover:scale-105"
+            >
+              <span className=" text-sm font-medium">
+                {amenity.amenities?.name}
+              </span>
+            </div>
+          ))}
+        </div>
       </div>
       {/* Calendar Section */}
       <div className="p-4 bg-gray-50 rounded-lg shadow-sm mb-6">

@@ -130,6 +130,11 @@ router.get("/:id", authenticateJWT, ensureLoggedIn, async (req, res, next) => {
     const venue_id = parseInt(req.params.id);
     const venue = await prisma.venues.findFirst({
       where: { id: venue_id },
+      include: {
+        venue_amenities: {
+          include: { amenities: true },
+        },
+      },
     });
     //add on blocked dates call to venue
     const blockedDates = await prisma.venue_blocked_dates.findMany({
