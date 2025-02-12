@@ -2,7 +2,12 @@ import React from "react";
 import { SocialLinks } from "../../artist/components/SocialLinks";
 import { ArtistDocuments } from "./ArtistDocuments";
 
-function ArtistBookingCard({ artist, booking, pdfThumbnails }) {
+function ArtistBookingCard({
+  artist,
+  booking,
+  pdfThumbnails,
+  handleCancelBooking,
+}) {
   return (
     <li
       key={booking.id}
@@ -79,9 +84,21 @@ function ArtistBookingCard({ artist, booking, pdfThumbnails }) {
 
           {/* Action Buttons - Inside Artist Section */}
           <div className="mt-6 flex justify-center space-x-4">
-            {/* <button className="px-6 py-2 bg-nextsetAccent text-white font-semibold rounded-md hover:bg-nextsetButton transition">
+            <button
+              onClick={() =>
+                handleCancelBooking(booking.id, {
+                  status: "canceled",
+                  date: booking.date,
+                  venue_id: booking.venue_id,
+                })
+              }
+              className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-nextsetButton transition"
+            >
+              Cancel Booking
+            </button>
+            <button className="px-6 py-2 bg-nextsetAccent text-white font-semibold rounded-md hover:bg-nextsetButton transition">
               Message Artist
-            </button> */}
+            </button>
           </div>
         </div>
       )}

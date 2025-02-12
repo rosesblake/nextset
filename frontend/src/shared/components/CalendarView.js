@@ -45,13 +45,15 @@ function CalendarView() {
   const bookedEvents = pitches?.filter((pitch) => pitch.status === "confirmed");
 
   const calendarEvents = bookedEvents?.map((pitch) => {
-    const artistName =
-      pitch.artist_pitches?.[0]?.artists?.name?.toLowerCase() ||
-      currUser?.artist?.name ||
-      "Unknown Artist";
+    const titleName =
+      currUser.accountType === "artist"
+        ? pitch.artist_pitches?.[0]?.artists?.name?.toLowerCase() ||
+          currUser?.artist?.name ||
+          "Unknown Artist"
+        : pitch.venues.name;
 
     return {
-      title: artistName,
+      title: titleName,
       start: new Date(pitch.date),
       end: new Date(pitch.date),
       allDay: true,

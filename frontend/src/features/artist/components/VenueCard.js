@@ -7,7 +7,7 @@ import { PitchModal } from "../../pitch/PitchModal";
 import { NextSetApi } from "../../../services/api";
 import { useLoading } from "../../../contexts/LoadingContext";
 
-function VenueCard({ venue, artist, pitches }) {
+function VenueCard({ venue, artist, hasPendingPitch }) {
   const { openModal, closeModal } = useModal();
   const { showMessage } = useMessage();
   const { currUser, setCurrUser } = useUser();
@@ -66,7 +66,7 @@ function VenueCard({ venue, artist, pitches }) {
             </p>
           </div>
         </Link>
-        {!pitches ? (
+        {!hasPendingPitch ? (
           <button
             className="px-4 py-2 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
             onClick={handleOpenPitchModal}

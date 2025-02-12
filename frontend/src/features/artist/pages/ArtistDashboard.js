@@ -38,6 +38,15 @@ function ArtistDashboard() {
     fetchVenues();
   }, [currUser, setIsLoading]);
 
+  //handle pendingpitches
+  const hasPendingPitch = (venueId, pitches) => {
+    return pitches.some(
+      (pitch) =>
+        pitch.pitches.venue_id === venueId &&
+        ["pending", "accepted"].includes(pitch.pitches?.status)
+    );
+  };
+
   //filter out confirmed venues.
   const recommendedVenues = venues?.slice(0, 3).filter((venue) => {
     const venuePitches = pitches.filter(
@@ -77,9 +86,7 @@ function ArtistDashboard() {
                   key={venue.id}
                   venue={venue}
                   artist={currUser.artist}
-                  pitches={pitches.some(
-                    (pitch) => pitch.pitches.venue_id === venue.id
-                  )}
+                  hasPendingPitch={hasPendingPitch(venue.id, pitches)}
                 />
               ))}
           </ul>

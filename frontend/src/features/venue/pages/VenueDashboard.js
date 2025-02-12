@@ -24,7 +24,13 @@ function VenueDashboard() {
             currUser.venue.id,
             currUser.account_type
           );
-          setPitches(response.filter((pitch) => pitch.status !== "confirmed"));
+          //only pending pitches
+          setPitches(
+            response.filter(
+              (pitch) =>
+                !["confirmed", "canceled", "removed"].includes(pitch.status)
+            )
+          );
         } catch (e) {
           console.error("error fetching pitches", e);
         } finally {
@@ -35,11 +41,11 @@ function VenueDashboard() {
 
     fetchPitches();
   }, [currUser, setIsLoading]);
-
+  console.log(pitches);
   const handlePitchStatus = async (pitch_id, data) => {
     try {
       setIsLoading(true);
-      const res = await NextSetApi.updatePitchStatus(pitch_id, {
+      await NextSetApi.updatePitchStatus(pitch_id, {
         status: data.status,
         venue_id: data.venue_id,
         date: data.date,

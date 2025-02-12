@@ -5,12 +5,14 @@ import { Spinner } from "../../../shared/components/Spinner";
 import { generatePdfThumbnail } from "../../../utils/pdfUtils";
 import { ArtistBookingCard } from "../components/ArtistBookingCard";
 import { useLoading } from "../../../contexts/LoadingContext";
+import { useMessage } from "../../../contexts/MessageContext";
 
 function VenueBookings() {
   const [bookings, setBookings] = useState([]);
-  const { currUser } = useUser();
+  const { currUser, setCurrUser } = useUser();
   const [pdfThumbnails, setPdfThumbnails] = useState({});
   const { isLoading, setIsLoading } = useLoading();
+  const { showMessage } = useMessage();
 
   useEffect(() => {
     const fetchBookings = async () => {
@@ -71,6 +73,24 @@ function VenueBookings() {
       });
     });
   }, [bookings, handlePdf]);
+
+  const handleCancelBooking = async (pitch_id, data) => {
+    try {
+      setIsLoading(true);
+
+      await NextSetApi.updatePitchStatus(pitch_id, data);
+
+      //trigger refresh
+      setCurrUser({ ...currUser });
+
+      showMessage("Booking successfully canceled", "success");
+    } catch (e) {
+      return console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+  console.log(currUser);
   if (isLoading) return <Spinner />;
 
   if (!bookings.length) {
@@ -99,6 +119,7 @@ function VenueBookings() {
                 artist={artist}
                 booking={booking}
                 pdfThumbnails={pdfThumbnails}
+                handleCancelBooking={handleCancelBooking}
               />
             );
           })}

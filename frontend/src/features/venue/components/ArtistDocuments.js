@@ -1,13 +1,16 @@
 import React from "react";
 
 function ArtistDocuments({ booking, pdfThumbnails }) {
+  const files = ["rider", "epk", "stage_plot", "w9"];
   return (
     <div className="p-4 bg-white rounded-lg shadow-md mt-4">
-      <h2 className="text-2xl font-bold text-nextsetPrimary mb-4">Documents</h2>
-      <div className="grid grid-cols-2 gap-4">
-        {["rider", "epk", "stage_plot", "w9"].map(
-          (fileType) =>
-            booking[fileType] && (
+      {files.some((fileType) => booking[fileType]) ? (
+        <>
+          <h2 className="text-2xl font-bold text-nextsetPrimary mb-4">
+            Documents
+          </h2>
+          <div className="grid grid-cols-2 gap-4">
+            {files.map((fileType) => (
               <a
                 key={fileType}
                 href={booking[fileType]}
@@ -27,9 +30,12 @@ function ArtistDocuments({ booking, pdfThumbnails }) {
                   {fileType.replace("_", " ").toUpperCase()}
                 </span>
               </a>
-            )
-        )}
-      </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <h2 className="text-2xl font-bold text-nextsetPrimary">No Documents</h2>
+      )}
     </div>
   );
 }

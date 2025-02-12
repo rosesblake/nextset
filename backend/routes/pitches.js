@@ -6,11 +6,7 @@ const prisma = new PrismaClient();
 const router = express.Router();
 const { authenticateJWT, ensureLoggedIn } = require("../middleware/auth");
 const { pitchValidator } = require("../validators/pitchValidator");
-const {
-  confirmPitchValidator,
-} = require("../validators/confirmPitchValidator");
 const { validate } = require("../middleware/validate");
-const { validationResult } = require("express-validator");
 const { BadRequestError } = require("../expressError");
 
 router.post(
@@ -129,34 +125,23 @@ router.patch(
       const pitch_id = parseInt(req.params.id, 10);
       const { status, venue_id, date } = req.body;
 
-      if (!["accepted", "declined", "removed"].includes(status)) {
+      // Validate status
+      if (!["accepted", "declined", "removed", "canceled"].includes(status)) {
         throw new BadRequestError("Invalid Status, Please Try Again.");
       }
 
-      if (status === "declined" || status === "removed") {
-        const declinedPitch = await prisma.pitches.update({
-          where: { id: pitch_id },
-          data: { status },
-        });
-        return res.status(200).json({ declinedPitch });
-      }
-
-      const blockedDate = await prisma.venue_blocked_dates.findFirst({
-        where: { venue_id, blocked_date: date },
-      });
-
-      if (blockedDate) {
-        throw new BadRequestError("Date already booked");
-      }
-
+      // Handle Declined, Removed, or Canceled Statuses
       const updatedPitch = await prisma.pitches.update({
         where: { id: pitch_id },
         data: { status },
       });
 
-      await prisma.venue_blocked_dates.create({
-        data: { venue_id, blocked_date: date },
-      });
+      // Remove the blocked date if canceled
+      if (status === "canceled" && date) {
+        await prisma.venue_blocked_dates.deleteMany({
+          where: { venue_id, blocked_date: date },
+        });
+      }
 
       return res.status(200).json({ updatedPitch });
     } catch (e) {
@@ -173,17 +158,36 @@ router.patch(
     try {
       const pitch_id = parseInt(req.params.id, 10);
       const { data } = req.body;
+      const { venueId, date, status } = data;
 
-      if (!data || Object.keys(data).length === 0) {
-        throw new BadRequestError("Please submit all required documents");
+      // Basic validation
+      if (!venueId || !date || !status) {
+        throw new BadRequestError("Venue ID, date, and status are required.");
       }
 
-      const confirmedPitch = await prisma.pitches.update({
-        where: { id: pitch_id },
-        data,
+      // Check if the date is already blocked
+      const blockedDate = await prisma.venue_blocked_dates.findFirst({
+        where: { venue_id: venueId, blocked_date: date },
       });
 
-      return res.status(200).json(confirmedPitch);
+      if (blockedDate) {
+        throw new BadRequestError("Date already booked.");
+      }
+
+      // Update the pitch status
+      const updatedPitch = await prisma.pitches.update({
+        where: { id: pitch_id },
+        data: { status },
+      });
+
+      // Block the date only if the status indicates confirmation
+      if (status === "confirmed") {
+        await prisma.venue_blocked_dates.create({
+          data: { venue_id: venueId, blocked_date: date },
+        });
+      }
+
+      return res.status(200).json(updatedPitch);
     } catch (e) {
       return next(e);
     }

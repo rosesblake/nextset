@@ -47,7 +47,11 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
           return;
         }
 
-        const payload = { status: data.status };
+        const payload = {
+          status: data.status,
+          venueId: pitch.pitches.venue_id,
+          date: pitch.pitches.date,
+        };
 
         Object.entries(data).forEach(([key, value]) => {
           if (value && currUser.artist[key]) {
@@ -82,6 +86,33 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
       }
     }
   );
+
+  const handleCancelBooking = async (pitch_id) => {
+    try {
+      setIsLoading(true);
+
+      await NextSetApi.updatePitchStatus(pitch_id, { status: "canceled" });
+
+      setCurrUser((prevUser) => ({
+        ...prevUser,
+        artist: {
+          ...prevUser.artist,
+          artist_pitches: prevUser.artist.artist_pitches?.map((p) =>
+            p.pitch_id === pitch.pitch_id
+              ? { ...p, pitches: { ...p.pitches, status: "canceled" } }
+              : p
+          ),
+        },
+      }));
+
+      closeModal();
+      showMessage("Booking successfully canceled", "success");
+    } catch (e) {
+      return console.error(e);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
   const documents = {
     w9: currUser.artist.w9,
@@ -194,14 +225,14 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
           <div className="flex justify-center space-x-4">
             <button
               type="button"
-              onClick={closeModal}
-              className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
+              onClick={() => handleCancelBooking(pitch.pitch_id)}
+              className="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-700 shadow-md"
             >
-              Cancel
+              Decline & Cancel
             </button>
             <button
               type="submit"
-              className="px-4 py-2 bg-nextsetAccent text-white rounded hover:bg-nextsetButton"
+              className="px-4 py-2 bg-nextsetAccent text-white rounded hover:bg-nextsetButton shadow-md"
             >
               Confirm & Submit
             </button>
