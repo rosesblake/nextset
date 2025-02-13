@@ -2,6 +2,7 @@ import React from "react";
 import { MapPin, Users, Mic, Music, FileText } from "lucide-react";
 import { useModal } from "../../../contexts/ModalContext";
 import { EditPitchModal } from "../../pitch/EditPitchModal";
+import { formatDate } from "../../../utils/formatDate";
 
 function GigCard({ gigs }) {
   const { openModal, closeModal } = useModal();
@@ -34,12 +35,7 @@ function GigCard({ gigs }) {
                   </span>
                 </div>
                 <p className="text-gray-500 font-semibold text-sm mt-2">
-                  {new Date(gig.pitches.date).toLocaleDateString("en-US", {
-                    weekday: "long",
-                    month: "long",
-                    day: "numeric",
-                    year: "numeric",
-                  })}
+                  {formatDate(gig.pitches.date)}
                 </p>
               </div>
 

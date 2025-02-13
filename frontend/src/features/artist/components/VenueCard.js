@@ -14,9 +14,9 @@ function VenueCard({ venue, artist, hasPendingPitch }) {
   const { setIsLoading } = useLoading();
 
   const handleSubmitPitch = async (pitchData) => {
-    closeModal();
     try {
       setIsLoading(true);
+      closeModal();
       await NextSetApi.sendPitch({
         ...pitchData,
         date: new Date(pitchData.date).toISOString(),
@@ -24,13 +24,13 @@ function VenueCard({ venue, artist, hasPendingPitch }) {
 
       const updatedArtist = await NextSetApi.getArtist(artist.id);
       setCurrUser({ ...currUser, artist: updatedArtist });
+      showMessage("Submission successful!", "success");
     } catch (e) {
       console.error(e);
       closeModal();
       showMessage(e.message, "error");
     } finally {
       setIsLoading(false);
-      showMessage("Submission successful!", "success");
     }
   };
 

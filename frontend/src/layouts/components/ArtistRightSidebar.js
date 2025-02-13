@@ -6,6 +6,7 @@ import { PitchConfirmationModal } from "../../features/pitch/PitchConfirmationMo
 import { NextSetApi } from "../../services/api";
 import { BellRing } from "lucide-react";
 import { ArrowLeft, ArrowRight } from "lucide-react";
+import { formatDate } from "../../utils/formatDate";
 
 function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [activeTab, setActiveTab] = useState("sent");
@@ -152,14 +153,7 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
                         {pitch.pitches.venues?.state || "Unknown State"}
                       </p>
                       <p className="text-xs text-gray-300">
-                        {new Date(pitch.pitches.date).toLocaleDateString(
-                          "en-US",
-                          {
-                            year: "numeric",
-                            month: "long",
-                            day: "numeric",
-                          }
-                        )}
+                        {formatDate(pitch.pitches.date)}
                       </p>
                       <p className="text-sm text-yellow-400">
                         Status: {pitch.pitches.status}

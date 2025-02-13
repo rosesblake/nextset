@@ -44,7 +44,7 @@ function ArtistDashboard() {
     const venuePitches = pitches.filter(
       (pitch) => pitch.pitches.venue_id === venue.id
     );
-    return !venuePitches.some((pitch) => pitch.pitches?.status === "confirmed");
+    return venuePitches;
   });
 
   if (isLoading) {

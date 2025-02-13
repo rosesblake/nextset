@@ -1,5 +1,6 @@
 import React from "react";
 import { SocialLinks } from "../../artist/components/SocialLinks";
+import { formatDate } from "../../../utils/formatDate";
 
 function ArtistPitchCard({
   artistDetails,
@@ -9,16 +10,6 @@ function ArtistPitchCard({
   preview,
 }) {
   const artist = pitch ? pitch.artist_pitches[0]?.artists : artistDetails;
-
-  const formatDate = (date) =>
-    date
-      ? new Date(date).toLocaleDateString("en-US", {
-          weekday: "long",
-          month: "long",
-          day: "numeric",
-          year: "numeric",
-        })
-      : "Date Not Available";
 
   const renderPitchStatus = () => {
     if (!pitch || preview) return null;

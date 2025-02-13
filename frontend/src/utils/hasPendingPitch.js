@@ -1,9 +1,10 @@
 const hasPendingPitch = (venueId, pitches) => {
-  return pitches.some(
+  const res = pitches.some(
     (pitch) =>
       pitch.pitches.venue_id === venueId &&
       ["pending", "accepted"].includes(pitch.pitches?.status)
   );
+  return res;
 };
 
 export { hasPendingPitch };

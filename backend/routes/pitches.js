@@ -22,7 +22,13 @@ router.post(
         where: { id: req.body.venue_id },
         select: { blocked_dates: true },
       });
-      if (venue.blocked_dates?.includes(req.body.date)) {
+      if (
+        venue.blocked_dates?.some(
+          (blocked) =>
+            new Date(blocked.blocked_date).toISOString().split("T")[0] ===
+            new Date(req.body.date).toISOString().split("T")[0]
+        )
+      ) {
         throw new BadRequestError("Date unavailable for this venue.");
       }
 
@@ -31,6 +37,7 @@ router.post(
         where: {
           venue_id: req.body.venue_id,
           date: req.body.date,
+          status: { in: ["pending", "accepted"] }, // Only check for pending or accepted pitches
           artist_pitches: {
             some: {
               artist_id: req.body.artist_id,
