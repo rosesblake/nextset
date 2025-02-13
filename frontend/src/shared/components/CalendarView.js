@@ -51,11 +51,10 @@ function CalendarView() {
           currUser?.artist?.name ||
           "Unknown Artist"
         : pitch.venues?.name;
-
     return {
       title: titleName,
-      start: new Date(pitch.date),
-      end: new Date(pitch.date),
+      start: new Date(pitch.date).toISOString(),
+      end: new Date(pitch.date).toISOString(),
       allDay: true,
       type: "blocked",
       supportActs: pitch.support_acts?.map((act) => act.name) || [],

@@ -1,9 +1,10 @@
 import { Calendar, momentLocalizer } from "react-big-calendar";
-import moment from "moment";
+import moment from "moment-timezone";
 import "react-big-calendar/lib/css/react-big-calendar.css";
 import { useNavigate } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 
+moment.tz.setDefault("UTC");
 const localizer = momentLocalizer(moment);
 
 const CustomEvent = ({ event, full }) => (

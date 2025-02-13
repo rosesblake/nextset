@@ -14,9 +14,21 @@ function VenueCard({ venue, artist, hasPendingPitch }) {
   const { setIsLoading } = useLoading();
 
   const handleSubmitPitch = async (pitchData) => {
+    if (
+      currUser.artist.artist_pitches.some(
+        (pitch) =>
+          pitch.pitches.status === "confirmed" &&
+          pitch.pitches.date === pitchData.date.toISOString()
+      )
+    ) {
+      closeModal();
+      setIsLoading(false);
+      return showMessage("You already have a show booked for this date");
+    }
     try {
       setIsLoading(true);
       closeModal();
+
       await NextSetApi.sendPitch({
         ...pitchData,
         date: new Date(pitchData.date).toISOString(),

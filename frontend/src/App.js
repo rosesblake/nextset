@@ -22,7 +22,6 @@ import { ArtistList } from "./features/venue/pages/ArtistList";
 import { VenueBookings } from "./features/venue/pages/VenueBookings";
 import { CalendarView } from "./shared/components/CalendarView";
 import { SettingsPage } from "./shared/components/SettingsPage";
-import { LoadScript } from "@react-google-maps/api";
 
 function App() {
   const { currUser, logout } = useUser();
@@ -63,12 +62,7 @@ function App() {
           path="/register/:accountType"
           element={
             <PublicRoute>
-              <LoadScript
-                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-                libraries={["places"]}
-              >
-                <Register />
-              </LoadScript>
+              <Register />
             </PublicRoute>
           }
         />
@@ -98,17 +92,7 @@ function App() {
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ArtistDashboard />} />
 
-          <Route
-            path="profile"
-            element={
-              <LoadScript
-                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-                libraries={["places"]}
-              >
-                <ArtistProfile />
-              </LoadScript>
-            }
-          />
+          <Route path="profile" element={<ArtistProfile />} />
           <Route path="bookings" element={<GigDetails />} />
           <Route path="venue/list" element={<VenueList />} />
           <Route path="venue/:id" element={<ArtistVenueView />} />

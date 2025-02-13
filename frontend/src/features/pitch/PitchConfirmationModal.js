@@ -7,6 +7,7 @@ import { useMessage } from "../../contexts/MessageContext";
 import { ErrorDisplay } from "../../shared/forms/ErrorDisplay";
 import { Asterisk } from "lucide-react";
 import { useLoading } from "../../contexts/LoadingContext";
+import { formatDate } from "../../utils/formatDate";
 
 const PitchConfirmationModal = ({ pitch, closeModal }) => {
   const { currUser, setCurrUser } = useUser();
@@ -151,15 +152,8 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
             {pitch.pitches.venues.name}
           </span>{" "}
           in {pitch.pitches.venues.city}, {pitch.pitches.venues.state}{" "}
-          <span className="font-bold">
-            {new Date(pitch.pitches.date).toLocaleDateString("en-US", {
-              weekday: "long",
-              year: "numeric",
-              day: "numeric",
-              month: "long",
-            })}
-          </span>
-          ! Confirm your details:
+          <span className="font-bold">{formatDate(pitch.pitches.date)}</span>!
+          Confirm your details:
         </p>
 
         <div className="text-center mb-4">
