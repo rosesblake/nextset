@@ -22,15 +22,12 @@ import { ArtistList } from "./features/venue/pages/ArtistList";
 import { VenueBookings } from "./features/venue/pages/VenueBookings";
 import { CalendarView } from "./shared/components/CalendarView";
 import { SettingsPage } from "./shared/components/SettingsPage";
-import { useLoading } from "./contexts/LoadingContext";
-import { Spinner } from "./shared/components/Spinner";
 import { LoadScript } from "@react-google-maps/api";
 
 function App() {
   const { currUser, logout } = useUser();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1000);
-  const { isLoading } = useLoading();
   const toggleSidebars = () => setIsCollapsed((prev) => !prev);
 
   useEffect(() => {
@@ -45,13 +42,8 @@ function App() {
     } else if (currUser.account_type === "venue" && !isMobile) {
       return isCollapsed ? "ml-16" : "ml-80";
     }
-
     return "";
   };
-
-  if (isLoading) {
-    return <Spinner />;
-  }
 
   return (
     <div className={`App ${getSidebarClasses()}`}>
