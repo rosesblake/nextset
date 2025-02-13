@@ -37,7 +37,7 @@ function VenueProfile() {
         return;
       }
       // Prevent adding duplicate amenities
-      const exists = currUser.venue.venue_amenities.some(
+      const exists = currUser.venue?.venue_amenities?.some(
         (a) => a.amenities.name.toLowerCase() === data.amenity.toLowerCase()
       );
 

@@ -82,7 +82,7 @@ function Register() {
             venue: venueRes.venue,
           };
           registrationSuccess = true;
-          navigate("/venue/dashboard");
+          navigate("/venue/profile");
         } catch (venueError) {
           showMessage(
             venueError.message || "Venue registration failed",
