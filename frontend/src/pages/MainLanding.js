@@ -1,7 +1,15 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { Spinner } from "../shared/components/Spinner";
+import { useLoading } from "../contexts/LoadingContext";
 
 function MainLanding() {
+  const { isLoading } = useLoading();
+
+  if (isLoading) {
+    return <Spinner />;
+  }
+
   return (
     <div className="min-h-screen bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 flex flex-col justify-center items-center py-20 px-10">
       {/* Header Section */}

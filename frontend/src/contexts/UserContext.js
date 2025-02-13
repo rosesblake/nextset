@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import { NextSetApi } from "../services/api";
 import { useNavigate } from "react-router-dom";
+import { useLoading } from "./LoadingContext"; // Import the Loading context
 
 const UserContext = createContext();
 
@@ -12,10 +13,12 @@ export const UserProvider = ({ children }) => {
   const [currUser, setCurrUser] = useState(null); // General user data
   const [artistData, setArtistData] = useState(null); // Artist-specific data
   const [venueData, setVenueData] = useState(null); // Venue-specific data
-  const [isLoading, setIsLoading] = useState(true);
+  const { setIsLoading } = useLoading(); // Use LoadingContext
   const navigate = useNavigate();
 
   useEffect(() => {
+    setIsLoading(true); // Start loading
+
     const user = JSON.parse(localStorage.getItem("user"));
     const artist = JSON.parse(localStorage.getItem("artist"));
     const venue = JSON.parse(localStorage.getItem("venue"));
@@ -39,7 +42,7 @@ export const UserProvider = ({ children }) => {
     }
 
     setIsLoading(false);
-  }, []);
+  }, [setIsLoading]);
 
   useEffect(() => {
     if (currUser) {
@@ -52,6 +55,7 @@ export const UserProvider = ({ children }) => {
   }, [currUser]);
 
   const logout = () => {
+    setIsLoading(true);
     NextSetApi.token = null;
     localStorage.removeItem("token");
     localStorage.removeItem("user");
@@ -61,6 +65,7 @@ export const UserProvider = ({ children }) => {
     setArtistData(null);
     setVenueData(null);
     navigate("/login");
+    setIsLoading(false);
   };
 
   return (
@@ -72,7 +77,6 @@ export const UserProvider = ({ children }) => {
         setArtistData,
         venueData,
         setVenueData,
-        isLoading,
         logout,
       }}
     >

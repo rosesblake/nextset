@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { formatDate } from "../../../utils/formatDate";
 
 function DashboardBooking({ gig }) {
   return (
@@ -12,13 +13,7 @@ function DashboardBooking({ gig }) {
           <span className="text-gray-400 font-medium">
             {gig.pitches.venues.city}, {gig.pitches.venues.state}
           </span>
-          <span className="text-gray-500">
-            {new Date(gig.pitches.date).toLocaleDateString("en-US", {
-              year: "numeric",
-              month: "long",
-              day: "numeric",
-            })}
-          </span>
+          <span className="text-gray-500">{formatDate(gig.pitches.date)}</span>
         </div>
       </li>
     </Link>

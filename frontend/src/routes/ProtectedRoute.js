@@ -2,13 +2,15 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 import { useUser } from "../contexts/UserContext";
 import { Spinner } from "../shared/components/Spinner";
+import { useLoading } from "../contexts/LoadingContext";
 
 function ProtectedRoute({ children, accountType }) {
-  const { currUser, isLoading } = useUser();
+  const { currUser } = useUser();
+  const { isLoading } = useLoading();
   const token = localStorage.getItem("token");
 
   if (isLoading) {
-    return <Spinner />; // Show spinner while loading
+    return <Spinner />;
   }
 
   // Check authentication and account type

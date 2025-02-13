@@ -22,11 +22,15 @@ import { ArtistList } from "./features/venue/pages/ArtistList";
 import { VenueBookings } from "./features/venue/pages/VenueBookings";
 import { CalendarView } from "./shared/components/CalendarView";
 import { SettingsPage } from "./shared/components/SettingsPage";
+import { useLoading } from "./contexts/LoadingContext";
+import { Spinner } from "./shared/components/Spinner";
+import { LoadScript } from "@react-google-maps/api";
 
 function App() {
   const { currUser, logout } = useUser();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobile, setIsMobile] = useState(window.innerWidth < 1000);
+  const { isLoading } = useLoading();
   const toggleSidebars = () => setIsCollapsed((prev) => !prev);
 
   useEffect(() => {
@@ -44,6 +48,10 @@ function App() {
 
     return "";
   };
+
+  if (isLoading) {
+    return <Spinner />;
+  }
 
   return (
     <div className={`App ${getSidebarClasses()}`}>
@@ -63,7 +71,12 @@ function App() {
           path="/register/:accountType"
           element={
             <PublicRoute>
-              <Register />
+              <LoadScript
+                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+                libraries={["places"]}
+              >
+                <Register />
+              </LoadScript>
             </PublicRoute>
           }
         />
@@ -92,7 +105,18 @@ function App() {
         >
           <Route index element={<Navigate to="dashboard" replace />} />
           <Route path="dashboard" element={<ArtistDashboard />} />
-          <Route path="profile" element={<ArtistProfile />} />
+
+          <Route
+            path="profile"
+            element={
+              <LoadScript
+                googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+                libraries={["places"]}
+              >
+                <ArtistProfile />
+              </LoadScript>
+            }
+          />
           <Route path="bookings" element={<GigDetails />} />
           <Route path="venue/list" element={<VenueList />} />
           <Route path="venue/:id" element={<ArtistVenueView />} />
