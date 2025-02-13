@@ -78,7 +78,7 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
                     : `/images/${label.toLowerCase()}_icon.svg`
                 }
                 alt={label}
-                className="w-8 h-8 mr-4"
+                className="w-8 h-8 mr-4 object-cover"
               />
             )}
             <span>{value}</span>

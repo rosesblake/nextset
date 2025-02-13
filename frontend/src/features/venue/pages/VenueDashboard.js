@@ -24,11 +24,10 @@ function VenueDashboard() {
             currUser.venue.id,
             currUser.account_type
           );
-          //only pending pitches
+          //only pending and declined pitches
           setPitches(
             response.filter(
-              (pitch) =>
-                !["confirmed", "canceled", "removed"].includes(pitch.status)
+              (pitch) => !["confirmed", "canceled"].includes(pitch.status)
             )
           );
         } catch (e) {
@@ -41,7 +40,7 @@ function VenueDashboard() {
 
     fetchPitches();
   }, [currUser, setIsLoading]);
-  console.log(pitches);
+
   const handlePitchStatus = async (pitch_id, data) => {
     try {
       setIsLoading(true);

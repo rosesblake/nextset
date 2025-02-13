@@ -8,10 +8,18 @@ function ArtistBookingCard({
   pdfThumbnails,
   handleCancelBooking,
 }) {
+  const bookingData = {
+    status: "canceled",
+    date: booking.date,
+    venue_id: booking.venue_id,
+  };
+
   return (
     <li
       key={booking.id}
-      className="bg-gray-100 rounded-lg shadow-md mb-6 overflow-hidden"
+      className={`bg-gray-100 rounded-lg shadow-md mb-6 overflow-hidden ${
+        booking.status === "canceled" && "opacity-75"
+      }`}
     >
       {/* Booking Info - White Background */}
       <div className="p-6 text-center bg-white">
@@ -60,7 +68,7 @@ function ArtistBookingCard({
             <img
               src={artist.spotify_photo}
               alt={artist.name}
-              className="w-24 h-24 rounded-full shadow-lg mx-auto"
+              className="w-24 h-24 rounded-full shadow-lg mx-auto object-cover"
             />
           )}
           <h3 className="text-2xl font-bold text-nextsetAccent mt-3">
@@ -84,21 +92,25 @@ function ArtistBookingCard({
 
           {/* Action Buttons - Inside Artist Section */}
           <div className="mt-6 flex justify-center space-x-4">
-            <button
-              onClick={() =>
-                handleCancelBooking(booking.id, {
-                  status: "canceled",
-                  date: booking.date,
-                  venue_id: booking.venue_id,
-                })
-              }
-              className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-nextsetButton transition"
-            >
-              Cancel Booking
-            </button>
-            <button className="px-6 py-2 bg-nextsetAccent text-white font-semibold rounded-md hover:bg-nextsetButton transition">
+            {booking.status === "canceled" ? (
+              <button
+                disabled
+                className="px-6 py-2 bg-red-300 text-white font-semibold rounded-md hover:bg-red-500 transition"
+              >
+                Canceled
+              </button>
+            ) : (
+              <button
+                onClick={() => handleCancelBooking(booking.id, bookingData)}
+                className="px-6 py-2 bg-red-500 text-white font-semibold rounded-md hover:bg-nextsetButton transition"
+              >
+                Cancel Booking
+              </button>
+            )}
+
+            {/* <button className="px-6 py-2 bg-nextsetAccent text-white font-semibold rounded-md hover:bg-nextsetButton transition">
               Message Artist
-            </button>
+            </button> */}
           </div>
         </div>
       )}

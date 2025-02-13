@@ -21,6 +21,17 @@ function Login() {
       setCurrUser(loggedInUser);
       // Redirect to home page after successful login
       navigate(`/${loggedInUser.account_type}/dashboard`);
+      if (
+        loggedInUser.artist?.artist_pitches?.some(
+          (pitch) => pitch.pitches.status === "accepted"
+        )
+      ) {
+        //show notification if they have a pitch awaiting confirmation
+        return showMessage(
+          "You have a pitch awaiting confirmation!",
+          "success"
+        );
+      }
       showMessage("Successfully logged in", "success");
     } catch (e) {
       showMessage(e.message, "error");

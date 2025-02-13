@@ -13,6 +13,9 @@ module.exports = {
         nextsetAccent: "#D4A97A", // Lighter Warm Taupe for Better Contrast
         nextsetButton: "#4E4E50", // Smooth Graphite Gray
       },
+      fontFamily: {
+        sans: ["DM Sans", "sans-serif"],
+      },
     },
   },
   plugins: [],

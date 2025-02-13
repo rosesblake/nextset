@@ -5,6 +5,7 @@ import { useModal } from "../../contexts/ModalContext";
 import { PitchConfirmationModal } from "../../features/pitch/PitchConfirmationModal";
 import { NextSetApi } from "../../services/api";
 import { BellRing } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [activeTab, setActiveTab] = useState("sent");
@@ -13,7 +14,16 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
   const [pitches, setPitches] = useState(
     currUser?.artist?.artist_pitches ?? []
   );
-  const [awaitingConfirmation, setAwaitingConfirmation] = useState(false);
+
+  const resultPitches = useMemo(
+    () =>
+      pitches.filter(
+        (pitch) =>
+          pitch.pitches.status === "accepted" ||
+          pitch.pitches.status === "declined"
+      ),
+    [pitches]
+  );
 
   useEffect(() => {
     async function fetchPitches() {
@@ -22,29 +32,22 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
           currUser.artist.id
         );
         setPitches(artistPitches);
-
-        const hasAcceptedPitches = artistPitches.some(
-          (pitch) => pitch.pitches.status === "accepted"
-        );
-
-        setAwaitingConfirmation(hasAcceptedPitches);
+        setActiveTab(resultPitches?.length > 0 ? "results" : "sent");
       } catch (error) {
         console.error("Error fetching artist pitches:", error.message);
       }
     }
 
     fetchPitches();
-  }, [currUser]);
+  }, [currUser, resultPitches.length]);
 
   const handleOpenModal = (pitch) => {
     openModal(<PitchConfirmationModal pitch={pitch} closeModal={closeModal} />);
-    setAwaitingConfirmation(false);
   };
 
   const handleRemovePitch = async (pitch) => {
-    console.log(pitch);
     try {
-      const res = await NextSetApi.updatePitchStatus(pitch.pitch_id, {
+      await NextSetApi.updatePitchStatus(pitch.pitch_id, {
         status: "removed",
       });
 
@@ -59,7 +62,6 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
           ),
         },
       }));
-      console.log(res);
     } catch (e) {
       return console.error(e.message);
     }
@@ -74,16 +76,6 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
     [pitches]
   );
 
-  const resultPitches = useMemo(
-    () =>
-      pitches.filter(
-        (pitch) =>
-          pitch.pitches.status === "accepted" ||
-          pitch.pitches.status === "declined"
-      ),
-    [pitches]
-  );
-
   return (
     <div
       className={`fixed right-0 top-0 h-full ${
@@ -95,7 +87,7 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
         onClick={toggleSidebars}
         className="absolute top-4 left-2 text-nextsetAccent z-20 text-2xl font-bold"
       >
-        {isCollapsed ? "←" : "→"}
+        {isCollapsed ? <ArrowLeft size={30} /> : <ArrowRight size={30} />}
       </button>
 
       {!isCollapsed && (

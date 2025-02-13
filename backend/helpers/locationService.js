@@ -9,8 +9,6 @@ async function getLocationFromGoogleAPI(hometown) {
     const response = await fetch(url);
     const data = await response.json();
 
-    console.log("Google Maps API Response:", data); // Log full API response
-
     if (data.status !== "OK") {
       throw new Error(
         `Google Maps API error: ${data.status} - ${

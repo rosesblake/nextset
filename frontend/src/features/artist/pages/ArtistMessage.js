@@ -8,7 +8,6 @@ function ArtistMessage() {
 
   const handleReply = () => {
     console.log("Reply clicked");
-    // Add any reply logic here (e.g., open a modal, show a form, etc.)
   };
 
   return (

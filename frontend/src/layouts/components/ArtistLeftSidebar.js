@@ -2,6 +2,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
 import { Settings } from "lucide-react";
+import { ArrowLeft, ArrowRight } from "lucide-react";
 
 function ArtistLeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();
@@ -17,7 +18,7 @@ function ArtistLeftSidebar({ isCollapsed, toggleSidebars }) {
         onClick={toggleSidebars}
         className="absolute top-4 right-2 text-nextsetAccent z-20 text-2xl font-bold"
       >
-        {isCollapsed ? "→" : "←"}
+        {isCollapsed ? <ArrowRight size={30} /> : <ArrowLeft size={30} />}
       </button>
 
       {/* Sidebar Content */}

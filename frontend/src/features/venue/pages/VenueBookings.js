@@ -24,7 +24,12 @@ function VenueBookings() {
             currUser.venue.id,
             currUser.account_type
           );
-          setBookings(response.filter((pitch) => pitch.status === "confirmed"));
+          setBookings(
+            response.filter(
+              (pitch) =>
+                pitch.status === "confirmed" || pitch.status === "canceled"
+            )
+          );
         } catch (e) {
           console.error("Error fetching bookings:", e);
         } finally {
@@ -90,7 +95,7 @@ function VenueBookings() {
       setIsLoading(false);
     }
   };
-  console.log(currUser);
+
   if (isLoading) return <Spinner />;
 
   if (!bookings.length) {

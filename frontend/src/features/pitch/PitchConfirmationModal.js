@@ -136,7 +136,7 @@ const PitchConfirmationModal = ({ pitch, closeModal }) => {
             <img
               src={currUser.artist.photo}
               alt={currUser.artist.name}
-              className="w-24 h-24 rounded-full shadow-lg mx-auto"
+              className="w-24 h-24 rounded-full shadow-lg mx-auto object-cover"
             />
           </div>
         )}

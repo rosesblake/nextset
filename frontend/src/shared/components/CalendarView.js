@@ -39,18 +39,18 @@ function CalendarView() {
       }
     };
     fetchBookings();
-  }, [currUser]);
+  }, [currUser, setIsLoading]);
 
   //show only confirmed shows
   const bookedEvents = pitches?.filter((pitch) => pitch.status === "confirmed");
 
   const calendarEvents = bookedEvents?.map((pitch) => {
     const titleName =
-      currUser.accountType === "artist"
+      currUser.account_type === "venue"
         ? pitch.artist_pitches?.[0]?.artists?.name?.toLowerCase() ||
           currUser?.artist?.name ||
           "Unknown Artist"
-        : pitch.venues.name;
+        : pitch.venues?.name;
 
     return {
       title: titleName,

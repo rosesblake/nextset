@@ -4,6 +4,7 @@ import { VenueCard } from "../components/VenueCard";
 import { useUser } from "../../../contexts/UserContext";
 import { useLoading } from "../../../contexts/LoadingContext";
 import { Spinner } from "../../../shared/components/Spinner";
+import { hasPendingPitch } from "../../../utils/hasPendingPitch";
 
 function VenueList() {
   const [venues, setVenues] = useState([]);
@@ -49,9 +50,7 @@ function VenueList() {
               key={venue.id}
               venue={venue}
               artist={currUser.artist}
-              pitches={pitches.some(
-                (pitch) => pitch.pitches.venue_id === venue.id
-              )}
+              hasPendingPitch={hasPendingPitch(venue.id, pitches)}
             />
           ))}
         </ul>

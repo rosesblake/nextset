@@ -244,7 +244,7 @@ function PitchModal({
                 >
                   <img
                     src="/images/spotify_icon.svg"
-                    className="w-5 mr-2"
+                    className="w-5 mr-2 object-cover"
                     alt="Spotify"
                   />
                   <span className="font-semibold text-nextsetPrimary">

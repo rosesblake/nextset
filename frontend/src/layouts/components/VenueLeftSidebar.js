@@ -1,10 +1,47 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { useUser } from "../../contexts/UserContext";
-import { Settings } from "lucide-react";
+import { ArrowLeft, ArrowRight, Settings } from "lucide-react";
+import { NextSetApi } from "../../services/api";
+import { useLoading } from "../../contexts/LoadingContext";
 
 function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
   const { currUser, logout } = useUser();
+  const { setIsLoading } = useLoading();
+  const [pitches, setPitches] = useState();
+  const [animation, setAnimation] = useState("animate-pulse");
+
+  useEffect(() => {
+    const fetchVenuePitches = async () => {
+      try {
+        setIsLoading(true);
+        setAnimation("animate-pulse");
+        const res = await NextSetApi.getVenuePitches(currUser?.venue?.id);
+        setPitches(res);
+      } catch (e) {
+        console.error(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchVenuePitches();
+  }, [currUser.venue.id, setIsLoading]);
+
+  const pendingPitches = pitches?.filter(
+    (pitch) =>
+      !["confirmed", "removed", "canceled", "accepted"].includes(pitch.status)
+  );
+
+  const toggleAnimation = (a) => {
+    if (animation === a) return;
+    setAnimation(a);
+    if (a === "animate-ping") {
+      setTimeout(() => {
+        setAnimation("hidden");
+      }, 500);
+    }
+  };
 
   return (
     <div
@@ -17,7 +54,7 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
         onClick={toggleSidebars}
         className="absolute top-4 right-2 text-nextsetAccent z-20 text-2xl font-bold"
       >
-        {isCollapsed ? "→" : "←"}
+        {isCollapsed ? <ArrowRight size={30} /> : <ArrowLeft size={30} />}
       </button>
 
       {/* Sidebar Content */}
@@ -32,7 +69,10 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
           {currUser && currUser.venue && (
             <div className="block text-nextsetAccent mb-6 hover:bg-nextsetButton hover:text-white transition duration-200 rounded-lg">
               <div className="flex items-center justify-between p-3 hover:bg-nextsetButton hover:shadow-lg rounded-lg transition duration-300">
-                <Link to="/venue/profile">
+                <Link
+                  to="/venue/profile"
+                  onClick={() => toggleAnimation("animate-pulse")}
+                >
                   <div className="flex items-center space-x-4">
                     <div className="flex flex-col">
                       <span className="text-xl font-semibold">
@@ -48,6 +88,7 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
                 {/* Settings Icon */}
                 <Link
                   to="/venue/settings"
+                  onClick={() => toggleAnimation("animate-pulse")}
                   className="hover:text-nextsetAccent transition"
                 >
                   <Settings size={28} />
@@ -61,14 +102,26 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
             <li>
               <Link
                 to="/venue/dashboard"
-                className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
+                onClick={() => toggleAnimation("animate-ping")}
+                className="flex items-center justify-between text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200 relative"
               >
                 <span>Dashboard</span>
+
+                {/* Notification Badge */}
+                {pendingPitches?.length > 0 && (
+                  <span
+                    className={`ml-2 bg-red-500 text-white text-xs font-bold h-7 min-w-7 flex items-center justify-center rounded-full ${animation} object-contain`}
+                  >
+                    {pendingPitches?.length}
+                  </span>
+                )}
               </Link>
             </li>
+
             <li>
               <Link
                 to="/venue/bookings"
+                onClick={() => toggleAnimation("animate-pulse")}
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
                 <span>Bookings</span>
@@ -77,6 +130,7 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
             <li>
               <Link
                 to="/venue/calendar"
+                onClick={() => toggleAnimation("animate-pulse")}
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
                 <span>Calendar</span>
@@ -85,6 +139,7 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
             <li>
               <Link
                 to="/venue/explore"
+                onClick={() => toggleAnimation("animate-pulse")}
                 className="flex items-center text-nextsetAccent text-lg font-semibold hover:text-white hover:bg-nextsetButton p-3 rounded-lg transition duration-200"
               >
                 <span>Explore</span>

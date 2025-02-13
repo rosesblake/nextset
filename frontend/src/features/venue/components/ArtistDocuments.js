@@ -24,7 +24,7 @@ function ArtistDocuments({ booking, pdfThumbnails }) {
                     "/images/doc_icon.svg"
                   }
                   alt={fileType.toUpperCase()}
-                  className="w-6 h-6"
+                  className="w-6 h-6 "
                 />
                 <span className="text-nextsetAccent font-semibold">
                   {fileType.replace("_", " ").toUpperCase()}

@@ -39,7 +39,7 @@ function SocialLinks({ artist, preview }) {
           <img
             src="/images/instagram_icon.svg"
             alt="Instagram"
-            className="w-8 h-8"
+            className="w-8 h-8 object-cover"
           />
         </a>
       )}
@@ -53,7 +53,7 @@ function SocialLinks({ artist, preview }) {
           <img
             src="/images/twitter_icon.png"
             alt="Twitter/X"
-            className="w-8 h-8"
+            className="w-8 h-8 object-cover"
           />
         </a>
       )}
@@ -62,7 +62,7 @@ function SocialLinks({ artist, preview }) {
           <img
             src="/images/facebook_icon.png"
             alt="Facebook"
-            className="w-8 h-8"
+            className="w-8 h-8 object-cover"
           />
         </a>
       )}
@@ -75,7 +75,7 @@ function SocialLinks({ artist, preview }) {
           <img
             src="/images/youtube_icon.png"
             alt="YouTube"
-            className="w-8 h-8"
+            className="w-8 h-8 object-cover"
           />
         </a>
       )}
@@ -84,7 +84,7 @@ function SocialLinks({ artist, preview }) {
           <img
             src="/images/spotify_icon.svg"
             alt="Spotify"
-            className="w-8 h-8"
+            className="w-8 h-8 object-cover"
           />
         </a>
       )}
@@ -94,7 +94,11 @@ function SocialLinks({ artist, preview }) {
           target="_blank"
           rel="noopener noreferrer"
         >
-          <img src="/images/apple_icon.svg" alt="Apple" className="w-8 h-8" />
+          <img
+            src="/images/apple_icon.svg"
+            alt="Apple"
+            className="w-8 h-8 object-cover"
+          />
         </a>
       )}
       {artist.soundcloud && (
@@ -102,7 +106,7 @@ function SocialLinks({ artist, preview }) {
           <img
             src="/images/soundcloud_icon.png"
             alt="Soundcloud"
-            className="w-8 h-8"
+            className="w-8 h-8 object-cover"
           />
         </a>
       )}

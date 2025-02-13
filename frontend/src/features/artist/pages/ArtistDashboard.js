@@ -6,6 +6,7 @@ import { VenueCard } from "../components/VenueCard";
 import { Spinner } from "../../../shared/components/Spinner";
 import { DashboardBooking } from "../components/DashboardBooking";
 import { useLoading } from "../../../contexts/LoadingContext";
+import { hasPendingPitch } from "../../../utils/hasPendingPitch";
 
 function ArtistDashboard() {
   const { currUser } = useUser();
@@ -37,15 +38,6 @@ function ArtistDashboard() {
 
     fetchVenues();
   }, [currUser, setIsLoading]);
-
-  //handle pendingpitches
-  const hasPendingPitch = (venueId, pitches) => {
-    return pitches.some(
-      (pitch) =>
-        pitch.pitches.venue_id === venueId &&
-        ["pending", "accepted"].includes(pitch.pitches?.status)
-    );
-  };
 
   //filter out confirmed venues.
   const recommendedVenues = venues?.slice(0, 3).filter((venue) => {

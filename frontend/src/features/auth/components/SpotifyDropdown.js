@@ -19,7 +19,7 @@ function SpotifyDropdown({ results, onSelect }) {
           <img
             src={artist.photo || ""}
             alt={artist.name}
-            className="w-10 h-10 rounded-full mr-3"
+            className="w-10 h-10 rounded-full mr-3 object-cover"
           />
           <span>{artist.name}</span>
         </li>
