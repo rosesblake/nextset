@@ -4,7 +4,12 @@ import { hasPendingPitch } from "../../../utils/hasPendingPitch";
 import { DashboardBooking } from "../components/DashboardBooking";
 import { VenueCard } from "../components/VenueCard";
 
-function VenueReccomendModal({ recommendedVenues, pitches, upcomingGigs }) {
+function VenueReccomendModal({
+  recommendedVenues,
+  pitches,
+  upcomingGigs,
+  welcome,
+}) {
   const { currUser } = useUser();
 
   const navigate = useNavigate();
@@ -13,14 +18,10 @@ function VenueReccomendModal({ recommendedVenues, pitches, upcomingGigs }) {
     <div className="w-[800px] max-w-3xl bg-white p-8 rounded-lg shadow-lg max-w-full">
       {/* Welcome Section */}
       <div className="text-center mb-6">
-        <h1 className="text-3xl font-bold text-nextsetAccent mb-2">
-          Welcome back, {currUser?.full_name || "Artist"}!
-        </h1>
-        {currUser.artist && (
-          <p className="text-gray-600">
-            You are logged in as{" "}
-            <span className="font-medium">{currUser.artist.name}</span>.
-          </p>
+        {welcome && (
+          <h1 className="text-3xl font-bold text-nextsetAccent mb-2">
+            Welcome back, {currUser?.full_name || "Artist"}!
+          </h1>
         )}
       </div>
 
@@ -63,6 +64,12 @@ function VenueReccomendModal({ recommendedVenues, pitches, upcomingGigs }) {
           </ul>
         ) : (
           <p className="text-gray-500">You have no upcoming gigs.</p>
+        )}
+        {currUser.artist && (
+          <p className="text-gray-600 text-center mt-8 text-sm">
+            You are logged in as{" "}
+            <span className="font-medium">{currUser.artist.name}</span>.
+          </p>
         )}
       </div>
 

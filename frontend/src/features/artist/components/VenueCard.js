@@ -62,7 +62,11 @@ function VenueCard({ venue, artist, hasPendingPitch }) {
   return (
     <div className="p-4 bg-gray-50 rounded-lg shadow-sm hover:shadow-md transition">
       <div className="flex justify-between items-center">
-        <Link to={`/artist/venue/${venue.id}`} className="flex-grow">
+        <Link
+          to={`/artist/venue/${venue.id}`}
+          className="flex-grow"
+          onClick={closeModal}
+        >
           <div>
             <h3 className="text-lg font-bold text-nextsetAccent">
               {venue.name}

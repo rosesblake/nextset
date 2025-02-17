@@ -13,6 +13,7 @@ function ArtistDashboard() {
   const [venues, setVenues] = useState(null);
   const [pitches, setPitches] = useState([]);
   const [upcomingGigs, setUpcomingGigs] = useState([]);
+  const [welcome, setWelcome] = useState(false);
   const { openModal } = useModal();
 
   useEffect(() => {
@@ -50,21 +51,26 @@ function ArtistDashboard() {
     if (venues) {
       openModal(
         <VenueReccomendModal
+          welcome={welcome}
           recommendedVenues={recommendedVenues}
           pitches={pitches}
           upcomingGigs={upcomingGigs}
         />
       );
     }
-  }, [openModal, pitches, upcomingGigs, recommendedVenues, venues]);
+  }, [openModal, pitches, upcomingGigs, recommendedVenues, venues, welcome]);
 
   //upon login show modal
   useEffect(() => {
     if (localStorage.getItem("justLoggedIn") && venues) {
+      setWelcome(true);
       handleOpenVenueRec();
       localStorage.removeItem("justLoggedIn");
-    } else return;
-  }, [handleOpenVenueRec, venues]);
+    } else {
+      setWelcome(false);
+      return;
+    }
+  }, [handleOpenVenueRec, venues, setWelcome]);
 
   if (isLoading || !venues) {
     return <Spinner />;

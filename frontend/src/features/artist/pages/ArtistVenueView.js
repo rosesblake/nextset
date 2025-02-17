@@ -46,12 +46,6 @@ function ArtistVenueView() {
           >
             Back to Venues
           </button>
-          <button
-            className="px-6 py-3 bg-nextsetAccent text-white rounded-md hover:bg-nextsetButton transition"
-            onClick={() => navigate(`/venues/${venue.id}/events`)}
-          >
-            View Events
-          </button>
         </div>
       </div>
     </div>

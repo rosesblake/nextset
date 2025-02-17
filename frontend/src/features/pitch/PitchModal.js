@@ -145,6 +145,11 @@ function PitchModal({
     );
   };
 
+  const handleCancel = () => {
+    localStorage.setItem("justLoggedIn", "true");
+    closeModal();
+  };
+
   return (
     <div className="w-[500px] min-w-[400px] max-w-xl">
       <h2 className="text-xl font-bold text-nextsetAccent">Pitch to Venue</h2>
@@ -267,7 +272,7 @@ function PitchModal({
           <button
             type="button"
             className="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400"
-            onClick={() => onSubmit(null)}
+            onClick={handleCancel}
           >
             Cancel
           </button>
