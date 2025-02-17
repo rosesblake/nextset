@@ -17,6 +17,7 @@ function Register() {
   const handleRegister = async (data) => {
     try {
       const locationDetails = data.pendingLocationData;
+
       const userRes = await NextSetApi.registerUser({
         full_name: data.full_name,
         email: data.email,
@@ -67,10 +68,12 @@ function Register() {
             {
               name: data.venue_name,
               capacity: parseInt(data.capacity),
-              address: data.address,
+              full_address: data.full_address,
               city: data.city,
               state: data.state,
-              zip_code: parseInt(data.zip_code),
+              zip_code: parseInt(data.zip),
+              lat: data.lat,
+              lng: data.lng,
               created_by: user.id,
             },
             user

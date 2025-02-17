@@ -1,24 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { SharedFields } from "../../../shared/forms/SharedFields";
 import { FormWrapper } from "../../../shared/forms/FormWrapper";
 import { InputField } from "../../../shared/forms/InputField";
 import { useForm } from "../../../hooks/useForm";
+import { LocationInput } from "../../../utils/LocationInput";
 
 function VenueForm({ onSubmit }) {
+  const [locationData, setLocationData] = useState({
+    full_address: "",
+    street: "",
+    city: "",
+    state: "",
+    zip: "",
+    lat: null,
+    lng: null,
+  });
+
   const { formData, handleChange, handleSubmit } = useForm(
     {
       venue_name: "",
       capacity: "",
-      address: "",
+      full_address: "",
+      street: "",
       city: "",
       state: "",
-      zip_code: "",
-      full_name: "",
-      email: "",
-      password: "",
+      zip_code: locationData.zip || "",
     },
     async (data) => {
-      await onSubmit(data);
+      if (!locationData.lat || !locationData.lng) {
+        alert("Please select a valid address.");
+        return;
+      }
+
+      await onSubmit({
+        ...data,
+        ...locationData,
+      });
     }
   );
 
@@ -38,34 +55,37 @@ function VenueForm({ onSubmit }) {
         value={formData.capacity}
         onChange={handleChange}
       />
-      <InputField
-        id="address"
-        name="address"
-        placeholder="Address"
-        value={formData.address}
-        onChange={handleChange}
-      />
-      <InputField
-        id="city"
-        name="city"
-        placeholder="City"
-        value={formData.city}
-        onChange={handleChange}
-      />
-      <InputField
-        id="state"
-        name="state"
-        placeholder="State"
-        value={formData.state}
-        onChange={handleChange}
-      />
-      <InputField
-        id="zip_code"
-        name="zip_code"
-        placeholder="Zip Code"
-        value={formData.zip_code}
-        onChange={handleChange}
-      />
+      <div>
+        <label
+          htmlFor="hometown"
+          className="block text-sm font-medium text-gray-700"
+        >
+          Address
+        </label>
+        <LocationInput
+          id="full_address"
+          mode="venue"
+          placeholder="Search for Venue Address"
+          onChange={(location) => {
+            if (!location) return;
+            setLocationData(location);
+            handleChange({
+              target: {
+                name: "full_address",
+                value: location.full_address || "",
+              },
+            });
+          }}
+        />
+        {/* Hidden Fields for Structured Address Data */}
+        <input type="hidden" name="street" value={locationData.street || ""} />
+        <input type="hidden" name="city" value={locationData.city || ""} />
+        <input type="hidden" name="state" value={locationData.state || ""} />
+        <input type="hidden" name="zip_code" value={locationData.zip || ""} />
+        <input type="hidden" name="lat" value={locationData.lat || ""} />
+        <input type="hidden" name="lng" value={locationData.lng || ""} />
+      </div>
+
       <h1 className="text-2xl font-bold text-center text-gray-800 py-4">
         Create a User
       </h1>

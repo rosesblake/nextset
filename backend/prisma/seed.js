@@ -50,6 +50,15 @@ async function main() {
       full_name: "Testing Dev",
     },
   });
+  const user5 = await prisma.users.create({
+    data: {
+      password_hash: hashed_password,
+      email: "troubadour@gmail.com",
+      access_level: "ADMIN",
+      account_type: "venue",
+      full_name: "Testing Dev",
+    },
+  });
 
   console.log("User seeded successfully:");
 
@@ -81,6 +90,8 @@ async function main() {
       spotify_popularity: 28,
       spotify_id: "4sBiA3ARQSDSGUqI2mbWgf",
       website: "sleepinglion.com",
+      hometown_lat: 34.052235,
+      hometown_lng: -118.243683,
     },
   });
   const artist2 = await prisma.artists.create({
@@ -88,6 +99,8 @@ async function main() {
       name: "Wasp Eater",
       hometown_city: "Nashville, TN",
       hometown_state: "CA",
+      hometown_lat: 36.16634,
+      hometown_lng: -86.779068,
       bio: "Artist living in Nashville, TN",
       instagram_handle: "https://instagram.com/waspeater",
       x_handle: "https://x.com/waspeater",
@@ -117,6 +130,8 @@ async function main() {
       name: "DAZYFACE",
       hometown_city: "Los Angeles",
       hometown_state: "CA",
+      hometown_lat: 34.052235,
+      hometown_lng: -118.243683,
       bio: "Artist from LA",
       instagram_handle: "https://instagram.com/dazyface",
       x_handle: "https://x.com/dazyface",
@@ -174,30 +189,27 @@ async function main() {
   const venues = await prisma.venues.createMany({
     data: [
       {
-        name: "The Velvet Room",
-        capacity: 300,
-        address: "123 Main St",
-        city: "Austin",
-        state: "TX",
-        zip_code: 78701,
-        created_by: user2.id,
-      },
-      {
-        name: "Echo Lounge",
+        name: "Troubadour",
         capacity: 500,
-        address: "456 Broadway Ave",
-        city: "Nashville",
-        state: "TN",
-        zip_code: 37203,
-        created_by: user2.id,
+        full_address: "9081 N Santa Monica Blvd, West Hollywood, CA, 90069",
+        street: "9081 N Santa Monica Blvd",
+        lat: 34.081577,
+        lng: -118.389221,
+        city: "Los Angeles",
+        state: "CA",
+        zip_code: "90069",
+        created_by: user5.id,
       },
       {
         name: "The Echo",
-        capacity: 250,
-        address: "456 Broadway Ave",
+        capacity: 350,
+        full_address: "1822 W Sunset Blvd, Los Angeles, CA 90026",
+        street: "1822 W Sunset Blvd",
+        lat: 34.077617,
+        lng: -118.260059,
         city: "Los Angeles",
         state: "CA",
-        zip_code: 37203,
+        zip_code: "90026",
         created_by: user2.id,
       },
     ],
@@ -206,11 +218,8 @@ async function main() {
   console.log("Venues seeded successfully.");
 
   // Fetch the venues to seed events
-  const velvetRoom = await prisma.venues.findUnique({
-    where: { name: "The Velvet Room" },
-  });
-  const echoLounge = await prisma.venues.findUnique({
-    where: { name: "Echo Lounge" },
+  const troubadour = await prisma.venues.findUnique({
+    where: { name: "Troubadour" },
   });
   const theEcho = await prisma.venues.findUnique({
     where: { name: "The Echo" },
@@ -224,63 +233,13 @@ async function main() {
       role: "Creator",
     },
   });
-
-  // Seed events (bookings)
-  if (velvetRoom && echoLounge) {
-    await prisma.events.createMany({
-      data: [
-        {
-          name: "Rock Night",
-          venue_id: velvetRoom.id,
-          event_date: new Date("2025-01-15"),
-          start_time: new Date("2025-01-15T18:00:00"),
-          end_time: new Date("2025-01-15T21:00:00"),
-          description: "A night of rock music featuring John's Band.",
-          ticket_price: 20.0,
-          available_tickets: 150,
-          status: "Scheduled",
-        },
-        {
-          name: "Jazz Evening",
-          venue_id: echoLounge.id,
-          event_date: new Date("2025-01-18"),
-          start_time: new Date("2025-01-18T19:00:00"),
-          end_time: new Date("2025-01-18T22:00:00"),
-          description: "An evening of smooth jazz.",
-          ticket_price: 25.0,
-          available_tickets: 200,
-          status: "Scheduled",
-        },
-      ],
-    });
-
-    console.log("Events (bookings) seeded successfully.");
-  }
-
-  // Blocked dates for each venue
-  const blockedDatesData = [
-    { venueName: "The Velvet Room", dates: ["2025-01-15", "2025-01-20"] },
-    { venueName: "Echo Lounge", dates: ["2025-01-18", "2025-01-25"] },
-  ];
-
-  for (const { venueName, dates } of blockedDatesData) {
-    const venue = await prisma.venues.findUnique({
-      where: { name: venueName },
-    });
-
-    if (venue) {
-      for (const date of dates) {
-        await prisma.venue_blocked_dates.create({
-          data: {
-            venue_id: venue.id,
-            blocked_date: new Date(date),
-          },
-        });
-      }
-    }
-  }
-
-  console.log("Blocked dates seeded successfully.");
+  await prisma.venue_users.create({
+    data: {
+      user_id: user5.id,
+      venue_id: troubadour.id,
+      role: "Creator",
+    },
+  });
 }
 
 main()

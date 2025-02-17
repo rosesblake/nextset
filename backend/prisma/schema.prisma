@@ -188,12 +188,15 @@ model venues {
   id              Int                   @id @default(autoincrement())
   name            String                @unique @db.VarChar(50)
   capacity        Int?
-  address         String?               @db.VarChar(50)
+  full_address    String?               @db.VarChar(75)
+  street          String?               @db.VarChar(50)
   city            String?               @db.VarChar(50)
   state           String?               @db.VarChar(20)
+  lat             Float?
+  lng             Float?
   created_at      DateTime?             @default(now()) @db.Timestamp(6)
   created_by      Int
-  zip_code        Int?
+  zip_code        String?
   events          events[]
   pitches         pitches[]
   schedules       schedules[]

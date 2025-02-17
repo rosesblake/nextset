@@ -96,13 +96,16 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
           </button>
         ) : (
           <div className="flex items-center space-x-2">
-            {label === "Hometown" ? (
+            {label === "Hometown" || label === "Address" ? (
               <LocationInput
+                mode={label === "Address" ? "venue" : "artist"}
                 value={inputValue}
                 onChange={(locationData) => {
                   if (locationData) {
                     setPendingLocationData(locationData);
-                    setInputValue(locationData.city); // Sync with inputValue
+                    setInputValue(
+                      locationData.full_address || locationData.city
+                    );
                   }
                 }}
                 onKeyDown={handleKeyDown}

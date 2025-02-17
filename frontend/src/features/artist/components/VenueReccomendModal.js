@@ -15,14 +15,12 @@ function VenueReccomendModal({
   const navigate = useNavigate();
 
   return (
-    <div className="w-[800px] max-w-3xl bg-white p-8 rounded-lg shadow-lg max-w-full">
+    <div className="w-[700px] max-w-3xl bg-white p-8 rounded-lg shadow-lg max-w-full">
       {/* Welcome Section */}
       <div className="text-center mb-6">
-        {welcome && (
-          <h1 className="text-3xl font-bold text-nextsetAccent mb-2">
-            Welcome back, {currUser?.full_name || "Artist"}!
-          </h1>
-        )}
+        <h1 className="text-3xl font-bold text-nextsetAccent mb-4">
+          Welcome back, {currUser?.full_name || "Artist"}!
+        </h1>
       </div>
 
       {/* Recommended Venues */}

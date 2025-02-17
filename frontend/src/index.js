@@ -10,7 +10,7 @@ import { HashRouter } from "react-router-dom";
 import { LoadingProvider } from "./contexts/LoadingContext";
 import { LoadScript } from "@react-google-maps/api";
 
-const libraries = ["places"];
+const libraries = ["places", "marker"];
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(

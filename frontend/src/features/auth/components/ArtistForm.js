@@ -103,6 +103,7 @@ function ArtistForm({ onSubmit }) {
           onChange={(locationData) => {
             setPendingLocationData(locationData);
           }}
+          mode="artist"
         />
       </div>
 

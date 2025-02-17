@@ -19,7 +19,24 @@ function VenueProfile() {
   const handleFieldSave = async (field, newValue) => {
     try {
       setIsLoading(true);
-      const data = { [field]: newValue };
+
+      let data;
+      if (field === "Address" && typeof newValue === "object") {
+        // Venue address update
+        data = {
+          full_address: newValue.full_address,
+          street: newValue.street || "",
+          city: newValue.city || "",
+          state: newValue.state || "",
+          zip: newValue.zip || "",
+          lat: newValue.lat ?? 0,
+          lng: newValue.lng ?? 0,
+        };
+      } else {
+        // General updates
+        data = { [field]: newValue };
+      }
+
       const updatedVenue = await NextSetApi.updateVenue(currUser.venue, data);
       setCurrUser({ ...currUser, venue: updatedVenue });
     } catch (e) {
@@ -143,25 +160,8 @@ function VenueProfile() {
           />
           <EditableField
             label="Address"
-            value={currUser.venue.address || "N/A"}
-            onSave={(newValue) => handleFieldSave("address", newValue)}
-          />
-          <EditableField
-            label="City"
-            value={currUser.venue.city || "N/A"}
-            onSave={(newValue) => handleFieldSave("city", newValue)}
-          />
-          <EditableField
-            label="State"
-            value={currUser.venue.state || "N/A"}
-            onSave={(newValue) => handleFieldSave("state", newValue)}
-          />
-          <EditableField
-            label="Zip Code"
-            value={currUser.venue.zip_code?.toString() || "N/A"}
-            onSave={(newValue) =>
-              handleFieldSave("zip_code", parseInt(newValue))
-            }
+            value={currUser.venue.full_address || "N/A"}
+            onSave={(newValue) => handleFieldSave("full_address", newValue)}
           />
         </div>
         <div className="p-4 bg-gray-50 rounded-lg shadow-sm mb-6">
