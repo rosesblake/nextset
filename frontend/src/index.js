@@ -10,15 +10,17 @@ import { HashRouter } from "react-router-dom";
 import { LoadingProvider } from "./contexts/LoadingContext";
 import { LoadScript } from "@react-google-maps/api";
 
+const libraries = ["places"];
+
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <HashRouter>
-      <LoadingProvider>
-        <LoadScript
-          googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
-          libraries={["places"]}
-        >
+    <LoadScript
+      googleMapsApiKey={process.env.REACT_APP_GOOGLE_MAPS_API_KEY}
+      libraries={libraries}
+    >
+      <HashRouter>
+        <LoadingProvider>
           <MessageProvider>
             <UserProvider>
               <ModalProvider>
@@ -26,9 +28,9 @@ root.render(
               </ModalProvider>
             </UserProvider>
           </MessageProvider>
-        </LoadScript>
-      </LoadingProvider>
-    </HashRouter>
+        </LoadingProvider>
+      </HashRouter>
+    </LoadScript>
   </React.StrictMode>
 );
 

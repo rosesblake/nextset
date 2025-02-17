@@ -25,7 +25,10 @@ function RequiredDocs({ pitch, status, handlePitchStatus }) {
   );
 
   return (
-    <form onSubmit={handleSubmit} className="p-4 bg-white rounded-lg shadow-lg">
+    <form
+      onSubmit={handleSubmit}
+      className="p-4 bg-white rounded-lg shadow-lg w-[500px] max-w-md"
+    >
       <h2 className="text-xl font-bold text-nextsetAccent mb-4">
         Require Documents
       </h2>

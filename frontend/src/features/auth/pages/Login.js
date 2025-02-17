@@ -17,6 +17,7 @@ function Login() {
       const { token, user: loggedInUser } = res;
       // Save the token in localStorage
       localStorage.setItem("token", token);
+      localStorage.setItem("justLoggedIn", "true");
       // Set the logged-in user in context
       setCurrUser(loggedInUser);
       // Redirect to home page after successful login
@@ -26,6 +27,7 @@ function Login() {
           (pitch) => pitch.pitches.status === "accepted"
         )
       ) {
+        localStorage.removeItem("justLoggedIn");
         //show notification if they have a pitch awaiting confirmation
         return showMessage(
           "You have a pitch awaiting confirmation!",
