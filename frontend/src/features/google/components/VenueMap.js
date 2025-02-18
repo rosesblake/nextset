@@ -52,8 +52,6 @@ function VenueMap({ handleModal, venues }) {
 
         markersRef.current.push(marker);
       });
-
-      console.log("Markers added:", markersRef.current);
     }
 
     loadMarkers();
@@ -73,7 +71,6 @@ function VenueMap({ handleModal, venues }) {
           try {
             await window.google.maps.importLibrary("marker");
             setMarkerLibraryLoaded(true);
-            console.log("AdvancedMarkerElement Library Loaded");
           } catch (error) {
             console.error("Failed to load Advanced Marker Library:", error);
           }
