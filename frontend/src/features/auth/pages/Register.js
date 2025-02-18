@@ -71,7 +71,7 @@ function Register() {
               full_address: data.full_address,
               city: data.city,
               state: data.state,
-              zip_code: parseInt(data.zip),
+              zip_code: data.zip,
               lat: data.lat,
               lng: data.lng,
               created_by: user.id,
