@@ -1,4 +1,4 @@
-import React, { useEffect, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { GoogleMap } from "@react-google-maps/api";
 import { useUser } from "../../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
@@ -14,6 +14,7 @@ function VenueMap({ handleModal, venues }) {
   const navigate = useNavigate();
   const mapRef = useRef(null);
   const markersRef = useRef([]);
+  const [markerLibraryLoaded, setMarkerLibraryLoaded] = useState(false);
 
   let center = {
     lat: currUser?.artist?.hometown_lat,
@@ -21,19 +22,20 @@ function VenueMap({ handleModal, venues }) {
   };
 
   if (!center.lat || !center.lng) {
-    center = { lat: 34.0522, lng: -118.2437 }; // Default to Los Angeles
+    center = { lat: 34.0522, lng: -118.2437 }; // Default to LA
   }
 
   useEffect(() => {
     async function loadMarkers() {
-      if (!mapRef.current || !venues) return;
+      if (!mapRef.current || !venues?.length || !markerLibraryLoaded) return;
+
+      // Clear existing markers
+      markersRef.current.forEach((marker) => marker.setMap(null));
+      markersRef.current = [];
 
       const { AdvancedMarkerElement } = await window.google.maps.importLibrary(
         "marker"
       );
-
-      markersRef.current.forEach((marker) => marker.setMap(null));
-      markersRef.current = [];
 
       venues.forEach((venue) => {
         if (!venue.lat || !venue.lng) return;
@@ -50,10 +52,12 @@ function VenueMap({ handleModal, venues }) {
 
         markersRef.current.push(marker);
       });
+
+      console.log("Markers added:", markersRef.current);
     }
 
     loadMarkers();
-  }, [venues, navigate]);
+  }, [venues, markerLibraryLoaded, navigate]);
 
   return (
     <div className="h-[100vh] relative">
@@ -61,13 +65,21 @@ function VenueMap({ handleModal, venues }) {
         mapContainerStyle={containerStyle}
         center={center}
         zoom={11}
-        options={{
-          mapId: "DEMO_MAP_ID",
+        options={{ mapId: "DEMO_MAP_ID" }}
+        onLoad={async (map) => {
+          mapRef.current = map;
+
+          // Load Advanced Marker Library
+          try {
+            await window.google.maps.importLibrary("marker");
+            setMarkerLibraryLoaded(true);
+            console.log("AdvancedMarkerElement Library Loaded");
+          } catch (error) {
+            console.error("Failed to load Advanced Marker Library:", error);
+          }
         }}
-        onLoad={(map) => (mapRef.current = map)}
       />
 
-      {/* Button to open Dashboard */}
       <button
         onClick={handleModal}
         className="flex flex-row text-center absolute top-2.5 right-20 text-nextsetAccent border rounded-md bg-nextsetPrimary py-2 px-4 shadow-md hover:bg-nextsetAccent hover:text-nextsetPrimary transition"
