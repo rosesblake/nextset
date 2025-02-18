@@ -80,19 +80,22 @@ function VenueMap({ handleModal, venues }) {
                 infoDiv.className = "custom-infowindow";
 
                 infoDiv.innerHTML = `
-                  <h3>${place.name}</h3>
-                  <p>${place.formatted_address}</p>
-                  <p>⭐ ${place.rating || "N/A"}</p>
-                  
-                  <div class="info-buttons">
-                    <button id="pitch-button-${
-                      venue.id
-                    }">Pitch to Venue</button>
-                    <button id="visit-venue-${
-                      venue.id
-                    }">Visit Venue Profile</button>
-                  </div>
-                `;
+                <h3>${place.name}</h3>
+                <p>${place.formatted_address}</p>
+                <p>⭐ ${place.rating || "N/A"}</p>
+              
+                <div class="info-buttons">
+                  <button id="pitch-button-${venue.id}">Pitch to Venue</button>
+                  <button id="visit-venue-${
+                    venue.id
+                  }">Visit Venue Profile</button>
+                  <a href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(
+                    place.name
+                  )}" target="_blank" id="view-on-google-${
+                  venue.id
+                }" class="google-link">View on Google Maps</a>
+                </div>
+              `;
 
                 const infoWindow = new window.google.maps.InfoWindow({
                   content: infoDiv,

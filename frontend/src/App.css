@@ -31,8 +31,8 @@
 }
 
 .custom-infowindow button {
-  background: #4e4e50; /* nextsetButton */
-  color: white;
+  background: #d4a97a; /* nextsetButton */
+  color: black;
   border: none;
   padding: 6px 12px;
   border-radius: 4px;
@@ -42,23 +42,22 @@
 }
 
 .custom-infowindow button:hover {
-  background: #d4a97a; /* nextsetAccent */
-  color: #1a1a2e; /* nextsetPrimary */
+  background: #4e4e50; /* nextsetAccent */
+  color: white; /* nextsetPrimary */
 }
 
 .custom-infowindow a {
   display: inline-block;
-  background: #d4a97a; /* nextsetAccent */
-  color: #1a1a2e; /* nextsetPrimary */
+  background: #4e4e50; /* nextsetAccent */
+  color: white; /* nextsetPrimary */
   padding: 6px 12px;
   border-radius: 4px;
   font-size: 14px;
   text-decoration: none;
-  font-weight: bold;
   transition: background 0.3s ease-in-out;
 }
 
 .custom-infowindow a:hover {
-  background: #4e4e50; /* nextsetButton */
-  color: white;
+  background: #d4a97a; /* nextsetButton */
+  color: black;
 }
