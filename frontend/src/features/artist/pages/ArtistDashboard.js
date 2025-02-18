@@ -38,13 +38,29 @@ function ArtistDashboard() {
     fetchVenues();
   }, [currUser, setIsLoading]);
 
-  //filter out confirmed venues.
-  const recommendedVenues = venues?.slice(0, 3).filter((venue) => {
-    const venuePitches = pitches.filter(
-      (pitch) => pitch.pitches.venue_id === venue.id
-    );
-    return venuePitches;
-  });
+  // Ensure venues and pitches are arrays
+  const validVenues = Array.isArray(venues) ? venues : [];
+  const validPitches = Array.isArray(pitches) ? pitches : [];
+
+  // Only filter out confirmed venues if pitches exist, otherwise keep all venues
+  const unconfirmedVenues =
+    validPitches.length > 0
+      ? validVenues.filter((venue) => {
+          const venuePitches = validPitches.filter(
+            (pitch) => pitch.pitches?.venue_id === venue.id
+          );
+          return venuePitches.length > 0;
+        })
+      : validVenues;
+
+  // Sort unconfirmed venues, prioritizing the user's hometown city
+  const recommendedVenues = [...unconfirmedVenues]
+    .slice(0, 3) // Keep only the first 3 unconfirmed venues
+    .sort((a, b) => {
+      const isAHomeCity = a.city === currUser?.artist?.hometown_city ? 1 : 0;
+      const isBHomeCity = b.city === currUser?.artist?.hometown_city ? 1 : 0;
+      return isBHomeCity - isAHomeCity;
+    });
 
   const handleOpenVenueRec = useCallback(() => {
     if (venues) {
