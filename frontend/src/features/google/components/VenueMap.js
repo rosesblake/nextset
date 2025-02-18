@@ -47,7 +47,7 @@ function VenueMap({ handleModal, venues }) {
         });
 
         marker.addListener("click", () => {
-          navigate(`/venue/${venue.id}`);
+          navigate(`/artist/venue/${venue.id}`);
         });
 
         markersRef.current.push(marker);
