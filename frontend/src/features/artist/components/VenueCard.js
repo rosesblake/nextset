@@ -4,54 +4,17 @@ import { useModal } from "../../../contexts/ModalContext";
 import { useMessage } from "../../../contexts/MessageContext";
 import { useUser } from "../../../contexts/UserContext";
 import { PitchModal } from "../../pitch/PitchModal";
-import { NextSetApi } from "../../../services/api";
-import { useLoading } from "../../../contexts/LoadingContext";
 
 function VenueCard({ venue, artist, hasPendingPitch }) {
   const { openModal, closeModal } = useModal();
   const { showMessage } = useMessage();
-  const { currUser, setCurrUser } = useUser();
-  const { setIsLoading } = useLoading();
-
-  const handleSubmitPitch = async (pitchData) => {
-    if (
-      currUser.artist.artist_pitches.some(
-        (pitch) =>
-          pitch.pitches.status === "confirmed" &&
-          pitch.pitches.date === pitchData.date.toISOString()
-      )
-    ) {
-      closeModal();
-      setIsLoading(false);
-      return showMessage("You already have a show booked for this date");
-    }
-    try {
-      setIsLoading(true);
-      closeModal();
-
-      await NextSetApi.sendPitch({
-        ...pitchData,
-        date: new Date(pitchData.date).toISOString(),
-      });
-
-      const updatedArtist = await NextSetApi.getArtist(artist.id);
-      setCurrUser({ ...currUser, artist: updatedArtist });
-      showMessage("Submission successful!", "success");
-    } catch (e) {
-      console.error(e);
-      closeModal();
-      showMessage(e.message, "error");
-    } finally {
-      setIsLoading(false);
-    }
-  };
+  const { currUser } = useUser();
 
   const handleOpenPitchModal = () => {
     openModal(
       <PitchModal
         venue={venue}
         artist={currUser.artist}
-        onSubmit={handleSubmitPitch}
         openModal={openModal}
         closeModal={closeModal}
         showMessage={showMessage}

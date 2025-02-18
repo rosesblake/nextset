@@ -22,6 +22,7 @@ import { ArtistList } from "./features/venue/pages/ArtistList";
 import { VenueBookings } from "./features/venue/pages/VenueBookings";
 import { CalendarView } from "./shared/components/CalendarView";
 import { SettingsPage } from "./shared/components/SettingsPage";
+import "./App.css";
 
 function App() {
   const { currUser, logout } = useUser();

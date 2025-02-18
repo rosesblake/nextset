@@ -3,16 +3,18 @@ import { useUser } from "../../../contexts/UserContext";
 import { hasPendingPitch } from "../../../utils/hasPendingPitch";
 import { DashboardBooking } from "../components/DashboardBooking";
 import { VenueCard } from "../components/VenueCard";
+import { useModal } from "../../../contexts/ModalContext";
 
-function VenueReccomendModal({
-  recommendedVenues,
-  pitches,
-  upcomingGigs,
-  welcome,
-}) {
+function VenueReccomendModal({ recommendedVenues, pitches, upcomingGigs }) {
   const { currUser } = useUser();
+  const { closeModal } = useModal();
 
   const navigate = useNavigate();
+
+  const handleNavigate = (url) => {
+    closeModal();
+    navigate(url);
+  };
 
   return (
     <div className="w-[700px] max-w-3xl bg-white p-8 rounded-lg shadow-lg max-w-full">
@@ -75,13 +77,13 @@ function VenueReccomendModal({
       <div className="flex justify-center space-x-4">
         <button
           className="px-6 py-3 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition"
-          onClick={() => navigate("/artist/profile")}
+          onClick={() => handleNavigate("/artist/profile")}
         >
           View Profile
         </button>
         <button
           className="px-6 py-3 bg-nextsetAccent text-white rounded-md hover:bg-nextsetButton transition"
-          onClick={() => navigate("/artist/venue/list")}
+          onClick={() => handleNavigate("/artist/venue/list")}
         >
           Explore Venues
         </button>

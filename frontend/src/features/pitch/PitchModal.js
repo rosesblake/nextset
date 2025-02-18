@@ -7,15 +7,14 @@ import { ArtistPitchPreview } from "./ArtistPitchPreview";
 import { Trash2 } from "lucide-react";
 import { useUser } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
+import { useHandleSubmitPitch } from "../../hooks/useHandleSubmitPitch";
 
-function PitchModal({
-  venue,
-  artist,
-  onSubmit,
-  openModal,
-  closeModal,
-  showMessage,
-}) {
+function PitchModal({ venue, openModal, closeModal, showMessage }) {
+  const { currUser } = useUser();
+  const artist = currUser.artist;
+
+  const onSubmit = useHandleSubmitPitch();
+
   const initialState = {
     content: "",
     support_acts: [],
@@ -40,7 +39,6 @@ function PitchModal({
     }
   );
 
-  const { currUser } = useUser();
   const [date, setDate] = useState(null);
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [searchInput, setSearchInput] = useState("");
