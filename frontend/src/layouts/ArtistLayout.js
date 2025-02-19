@@ -35,7 +35,7 @@ function ArtistLayout({ isCollapsed, toggleSidebars, setIsMobile, isMobile }) {
           <ArtistMobileRightSidebar />
         </div>
       ) : (
-        <div className="desktop-layout">
+        <div className={`desktop-layout`}>
           <ArtistLeftSidebar
             isCollapsed={isCollapsed}
             toggleSidebars={toggleSidebars}

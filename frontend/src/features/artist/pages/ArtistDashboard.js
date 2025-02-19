@@ -45,22 +45,21 @@ function ArtistDashboard() {
   // Only filter out confirmed venues if pitches exist, otherwise keep all venues
   const unconfirmedVenues =
     validPitches.length > 0
-      ? validVenues.filter((venue) => {
-          const venuePitches = validPitches.filter(
-            (pitch) => pitch.pitches?.venue_id === venue.id
+      ? validVenues.filter(() => {
+          return validPitches.some(
+            (pitch) => pitch.pitches?.status !== "confirmed"
           );
-          return venuePitches.length > 0;
         })
       : validVenues;
 
-  // Sort unconfirmed venues, prioritizing the user's hometown city
+  // Sort unconfirmed venues, prioritizing the user's hometown city first
   const recommendedVenues = [...unconfirmedVenues]
-    .slice(0, 3) // Keep only the first 3 unconfirmed venues
     .sort((a, b) => {
       const isAHomeCity = a.city === currUser?.artist?.hometown_city ? 1 : 0;
       const isBHomeCity = b.city === currUser?.artist?.hometown_city ? 1 : 0;
-      return isBHomeCity - isAHomeCity;
-    });
+      return isBHomeCity - isAHomeCity; // Sort so hometown city is first
+    })
+    .slice(0, 3); // slice after sorting
 
   const handleOpenVenueRec = useCallback(() => {
     if (venues) {

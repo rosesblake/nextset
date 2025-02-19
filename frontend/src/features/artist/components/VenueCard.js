@@ -1,25 +1,13 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { useModal } from "../../../contexts/ModalContext";
-import { useMessage } from "../../../contexts/MessageContext";
-import { useUser } from "../../../contexts/UserContext";
 import { PitchModal } from "../../pitch/PitchModal";
 
-function VenueCard({ venue, artist, hasPendingPitch }) {
+function VenueCard({ venue, hasPendingPitch }) {
   const { openModal, closeModal } = useModal();
-  const { showMessage } = useMessage();
-  const { currUser } = useUser();
 
   const handleOpenPitchModal = () => {
-    openModal(
-      <PitchModal
-        venue={venue}
-        artist={currUser.artist}
-        openModal={openModal}
-        closeModal={closeModal}
-        showMessage={showMessage}
-      />
-    );
+    openModal(<PitchModal venue={venue} />);
   };
 
   return (
@@ -53,7 +41,7 @@ function VenueCard({ venue, artist, hasPendingPitch }) {
             Pitch
           </button>
         ) : (
-          <p className="px-4 py-2 bg-nextsetButton text-white rounded-md hover:bg-nextsetAccent transition">
+          <p className="px-4 py-2 bg-nextsetAccent opacity-75 text-white rounded-md hover:bg-nextsetAccent transition">
             Pitched
           </p>
         )}

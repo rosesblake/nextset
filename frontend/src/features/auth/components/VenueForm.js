@@ -12,22 +12,20 @@ function VenueForm({ onSubmit }) {
     city: "",
     state: "",
     zip: "",
-    lat: null,
-    lng: null,
+    lat: "",
+    lng: "",
   });
 
   const { formData, handleChange, handleSubmit } = useForm(
     {
       venue_name: "",
+      full_name: "",
+      email: "",
       capacity: "",
       full_address: "",
-      street: "",
-      city: "",
-      state: "",
-      zip_code: locationData.zip || "",
     },
     async (data) => {
-      if (!locationData.lat || !locationData.lng) {
+      if (!locationData.lat || !locationData.lng || !locationData.street) {
         alert("Please select a valid address.");
         return;
       }
@@ -77,13 +75,6 @@ function VenueForm({ onSubmit }) {
             });
           }}
         />
-        {/* Hidden Fields for Structured Address Data */}
-        <input type="hidden" name="street" value={locationData.street || ""} />
-        <input type="hidden" name="city" value={locationData.city || ""} />
-        <input type="hidden" name="state" value={locationData.state || ""} />
-        <input type="hidden" name="zip_code" value={locationData.zip || ""} />
-        <input type="hidden" name="lat" value={locationData.lat || ""} />
-        <input type="hidden" name="lng" value={locationData.lng || ""} />
       </div>
 
       <h1 className="text-2xl font-bold text-center text-gray-800 py-4">

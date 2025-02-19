@@ -46,85 +46,87 @@ function App() {
   };
 
   return (
-    <div className={`App ${getSidebarClasses()}`}>
-      {!currUser && <Navbar />}
-      <Routes>
-        {/* Public Routes */}
-        <Route
-          path="/"
-          element={
-            <PublicRoute>
-              <MainLanding />
-            </PublicRoute>
-          }
-        />
+    <div className="bg-gray-100">
+      <div className={`App ${getSidebarClasses()}`}>
+        {!currUser && <Navbar />}
+        <Routes>
+          {/* Public Routes */}
+          <Route
+            path="/"
+            element={
+              <PublicRoute>
+                <MainLanding />
+              </PublicRoute>
+            }
+          />
 
-        <Route
-          path="/register/:accountType"
-          element={
-            <PublicRoute>
-              <Register />
-            </PublicRoute>
-          }
-        />
-        <Route
-          path="/login"
-          element={
-            <PublicRoute>
-              <Login />
-            </PublicRoute>
-          }
-        />
+          <Route
+            path="/register/:accountType"
+            element={
+              <PublicRoute>
+                <Register />
+              </PublicRoute>
+            }
+          />
+          <Route
+            path="/login"
+            element={
+              <PublicRoute>
+                <Login />
+              </PublicRoute>
+            }
+          />
 
-        {/* Artist Routes */}
-        <Route
-          path="/artist"
-          element={
-            <ProtectedRoute accountType="artist">
-              <ArtistLayout
-                isCollapsed={isCollapsed}
-                toggleSidebars={toggleSidebars}
-                setIsMobile={setIsMobile}
-                isMobile={isMobile}
-              />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<ArtistDashboard />} />
+          {/* Artist Routes */}
+          <Route
+            path="/artist"
+            element={
+              <ProtectedRoute accountType="artist">
+                <ArtistLayout
+                  isCollapsed={isCollapsed}
+                  toggleSidebars={toggleSidebars}
+                  setIsMobile={setIsMobile}
+                  isMobile={isMobile}
+                />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<ArtistDashboard />} />
 
-          <Route path="profile" element={<ArtistProfile />} />
-          <Route path="bookings" element={<GigDetails />} />
-          <Route path="venue/list" element={<VenueList />} />
-          <Route path="venue/:id" element={<ArtistVenueView />} />
-          <Route path="calendar" element={<CalendarView />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
+            <Route path="profile" element={<ArtistProfile />} />
+            <Route path="bookings" element={<GigDetails />} />
+            <Route path="venue/list" element={<VenueList />} />
+            <Route path="venue/:id" element={<ArtistVenueView />} />
+            <Route path="calendar" element={<CalendarView />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
 
-        {/* Venue Routes */}
-        <Route
-          path="/venue"
-          element={
-            <ProtectedRoute accountType="venue">
-              <VenueLayout
-                isCollapsed={isCollapsed}
-                toggleSidebars={toggleSidebars}
-              />
-            </ProtectedRoute>
-          }
-        >
-          <Route index element={<Navigate to="dashboard" replace />} />
-          <Route path="dashboard" element={<VenueDashboard />} />
-          <Route path="profile" element={<VenueProfile />} />
-          <Route path="bookings" element={<VenueBookings />} />
-          <Route path="explore" element={<ArtistList />} />
-          <Route path="calendar" element={<CalendarView />} />
-          <Route path="settings" element={<SettingsPage />} />
-        </Route>
+          {/* Venue Routes */}
+          <Route
+            path="/venue"
+            element={
+              <ProtectedRoute accountType="venue">
+                <VenueLayout
+                  isCollapsed={isCollapsed}
+                  toggleSidebars={toggleSidebars}
+                />
+              </ProtectedRoute>
+            }
+          >
+            <Route index element={<Navigate to="dashboard" replace />} />
+            <Route path="dashboard" element={<VenueDashboard />} />
+            <Route path="profile" element={<VenueProfile />} />
+            <Route path="bookings" element={<VenueBookings />} />
+            <Route path="explore" element={<ArtistList />} />
+            <Route path="calendar" element={<CalendarView />} />
+            <Route path="settings" element={<SettingsPage />} />
+          </Route>
 
-        {/* Catch-All Route */}
-        <Route path="*" element={<NotFound />} />
-      </Routes>
+          {/* Catch-All Route */}
+          <Route path="*" element={<NotFound />} />
+        </Routes>
+      </div>
     </div>
   );
 }

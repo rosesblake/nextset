@@ -8,9 +8,14 @@ import { Trash2 } from "lucide-react";
 import { useUser } from "../../contexts/UserContext";
 import { useNavigate } from "react-router-dom";
 import { useHandleSubmitPitch } from "../../hooks/useHandleSubmitPitch";
+import { useModal } from "../../contexts/ModalContext";
+import { useMessage } from "../../contexts/MessageContext";
 
-function PitchModal({ venue, openModal, closeModal, showMessage }) {
+function PitchModal({ venue }) {
   const { currUser } = useUser();
+  const { openModal, closeModal } = useModal();
+  const { showMessage } = useMessage();
+
   const artist = currUser.artist;
 
   const onSubmit = useHandleSubmitPitch();

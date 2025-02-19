@@ -44,7 +44,7 @@ function VenueReccomendModal({ recommendedVenues, pitches, upcomingGigs }) {
         <div className="text-right mt-4">
           <button
             className="text-nextsetAccent hover:underline"
-            onClick={() => navigate("/artist/venue/list")}
+            onClick={() => handleNavigate("/artist/venue/list")}
           >
             View All Venues
           </button>

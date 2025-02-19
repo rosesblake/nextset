@@ -68,10 +68,33 @@ function VenueMap({ handleModal, venues }) {
         };
 
         placesService.textSearch(request, (results, status) => {
+          //very jank for now
+          const normalizeAddress = (address) => {
+            return address
+              .toLowerCase()
+              .replace(/\bavenue\b/g, "ave")
+              .replace(/\broad\b/g, "rd")
+              .replace(/\bstreet\b/g, "st")
+              .replace(/\bdrive\b/g, "dr")
+              .replace(/\bboulevard\b/g, "blvd")
+              .replace(/\bsouth\b/g, "s")
+              .replace(/\bnorth\b/g, "n")
+              .replace(/\beast\b/g, "e")
+              .replace(/\bwest\b/g, "w")
+              .replace(/,/g, "") // Remove commas
+              .replace(/\s+/g, " ") // Replace multiple spaces with single space
+              .replace(/\bunited states\b/gi, "") // Remove "United States" case-insensitively
+              .replace(/\busa\b/gi, "") // Remove "United States" case-insensitively
+              .trim();
+          };
+
           if (status === window.google.maps.places.PlacesServiceStatus.OK) {
-            const place = results.find((p) =>
-              p.formatted_address.includes(venue.street)
-            );
+            const place = results.find((p) => {
+              return (
+                normalizeAddress(venue.full_address) ===
+                normalizeAddress(p.formatted_address)
+              );
+            });
 
             if (place) {
               marker.addListener("click", () => {
@@ -114,14 +137,7 @@ function VenueMap({ handleModal, venues }) {
                     );
                     if (pitchButton) {
                       pitchButton.addEventListener("click", () => {
-                        openModal(
-                          <PitchModal
-                            venue={venue}
-                            openModal={openModal}
-                            closeModal={closeModal}
-                            showMessage={showMessage}
-                          />
-                        );
+                        openModal(<PitchModal venue={venue} />);
                       });
                     }
 

@@ -71,6 +71,7 @@ function Register() {
               full_address: data.full_address,
               city: data.city,
               state: data.state,
+              street: data.street,
               zip_code: data.zip,
               lat: data.lat,
               lng: data.lng,
@@ -84,6 +85,7 @@ function Register() {
             venue_id: venueRes.venue.id,
             venue: venueRes.venue,
           };
+          console.log(venueRes.venue);
           registrationSuccess = true;
           navigate("/venue/profile");
         } catch (venueError) {
