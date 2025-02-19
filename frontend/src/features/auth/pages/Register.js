@@ -85,7 +85,6 @@ function Register() {
             venue_id: venueRes.venue.id,
             venue: venueRes.venue,
           };
-          console.log(venueRes.venue);
           registrationSuccess = true;
           navigate("/venue/profile");
         } catch (venueError) {

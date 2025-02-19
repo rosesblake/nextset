@@ -45,9 +45,11 @@ function ArtistDashboard() {
   // Only filter out confirmed venues if pitches exist, otherwise keep all venues
   const unconfirmedVenues =
     validPitches.length > 0
-      ? validVenues.filter(() => {
+      ? validVenues.filter((venue) => {
           return validPitches.some(
-            (pitch) => pitch.pitches?.status !== "confirmed"
+            (pitch) =>
+              pitch.venue_id !== venue.id && // Ensure pitch is related to venue
+              pitch.status !== "confirmed" // Check status correctly
           );
         })
       : validVenues;
