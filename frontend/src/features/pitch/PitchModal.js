@@ -131,9 +131,12 @@ function PitchModal({ venue }) {
   const handlePitchPreviewModal = (e) => {
     e.preventDefault();
     if (!formData.content || !date) {
-      closeModal();
       return showMessage("Please fill out all required fields", "error");
     }
+    if (formData.content.length > 20) {
+      return showMessage("Description must be 20 characters or less.", "error");
+    }
+
     closeModal();
     openModal(
       <ArtistPitchPreview
