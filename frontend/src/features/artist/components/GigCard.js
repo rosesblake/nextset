@@ -30,7 +30,7 @@ function GigCard({ gigs }) {
                 <div className="flex items-center justify-center text-gray-600 text-sm space-x-2 mt-1">
                   <MapPin size={18} className="text-nextsetPrimary" />
                   <span>
-                    {gig.pitches.venues.address}, {gig.pitches.venues?.city},{" "}
+                    {gig.pitches.venues?.street}, {gig.pitches.venues?.city},{" "}
                     {gig.pitches.venues?.state}
                   </span>
                 </div>
