@@ -287,7 +287,7 @@ function ArtistProfile() {
           </div>
 
           {/* Social Links Section */}
-          <div className="p-4 bg-gray-50 rounded-lg shadow-sm mb-6">
+          <div className="p-4 bg-gray-50 rounded-lg shadow-sm mb-6 truncate">
             <h3 className="text-lg font-bold text-nextsetAccent mb-4">
               Social Links
             </h3>

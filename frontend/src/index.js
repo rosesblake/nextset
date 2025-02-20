@@ -21,13 +21,13 @@ root.render(
     >
       <HashRouter>
         <LoadingProvider>
-          <MessageProvider>
-            <UserProvider>
+          <UserProvider>
+            <MessageProvider>
               <ModalProvider>
                 <App />
               </ModalProvider>
-            </UserProvider>
-          </MessageProvider>
+            </MessageProvider>
+          </UserProvider>
         </LoadingProvider>
       </HashRouter>
     </LoadScript>

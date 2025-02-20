@@ -154,7 +154,7 @@ function PitchModal({ venue }) {
   };
 
   return (
-    <div className="w-[500px] min-w-[400px] max-w-xl">
+    <div className="w-[400px] min-w-[400px] max-w-lg max-h-[75vh] overflow-y-auto">
       <h2 className="text-xl font-bold text-nextsetAccent">Pitch to Venue</h2>
       <p className="text-gray-700 mb-4">{`${venue.name} - ${venue.city}, ${venue.state}`}</p>
       {/* Role */}

@@ -43,7 +43,7 @@ function Login() {
 
   return (
     <div className="mt-[64px] flex items-center justify-center min-h-screen">
-      <div className="w-full max-w-md">
+      <div className="w-full max-w-sm">
         {errorMessage?.length > 0 && (
           <div className="bg-red-100 border-l-4 border-red-500 text-red-700 p-4 mb-6 rounded">
             {errorMessage.map((error, idx) => (

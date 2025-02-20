@@ -17,7 +17,7 @@ function VenueReccomendModal({ recommendedVenues, pitches, upcomingGigs }) {
   };
 
   return (
-    <div className="w-[700px] max-w-3xl bg-white p-8 rounded-lg shadow-lg max-w-full">
+    <div className="w-[600px] max-w-2xl bg-white p-8 rounded-lg shadow-lg max-w-full max-h-[75vh] overflow-y-auto">
       {/* Welcome Section */}
       <div className="text-center mb-6">
         <h1 className="text-3xl font-bold text-nextsetAccent mb-4">
@@ -52,7 +52,7 @@ function VenueReccomendModal({ recommendedVenues, pitches, upcomingGigs }) {
       </div>
 
       {/* Upcoming Gigs */}
-      <div className="mb-8">
+      <div className="mb-6">
         <h2 className="text-2xl font-semibold text-nextsetPrimary mb-4">
           Upcoming Gigs
         </h2>

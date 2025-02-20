@@ -114,6 +114,11 @@ router.get(
             },
           },
         },
+        orderBy: {
+          pitches: {
+            date: "asc",
+          },
+        },
       });
 
       return res.status(200).json(artistPitches);

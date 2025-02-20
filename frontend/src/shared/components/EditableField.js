@@ -81,7 +81,7 @@ function EditableField({ label, value, onSave, link, linkOnly, png }) {
                 className="w-8 h-8 mr-4 object-cover"
               />
             )}
-            <span>{value}</span>
+            <span className="max-w-[250px] truncate">{value}</span>
           </a>
         )}
       </div>

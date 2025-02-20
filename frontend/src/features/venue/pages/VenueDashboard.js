@@ -88,7 +88,7 @@ function VenueDashboard() {
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-100 p-6">
-      <div className="w-full max-w-4xl bg-white rounded-lg shadow-lg p-6">
+      <div className="w-full max-w-3xl bg-white rounded-lg shadow-lg p-6">
         <h2 className="text-2xl font-bold text-nextsetAccent mb-6 text-center">
           Pitches Received
         </h2>

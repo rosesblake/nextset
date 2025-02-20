@@ -1,4 +1,5 @@
 import React, { createContext, useContext, useState } from "react";
+import { useUser } from "./UserContext";
 
 const MessageContext = createContext();
 
@@ -9,9 +10,12 @@ export const useMessage = () => {
 
 export const MessageProvider = ({ children }) => {
   const [message, setMessage] = useState(null);
-
+  const { currUser } = useUser();
   const messageColorCss = (() => {
-    if (message?.type === "success") return "bg-green-500 text-white";
+    if (message?.type === "success")
+      return currUser?.account_type === "venue"
+        ? "ml-40 bg-green-500 text-white"
+        : "bg-green-500 text-white";
     if (message?.type === "error") return "bg-red-500 text-white";
     return "bg-gray-500 text-white";
   })();
