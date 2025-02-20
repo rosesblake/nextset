@@ -33,8 +33,8 @@ function ArtistVenueProfile({ venue, pitches }) {
         </p>
         <p className="mb-2">
           <strong>Address:</strong>{" "}
-          {venue.address
-            ? `${venue.address}, ${venue.city}, ${venue.state} ${venue.zip_code}`
+          {venue.full_address
+            ? `${venue.street}, ${venue.city}, ${venue.state} ${venue.zip_code}`
             : "Not specified"}
         </p>
       </div>
