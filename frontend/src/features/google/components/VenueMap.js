@@ -6,6 +6,7 @@ import { NotepadText } from "lucide-react";
 import { useModal } from "../../../contexts/ModalContext";
 import { useMessage } from "../../../contexts/MessageContext";
 import { PitchModal } from "../../pitch/PitchModal";
+import { MapLoader } from "../MapLoader";
 
 const containerStyle = {
   width: "100%",
@@ -177,23 +178,25 @@ function VenueMap({ handleModal, venues }) {
 
   return (
     <div className="h-[100vh] relative">
-      <GoogleMap
-        mapContainerStyle={containerStyle}
-        center={center}
-        zoom={11}
-        options={{ mapId: "DEMO_MAP_ID" }}
-        onLoad={async (map) => {
-          mapRef.current = map;
+      <MapLoader>
+        <GoogleMap
+          mapContainerStyle={containerStyle}
+          center={center}
+          zoom={11}
+          options={{ mapId: "DEMO_MAP_ID" }}
+          onLoad={async (map) => {
+            mapRef.current = map;
 
-          // Load Advanced Marker Library
-          try {
-            await window.google.maps.importLibrary("marker");
-            setMarkerLibraryLoaded(true);
-          } catch (error) {
-            console.error("Failed to load Advanced Marker Library:", error);
-          }
-        }}
-      />
+            // Load Advanced Marker Library
+            try {
+              await window.google.maps.importLibrary("marker");
+              setMarkerLibraryLoaded(true);
+            } catch (error) {
+              console.error("Failed to load Advanced Marker Library:", error);
+            }
+          }}
+        />
+      </MapLoader>
 
       <button
         onClick={handleModal}

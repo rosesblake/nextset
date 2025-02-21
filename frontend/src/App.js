@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import "./App.css";
 import { Routes, Route, Navigate } from "react-router-dom";
 import { useUser } from "./contexts/UserContext";
 import { Navbar } from "./layouts/NavBar";
@@ -22,7 +23,6 @@ import { ArtistList } from "./features/venue/pages/ArtistList";
 import { VenueBookings } from "./features/venue/pages/VenueBookings";
 import { CalendarView } from "./shared/components/CalendarView";
 import { SettingsPage } from "./shared/components/SettingsPage";
-import "./App.css";
 
 function App() {
   const { currUser, logout } = useUser();
