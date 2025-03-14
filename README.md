@@ -1,6 +1,6 @@
 # nextset
 
-Deployed at nextset-demo.render.com
+Deployed at https://nextset-demo.render.com
 
 ## Description
 
@@ -8,15 +8,40 @@ Tour Support is a web and mobile application designed to simplify the booking pr
 
 ## Setup
 
-Dependencies:
+### Database:
+
+createdb nextset
+
+### Secrets:
+
+/backend/.env
+DATABASE_URL="postgresql://username:password@localhost/nextset"
+SECRET_KEY="anypassword"
+PORT=3001
+SPOTIFY_CLIENT_ID="" //create via spotify for artists developer section
+SPOTIFY_CLIENT_SECRET="" //create via spotify for artists developer section
+GOOGLE_MAPS_API_KEY="" //google maps javascript api and places api key. create key on google for developers.
+
+/frontend/.env
+REACT_APP_GOOGLE_MAPS_API_KEY="" //same as backend key
+
+### Dependencies:
+
 npm i in root
 npm i in /frontend
 npm i in /backend
 
-Deploy:
+### Seeded data: (optional)
+
+cd /backend
+npm run prisma:seed
+
+### Deploy:
+
 npm start in root to deploy backend and frontend together
 
-How to use:
+### How to use:
+
 Create an artist account to pitch to venues or a venue account to pitch to artists. Create a venue account that will use google maps to add to the google maps display for artists.
 
 ## Stack
@@ -39,6 +64,7 @@ Tour Scheduling: Tools for artists to plan multi-city tours with venue availabil
 Collaboration Features: Enabling multiple artists to pitch together for joint events.
 Rating System: Allow venues and artists to rate each other post-event.
 Mobile Optimization: Restyle for mobile.
+Testing: Add testing.
 
 ## db diagram
 
