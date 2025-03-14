@@ -14,6 +14,10 @@ function Login() {
   const loginUser = async (user) => {
     try {
       const res = await NextSetApi.loginUser(user);
+
+      if (!res) {
+        return showMessage("Invalid User/Password");
+      }
       const { token, user: loggedInUser } = res;
       // Save the token in localStorage
       localStorage.setItem("token", token);

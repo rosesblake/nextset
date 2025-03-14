@@ -6,6 +6,7 @@ import { ErrorDisplay } from "../../../shared/forms/ErrorDisplay";
 import { ArtistForm } from "../components/ArtistForm";
 import { VenueForm } from "../components/VenueForm";
 import { useMessage } from "../../../contexts/MessageContext";
+import { MapLoader } from "../../google/MapLoader";
 
 function Register() {
   const { accountType } = useParams();
@@ -114,8 +115,16 @@ function Register() {
     <div className="mt-[64px] flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-sm">
         <ErrorDisplay errors={errorMessage} />
-        {accountType === "artist" && <ArtistForm onSubmit={handleRegister} />}
-        {accountType === "venue" && <VenueForm onSubmit={handleRegister} />}
+        {accountType === "artist" && (
+          <MapLoader>
+            <ArtistForm onSubmit={handleRegister} />
+          </MapLoader>
+        )}
+        {accountType === "venue" && (
+          <MapLoader>
+            <VenueForm onSubmit={handleRegister} />
+          </MapLoader>
+        )}
       </div>
     </div>
   );
