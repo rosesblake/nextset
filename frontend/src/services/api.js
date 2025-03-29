@@ -43,11 +43,16 @@ class NextSetApi {
   // Centralized request method
   static async request(endpoint, data = {}, method = "get") {
     try {
+      console.log("Sending request to:", endpoint);
+      console.log("Cookies being sent:", document.cookie);
+
       const response = await this.axiosInstance({
         url: endpoint,
         method,
         ...(method === "get" ? { params: data } : { data }),
       });
+      console.log("Response:", response); // Log the response
+
       return response.data;
     } catch (error) {
       // Extract error message
