@@ -10,8 +10,11 @@ const { UnauthorizedError } = require("../expressError");
  */
 function authenticateJWT(req, res, next) {
   const token = req.cookies.token;
+  const refreshToken = req.cookies.refreshToken; // Get refreshToken from cookies
 
-  //Try verifying the access token
+  console.log("Received token:", token); // Log token
+  console.log("Received refresh token:", refreshToken);
+
   if (token) {
     try {
       const user = jwt.verify(token, process.env.SECRET_KEY);
@@ -23,9 +26,6 @@ function authenticateJWT(req, res, next) {
       }
     }
   }
-
-  //Try refreshing using the refresh token
-  const refreshToken = req.cookies.refreshToken;
 
   if (!refreshToken) {
     return next(new UnauthorizedError("Authorization token is missing"));
