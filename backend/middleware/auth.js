@@ -44,7 +44,7 @@ function authenticateJWT(req, res, next) {
     res.cookie("token", newAccessToken, {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
-      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+      sameSite: "none",
       maxAge: 15 * 60 * 1000,
     });
 
