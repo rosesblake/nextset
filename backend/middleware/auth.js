@@ -12,9 +12,6 @@ function authenticateJWT(req, res, next) {
   const token = req.cookies.token;
   const refreshToken = req.cookies.refreshToken; // Get refreshToken from cookies
 
-  console.log("Received token:", token); // Log token
-  console.log("Received refresh token:", refreshToken);
-
   if (token) {
     try {
       const user = jwt.verify(token, process.env.SECRET_KEY);

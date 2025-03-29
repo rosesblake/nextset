@@ -32,7 +32,7 @@ function GigDetails() {
   if (isLoading) {
     return <Spinner />;
   }
-  console.log(gigs[0]?.pitches?.date);
+
   return (
     <div className="flex flex-col items-center justify-center min-h-screen bg-gray-100 p-6">
       <div className="w-full max-w-5xl bg-white p-8 rounded-lg shadow-lg flex flex-col items-center">
