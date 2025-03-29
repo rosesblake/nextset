@@ -42,7 +42,7 @@ router.post(
       // tokens as cookies
       res.cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         sameSite: "None",
         path: "/",
         maxAge: 15 * 60 * 1000,
@@ -50,7 +50,7 @@ router.post(
 
       res.cookie("refreshToken", refreshToken, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: true,
         sameSite: "None",
         path: "/",
         maxAge: 7 * 24 * 60 * 60 * 1000,
@@ -108,7 +108,7 @@ router.patch("/update", hashPassword, async function (req, res, next) {
     //new cookie use replacement
     res.cookie("token", newToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "None",
       path: "/",
       maxAge: 15 * 60 * 1000,
@@ -116,7 +116,7 @@ router.patch("/update", hashPassword, async function (req, res, next) {
 
     res.cookie("refreshToken", refreshToken, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: true,
       sameSite: "None",
       path: "/",
       maxAge: 7 * 24 * 60 * 60 * 1000,
