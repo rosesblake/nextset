@@ -45,6 +45,7 @@ function authenticateJWT(req, res, next) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "None",
+      path: "/",
       maxAge: 15 * 60 * 1000,
     });
 
