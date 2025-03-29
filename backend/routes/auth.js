@@ -108,6 +108,8 @@ router.post(
         maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
       });
 
+      console.log("Set cookies:", req.cookies); // Logs cookies from request
+
       return res.status(200).json({
         user: {
           ...user,
