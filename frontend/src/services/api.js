@@ -2,6 +2,8 @@ import axios from "axios";
 
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
+axios.defaults.withCredentials = true; // Set globally
+
 class NextSetApi {
   // Create Axios instance with interceptors
   static axiosInstance = axios.create({
