@@ -26,7 +26,7 @@ function Register() {
         account_type: accountType,
       });
 
-      let { user, token } = userRes;
+      let { user } = userRes;
       let registrationSuccess = false;
 
       if (accountType === "artist") {
@@ -100,7 +100,6 @@ function Register() {
         return await NextSetApi.deleteUser(user.id);
       }
 
-      localStorage.setItem("token", token);
       setCurrUser(user);
       showMessage("Registration successful", "success");
       setErrorMessage([]);

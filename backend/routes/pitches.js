@@ -58,7 +58,7 @@ router.post(
           venue_id: req.body.venue_id,
           date: req.body.date,
           content: req.body.content,
-          support_acts: req.body.support_acts, // Ensure this is valid JSON
+          support_acts: req.body.support_acts,
           status: "pending",
           role: req.body.role,
         },

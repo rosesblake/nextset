@@ -10,6 +10,8 @@ const { userValidator } = require("../validators/userValidator");
 const { validate } = require("../middleware/validate");
 const { createToken } = require("../helpers/createTokens");
 const router = express.Router();
+const { ensureLoggedIn } = require("../middleware/auth");
+const { createRefreshToken } = require("../helpers/createRefreshToken");
 
 //basic user registration
 router.post(
@@ -35,9 +37,24 @@ router.post(
       delete user.password_hash;
       // Generate JWT for the newly created user
       const token = createToken(user);
-      // Return the token, and let frontend handle the redirect using the user.id from the token
+      const refreshToken = createRefreshToken(user);
+
+      // tokens as cookies
+      res.cookie("token", token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+        maxAge: 15 * 60 * 1000,
+      });
+
+      res.cookie("refreshToken", refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+        maxAge: 7 * 24 * 60 * 60 * 1000,
+      });
+
       return res.status(201).json({
-        token,
         user,
       });
     } catch (e) {
@@ -48,7 +65,7 @@ router.post(
 
 router.patch("/update", hashPassword, async function (req, res, next) {
   try {
-    const { currUserEmail, data, password_hash } = req.body;
+    const { currUserEmail, data } = req.body;
 
     const user = await prisma.users.findFirst({
       where: { email: currUserEmail },
@@ -67,6 +84,10 @@ router.patch("/update", hashPassword, async function (req, res, next) {
         return next(new UnauthorizedError("Invalid Password Provided"));
       }
     }
+
+    //pull password_hash from body after hashpassword runs
+    const password_hash = req.body.password_hash;
+
     //update user
     const updatedUser = await prisma.users.update({
       where: { email: currUserEmail },
@@ -77,23 +98,59 @@ router.patch("/update", hashPassword, async function (req, res, next) {
     });
 
     delete updatedUser.password_hash;
+
     // find connected artist details
     const newToken = createToken(updatedUser);
+    const refreshToken = createRefreshToken(updatedUser);
 
-    return res.status(200).json({ updatedUser, token: newToken });
+    //new cookie use replacement
+    res.cookie("token", newToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.cookie("refreshToken", refreshToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+
+    return res.status(200).json({ updatedUser });
   } catch (e) {
     return next(e);
   }
 });
 
-router.delete("/delete/:id", async function (req, res, next) {
+//updated delete with more validation.
+router.delete("/delete/:id", ensureLoggedIn, async function (req, res, next) {
   try {
+    const userId = parseInt(req.params.id);
+
+    // Validate ID
+    if (isNaN(userId)) {
+      return res.status(400).json({ error: "Invalid user ID" });
+    }
+
+    // Ensure the logged-in user matches the user being deleted
+    if (res.locals.user.id !== userId && !res.locals.user.admin) {
+      return res
+        .status(403)
+        .json({ error: "Unauthorized to delete this user" });
+    }
+
+    // Delete related artists first
     const artists = await prisma.artists.deleteMany({
-      where: { created_by: parseInt(req.params.id) },
+      where: { created_by: userId },
     });
+
+    // Delete the user
     const user = await prisma.users.delete({
-      where: { id: parseInt(req.params.id) },
+      where: { id: userId },
     });
+
     return res.status(200).json({ user, artists });
   } catch (e) {
     if (e.code === "P2025") {

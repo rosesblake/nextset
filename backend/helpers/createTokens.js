@@ -1,7 +1,6 @@
 const jwt = require("jsonwebtoken");
 
 function createToken(user) {
-  // You can choose what to store in the payload (e.g., user id, username, etc.)
   const payload = {
     id: user.id,
     email: user.email,
@@ -10,8 +9,7 @@ function createToken(user) {
     role: user.role,
   };
 
-  // Secret key should be stored in an environment variable
-  const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "12h" });
+  const token = jwt.sign(payload, process.env.SECRET_KEY, { expiresIn: "15m" });
 
   return token;
 }

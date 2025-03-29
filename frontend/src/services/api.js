@@ -3,48 +3,38 @@ import axios from "axios";
 const BASE_URL = process.env.REACT_APP_BASE_URL || "http://localhost:3001";
 
 class NextSetApi {
-  static token;
-
   // Create Axios instance with interceptors
   static axiosInstance = axios.create({
     baseURL: BASE_URL,
     headers: {
       "Content-Type": "application/json",
     },
+    withCredentials: true, //send cookies
   });
 
-  // Set up interceptors
   static initializeInterceptors(logout) {
-    // Attach token to every request
-    this.axiosInstance.interceptors.request.use(
-      (config) => {
-        const token = NextSetApi.token || localStorage.getItem("token");
-        if (token) {
-          config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-      },
-      (error) => Promise.reject(error)
-    );
-
-    // Handle token expiration
     this.axiosInstance.interceptors.response.use(
       (response) => response,
-      (error) => {
-        if (error.response?.status === 401) {
-          const errorMessage = error.response?.data?.error?.message;
-          if (
-            errorMessage === "Token has expired" ||
-            errorMessage === "Invalid or missing token"
-          ) {
-            console.warn("Token expired, logging out.");
-            try {
-              logout();
-            } catch (logoutError) {
-              console.error("Error during logout:", logoutError);
-            }
+      async (error) => {
+        const originalRequest = error.config;
+
+        // Let backend handle token refreshing automatically
+        if (
+          error.response?.status === 401 &&
+          !originalRequest._retry &&
+          (error.response?.data?.error?.message === "Token has expired" ||
+            error.response?.data?.error?.message === "Invalid or missing token")
+        ) {
+          originalRequest._retry = true;
+
+          // Just retry the original request
+          try {
+            return this.axiosInstance(originalRequest);
+          } catch (err) {
+            logout?.();
           }
         }
+
         return Promise.reject(error);
       }
     );
@@ -102,7 +92,6 @@ class NextSetApi {
 
   static async registerUser(user) {
     let res = await this.request(`users/register`, user, "post");
-    NextSetApi.token = res.token;
     return res;
   }
 
@@ -192,7 +181,6 @@ class NextSetApi {
 
   static async loginUser(user) {
     let res = await this.request(`auth/login`, user, "post");
-    NextSetApi.token = res.token;
     return res;
   }
 

@@ -1,9 +1,9 @@
 "use strict";
 
 const express = require("express");
-const session = require("express-session");
 const cors = require("cors");
 const path = require("path");
+const cookieParser = require("cookie-parser"); // added
 
 const { NotFoundError, BadRequestError } = require("./expressError");
 
@@ -19,18 +19,28 @@ const morgan = require("morgan");
 
 const app = express();
 
-app.use(cors());
-app.use(express.json());
-app.use(morgan("tiny"));
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://nextset-demo.onrender.com",
+];
 
 app.use(
-  session({
-    secret: process.env.SECRET_KEY,
-    resave: false,
-    saveUninitialized: true,
-    cookie: { secure: false },
+  cors({
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
+    credentials: true,
   })
 );
+
+//allow cookies
+app.use(express.json());
+app.use(cookieParser()); //added
+app.use(morgan("tiny"));
 
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
@@ -42,6 +52,14 @@ app.use("/venues", venuesRoutes);
 app.use("/pitches", pitchesRoutes);
 app.use("/spotify", spotifyRoutes);
 app.use("/locations", locationsRoutes);
+
+app.use((req, res, next) => {
+  res.setHeader(
+    "Content-Security-Policy",
+    "default-src 'self'; script-src 'self'; object-src 'none';"
+  );
+  next();
+});
 
 //handle 404 errors
 app.use(function (req, res, next) {

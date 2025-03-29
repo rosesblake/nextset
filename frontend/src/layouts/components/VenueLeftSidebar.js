@@ -42,6 +42,7 @@ function VenueLeftSidebar({ isCollapsed, toggleSidebars }) {
       }, 500);
     }
   };
+  console.log("currUser in VenueLeftSidebar", currUser);
 
   return (
     <div

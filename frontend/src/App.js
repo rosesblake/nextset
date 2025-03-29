@@ -110,6 +110,8 @@ function App() {
                 <VenueLayout
                   isCollapsed={isCollapsed}
                   toggleSidebars={toggleSidebars}
+                  setIsMobile={setIsMobile}
+                  isMobile={isMobile}
                 />
               </ProtectedRoute>
             }

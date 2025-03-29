@@ -61,8 +61,6 @@ function SettingsPage() {
         } else {
           setCurrUser({ ...currUser, ...res.updatedUser });
         }
-        //update JWT
-        localStorage.setItem("token", res.token);
         showMessage("Profile updated successfully", "success");
       } else {
         showMessage("No changes detected", "info");

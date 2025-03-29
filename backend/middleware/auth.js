@@ -1,38 +1,58 @@
-"use strict";
-
-/** Convenience middleware to handle common auth cases in routes. */
+("use strict");
 
 const jwt = require("jsonwebtoken");
-const { SECRET_KEY } = require("../config");
 const { UnauthorizedError } = require("../expressError");
 
-/** Middleware: Authenticate user.
+/** Middleware: Authenticate user via cookie-based JWT.
  *
- * If a token was provided, verify it, and, if valid, store the token payload
- * on res.locals (this will include the username and isAdmin field.)
- *
- * It's not an error if no token was provided or if the token is not valid.
+ * If a token cookie is provided, verify it, and, if valid,
+ * store the token payload on res.locals.user.
  */
-
 function authenticateJWT(req, res, next) {
-  const authHeader = req.headers && req.headers.authorization;
+  const token = req.cookies.token;
 
-  if (!authHeader) {
+  //Try verifying the access token
+  if (token) {
+    try {
+      const user = jwt.verify(token, process.env.SECRET_KEY);
+      res.locals.user = user;
+      return next();
+    } catch (err) {
+      if (err.name !== "TokenExpiredError") {
+        return next(new UnauthorizedError("Invalid token"));
+      }
+    }
+  }
+
+  //Try refreshing using the refresh token
+  const refreshToken = req.cookies.refreshToken;
+
+  if (!refreshToken) {
     return next(new UnauthorizedError("Authorization token is missing"));
   }
 
-  const token = authHeader.replace(/^[Bb]earer /, "").trim();
-
   try {
-    // Verify the token using the secret key
-    const user = jwt.verify(token, SECRET_KEY);
-    res.locals.user = user;
-    next();
+    const payload = jwt.verify(refreshToken, process.env.REFRESH_SECRET_KEY);
+
+    const { id, email, full_name, account_type, role } = payload;
+    const newAccessToken = jwt.sign(
+      { id, email, full_name, account_type, role },
+      process.env.SECRET_KEY,
+      { expiresIn: "15m" }
+    );
+
+    res.cookie("token", newAccessToken, {
+      httpOnly: true,
+      secure: process.env.NODE_ENV === "production",
+      sameSite: process.env.NODE_ENV === "production" ? "Strict" : "Lax",
+      maxAge: 15 * 60 * 1000,
+    });
+
+    res.locals.user = { id, email, full_name, account_type, role };
+    return next();
   } catch (err) {
-    if (err.name === "TokenExpiredError") {
-      return next(new UnauthorizedError("Token has expired"));
-    }
-    return next(new UnauthorizedError("Invalid or missing token"));
+    console.error("Refresh token verification failed:", err.message);
+    return next(new UnauthorizedError("Invalid refresh token"));
   }
 }
 

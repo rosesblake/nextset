@@ -18,9 +18,10 @@ function Login() {
       if (!res) {
         return showMessage("Invalid User/Password");
       }
-      const { token, user: loggedInUser } = res;
-      // Save the token in localStorage
-      localStorage.setItem("token", token);
+
+      const { user: loggedInUser } = res;
+
+      // Track just logged in for display on login
       localStorage.setItem("justLoggedIn", "true");
       // Set the logged-in user in context
       setCurrUser(loggedInUser);

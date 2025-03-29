@@ -4,59 +4,46 @@ import { useNavigate } from "react-router-dom";
 
 const UserContext = createContext();
 
-export const useUser = () => {
-  return useContext(UserContext);
-};
+export const useUser = () => useContext(UserContext);
 
 export const UserProvider = ({ children }) => {
-  const [currUser, setCurrUser] = useState(null); // General user data
-  const [artistData, setArtistData] = useState(null); // Artist-specific data
-  const [venueData, setVenueData] = useState(null); // Venue-specific data
+  const [currUser, setCurrUser] = useState(null);
+  const [artistData, setArtistData] = useState(null);
+  const [venueData, setVenueData] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
 
+  // Fetch user from backend (based on cookies)
   useEffect(() => {
-    const user = JSON.parse(localStorage.getItem("user"));
-    const artist = JSON.parse(localStorage.getItem("artist"));
-    const venue = JSON.parse(localStorage.getItem("venue"));
-    const token = localStorage.getItem("token");
+    async function loadUser() {
+      try {
+        const res = await NextSetApi.request("auth/me");
 
-    if (token) {
-      NextSetApi.token = token;
+        const user = res.user;
+
+        setCurrUser(user);
+        if (user.account_type === "artist" && user.artist) {
+          setArtistData(user.artist);
+        } else if (user.account_type === "venue" && user.venue) {
+          setVenueData(user.venue);
+        }
+      } catch (err) {
+        console.warn("Failed to load user from cookies", err.message);
+        setCurrUser(null);
+      } finally {
+        setIsLoading(false);
+      }
     }
 
-    if (!user) {
-      setIsLoading(false);
-      return;
-    }
-
-    setCurrUser(user);
-    //set the artist or venue data to separate context
-    if (user.account_type === "artist" && artist) {
-      setArtistData(artist);
-    } else if (user.account_type === "venue" && venue) {
-      setVenueData(venue);
-    }
-
-    setIsLoading(false);
+    loadUser();
   }, []);
 
-  useEffect(() => {
-    if (currUser) {
-      localStorage.setItem("user", JSON.stringify(currUser));
-    } else {
-      localStorage.removeItem("user");
-      setArtistData(null);
-      setVenueData(null);
+  const logout = async () => {
+    try {
+      await NextSetApi.request("auth/logout", {}, "post"); // backend clears cookies
+    } catch (err) {
+      console.warn("Logout failed", err.message);
     }
-  }, [currUser]);
-
-  const logout = () => {
-    NextSetApi.token = null;
-    localStorage.removeItem("token");
-    localStorage.removeItem("user");
-    localStorage.removeItem("artist");
-    localStorage.removeItem("venue");
     setCurrUser(null);
     setArtistData(null);
     setVenueData(null);
