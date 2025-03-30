@@ -7,6 +7,7 @@ import { ArtistForm } from "../components/ArtistForm";
 import { VenueForm } from "../components/VenueForm";
 import { useMessage } from "../../../contexts/MessageContext";
 import { MapLoader } from "../../google/MapLoader";
+import { TemporaryWarning } from "../components/TemporaryWarning";
 
 function Register() {
   const { accountType } = useParams();
@@ -113,6 +114,7 @@ function Register() {
   return (
     <div className="mt-[64px] flex items-center justify-center min-h-screen bg-gray-100">
       <div className="w-full max-w-sm">
+        <TemporaryWarning />
         <ErrorDisplay errors={errorMessage} />
         {accountType === "artist" && (
           <MapLoader>

@@ -114,11 +114,10 @@ router.get(
             },
           },
         },
-        orderBy: {
-          pitches: {
-            date: "asc",
-          },
-        },
+      });
+
+      artistPitches.sort((a, b) => {
+        return new Date(a.pitches.date) - new Date(b.pitches.date);
       });
 
       return res.status(200).json(artistPitches);
