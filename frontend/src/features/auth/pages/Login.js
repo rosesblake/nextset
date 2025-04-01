@@ -21,6 +21,7 @@ function Login() {
 
       const { user: loggedInUser } = res;
 
+      localStorage.setItem("isLoggedIn", "true");
       // Track just logged in for display on login
       localStorage.setItem("justLoggedIn", "true");
       // Set the logged-in user in context

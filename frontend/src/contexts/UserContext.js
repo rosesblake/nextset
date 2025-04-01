@@ -16,6 +16,11 @@ export const UserProvider = ({ children }) => {
   // Fetch user from backend (based on cookies)
   useEffect(() => {
     async function loadUser() {
+      //dont execute currUser check/set unless there is someone logged in
+      if (localStorage.getItem("isLoggedIn") !== "true") {
+        setIsLoading(false);
+        return;
+      }
       try {
         const res = await NextSetApi.request("auth/me");
 
@@ -47,6 +52,7 @@ export const UserProvider = ({ children }) => {
     setCurrUser(null);
     setArtistData(null);
     setVenueData(null);
+    localStorage.setItem("isLoggedIn", "false");
     navigate("/login");
   };
 

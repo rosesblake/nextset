@@ -102,6 +102,7 @@ function Register() {
       }
 
       setCurrUser(user);
+      localStorage.setItem("isLoggedIn", "true");
       showMessage("Registration successful", "success");
       setErrorMessage([]);
     } catch (e) {
