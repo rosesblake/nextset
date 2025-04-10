@@ -7,7 +7,8 @@ function ArtistPitchPreview({
   closeModal,
   handleSubmit,
   formData,
-  date,
+  startDate,
+  endDate,
   openModal,
   onSubmit,
   venue,
@@ -16,7 +17,8 @@ function ArtistPitchPreview({
 
   const pitch = {
     content: formData.content,
-    date: date,
+    start_date: startDate,
+    end_date: endDate,
     id: currUser.artist.id,
     support_acts: formData.support_acts,
     artist_pitches: [{ artists: currUser.artist }],

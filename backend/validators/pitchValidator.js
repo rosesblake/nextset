@@ -26,12 +26,19 @@ const pitchValidator = [
     .isURL()
     .withMessage("Each support act must have a valid Spotify URL"),
 
-  // Date: Must be a valid ISO 8601 date and not empty
-  body("date")
+  // Start Date: Required, must be ISO 8601
+  body("start_date")
     .isISO8601()
-    .withMessage("Date must be a valid ISO 8601 date")
+    .withMessage("Start date must be a valid ISO 8601 date")
     .notEmpty()
-    .withMessage("Date is required"),
+    .withMessage("Start date is required"),
+
+  // End Date: Required, must be ISO 8601
+  body("end_date")
+    .isISO8601()
+    .withMessage("End date must be a valid ISO 8601 date")
+    .notEmpty()
+    .withMessage("End date is required"),
 
   // Content: Must be a non-empty string
   body("content")

@@ -17,26 +17,10 @@ router.post(
   ensureLoggedIn,
   async (req, res, next) => {
     try {
-      // Ensure the date is available
-      const venue = await prisma.venues.findUnique({
-        where: { id: req.body.venue_id },
-        select: { blocked_dates: true },
-      });
-      if (
-        venue.blocked_dates?.some(
-          (blocked) =>
-            new Date(blocked.blocked_date).toISOString().split("T")[0] ===
-            new Date(req.body.date).toISOString().split("T")[0]
-        )
-      ) {
-        throw new BadRequestError("Date unavailable for this venue.");
-      }
-
       // Duplicate check
       const duplicate = await prisma.pitches.findFirst({
         where: {
           venue_id: req.body.venue_id,
-          date: req.body.date,
           status: { in: ["pending", "accepted"] }, // Only check for pending or accepted pitches
           artist_pitches: {
             some: {
@@ -56,7 +40,8 @@ router.post(
       const pitch = await prisma.pitches.create({
         data: {
           venue_id: req.body.venue_id,
-          date: req.body.date,
+          start_date: req.body.start_date,
+          end_date: req.body.end_date,
           content: req.body.content,
           support_acts: req.body.support_acts,
           status: "pending",
@@ -135,6 +120,7 @@ router.patch(
     try {
       const pitch_id = parseInt(req.params.id, 10);
       const { status, venue_id, date } = req.body;
+      console.log(date);
 
       // Validate status
       if (!["accepted", "declined", "removed", "canceled"].includes(status)) {
@@ -144,7 +130,7 @@ router.patch(
       // Handle Declined, Removed, or Canceled Statuses
       const updatedPitch = await prisma.pitches.update({
         where: { id: pitch_id },
-        data: { status },
+        data: { status, date: new Date(date) },
       });
 
       // Remove the blocked date if canceled
@@ -188,7 +174,13 @@ router.patch(
       // Update the pitch status
       const updatedPitch = await prisma.pitches.update({
         where: { id: pitch_id },
-        data: { status },
+        data: {
+          status,
+          w9: data.w9,
+          rider: data.rider,
+          epk: data.epk,
+          stage_plot: data.stage_plot,
+        },
       });
 
       // Block the date only if the status indicates confirmation

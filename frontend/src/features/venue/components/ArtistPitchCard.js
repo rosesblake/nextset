@@ -32,9 +32,9 @@ function ArtistPitchCard({
       <>
         <button
           onClick={() => openDocsModal(pitch, "accepted")}
-          className="px-6 py-2 bg-green-500 text-white font-semibold rounded-md hover:bg-green-600 transition"
+          className="px-6 py-2 bg-nextsetAccent text-white font-semibold rounded-md hover:bg-nextsetButton transition"
         >
-          Accept
+          Select Date
         </button>
         <button
           onClick={() => handlePitchStatus(pitch.id, { status: "declined" })}
@@ -54,7 +54,11 @@ function ArtistPitchCard({
             {pitch.content}
           </h3>
           <div className="inline-block bg-nextsetAccent text-white text-sm font-semibold px-4 py-1 rounded-full mt-2">
-            {formatDate(pitch.date)}
+            {pitch.date
+              ? formatDate(pitch.date)
+              : `${formatDate(pitch.start_date)} – ${formatDate(
+                  pitch.end_date
+                )}`}
           </div>
           {pitch.support_acts?.length ? (
             <div className="mt-4">
@@ -100,10 +104,20 @@ function ArtistPitchCard({
             {artist.hometown_state || "Unknown"}
           </p>
           {artist.website && (
-            <a href={artist.website} className="text-nextsetAccent text-xs">
+            <a
+              href={
+                artist.website.startsWith("http")
+                  ? artist.website
+                  : `https://${artist.website}`
+              }
+              className="text-nextsetAccent text-xs break-all"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
               {artist.website}
             </a>
           )}
+
           <p className="text-gray-600 mt-2 px-4 leading-relaxed">
             {artist.bio || "No bio available"}
           </p>

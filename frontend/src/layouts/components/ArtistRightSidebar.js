@@ -153,7 +153,10 @@ function ArtistRightSidebar({ isCollapsed, toggleSidebars }) {
                         {pitch.pitches.venues?.state || "Unknown State"}
                       </p>
                       <p className="text-xs text-gray-300">
-                        {formatDate(pitch.pitches.date)}
+                        {`${formatDate(
+                          pitch.pitches.start_date,
+                          true
+                        )} - ${formatDate(pitch.pitches.end_date, true)}`}
                       </p>
                       <p className="text-sm text-yellow-400">
                         Status: {pitch.pitches.status}

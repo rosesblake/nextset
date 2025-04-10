@@ -1,4 +1,5 @@
 import React from "react";
+import { ImageIcon } from "lucide-react";
 
 function ArtistDocuments({ booking, pdfThumbnails }) {
   const files = ["rider", "epk", "stage_plot", "w9"];
@@ -18,14 +19,16 @@ function ArtistDocuments({ booking, pdfThumbnails }) {
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 bg-gray-50 hover:bg-gray-100 p-3 rounded-lg shadow transition"
               >
-                <img
-                  src={
-                    pdfThumbnails[booking.id]?.[fileType] ||
-                    "/images/doc_icon.svg"
-                  }
-                  alt={fileType.toUpperCase()}
-                  className="w-6 h-6 "
-                />
+                {pdfThumbnails[booking.id]?.[fileType] ? (
+                  <img
+                    src={pdfThumbnails[booking.id][fileType]}
+                    alt={fileType.toUpperCase()}
+                    className="w-6 h-6"
+                  />
+                ) : (
+                  <ImageIcon className="w-6 h-6 text-gray-300" />
+                )}
+
                 <span className="text-nextsetAccent font-semibold">
                   {fileType.replace("_", " ").toUpperCase()}
                 </span>

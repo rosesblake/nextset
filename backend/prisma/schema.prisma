@@ -110,7 +110,9 @@ model pitches {
   avg_ticket_sales    Int?
   content             String
   status              String               @db.VarChar(15)
-  date                DateTime             @db.Date
+  date                DateTime?            @db.Date
+  start_date          DateTime             @db.Date
+  end_date            DateTime             @db.Date
   role                String
   epk                 String?              @db.VarChar(255)
   rider               String?              @db.VarChar(255)

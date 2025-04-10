@@ -1,6 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 import { useForm } from "../../hooks/useForm";
-import DatePicker from "react-date-picker";
+import { DayPicker } from "react-day-picker";
+import "react-day-picker/dist/style.css";
+import { isSameDay } from "date-fns";
 import { SpotifyDropdown } from "../auth/components/SpotifyDropdown";
 import { NextSetApi } from "../../services/api";
 import { ArtistPitchPreview } from "./ArtistPitchPreview";
@@ -11,14 +13,46 @@ import { useHandleSubmitPitch } from "../../hooks/useHandleSubmitPitch";
 import { useModal } from "../../contexts/ModalContext";
 import { useMessage } from "../../contexts/MessageContext";
 
+// Helpers
+function formatDateRangeLabel(range) {
+  if (!range?.from) return "Select a date range";
+  const fromDate = range.from.toLocaleDateString();
+  const toDate =
+    range.to && !isSameDay(range.from, range.to)
+      ? range.to.toLocaleDateString()
+      : null;
+  return toDate ? `${fromDate} – ${toDate}` : fromDate;
+}
+
+function isDateBlocked(date, blockedDates) {
+  return blockedDates?.some((blocked) => isSameDay(date, new Date(blocked)));
+}
+
+function handleRangeSelect(selectedRange, setRange) {
+  if (!selectedRange) {
+    setRange({ from: undefined, to: undefined });
+  } else if (selectedRange.from && !selectedRange.to) {
+    setRange({ from: selectedRange.from, to: selectedRange.from });
+  } else {
+    setRange(selectedRange);
+  }
+}
+
 function PitchModal({ venue }) {
   const { currUser } = useUser();
   const { openModal, closeModal } = useModal();
   const { showMessage } = useMessage();
+  const navigate = useNavigate();
 
   const artist = currUser.artist;
-
   const onSubmit = useHandleSubmitPitch();
+
+  const [range, setRange] = useState({ from: undefined, to: undefined });
+  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
+  const [searchInput, setSearchInput] = useState("");
+  const [spotifyResults, setSpotifyResults] = useState([]);
+
+  const requiredProfileFields = useMemo(() => ["bio", "genre", "name"], []);
 
   const initialState = {
     content: "",
@@ -31,8 +65,9 @@ function PitchModal({ venue }) {
     (data) => {
       const pitchData = {
         venue_id: venue.id,
-        date,
         artist_id: artist.id,
+        start_date: range?.from ?? null,
+        end_date: range?.to ?? range?.from ?? null,
         ...data,
         support_acts: formData.support_acts.map((act) => ({
           name: act.name,
@@ -43,15 +78,6 @@ function PitchModal({ venue }) {
       onSubmit(pitchData);
     }
   );
-
-  const [date, setDate] = useState(null);
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
-  const [spotifyResults, setSpotifyResults] = useState([]);
-
-  const navigate = useNavigate();
-
-  const requiredProfileFields = useMemo(() => ["bio", "genre", "name"], []);
 
   useEffect(() => {
     const missing = requiredProfileFields.filter((key) => !artist[key]);
@@ -74,21 +100,13 @@ function PitchModal({ venue }) {
     showMessage,
   ]);
 
-  const handleDateChange = (newDate) => {
-    setDate(newDate);
-    setIsDatePickerOpen(false); // Close the DatePicker when a date is selected
-  };
-
   const handleDatePickerToggle = () => {
     setIsDatePickerOpen((prev) => !prev);
   };
 
   const handleSearch = async (value) => {
-    setSearchInput(value); // Update input state
-    if (!value) {
-      setSpotifyResults([]); // Clear results if input is empty
-      return;
-    }
+    setSearchInput(value);
+    if (!value) return setSpotifyResults([]);
     try {
       const res = await NextSetApi.searchSpotifyArtist(value);
       setSpotifyResults(res.artists || []);
@@ -130,13 +148,12 @@ function PitchModal({ venue }) {
 
   const handlePitchPreviewModal = (e) => {
     e.preventDefault();
-    if (!formData.content || !date) {
+    if (!formData.content || !range.from) {
       return showMessage("Please fill out all required fields", "error");
     }
     if (formData.content.length > 20) {
       return showMessage("Description must be 20 characters or less.", "error");
     }
-
     closeModal();
     openModal(
       <ArtistPitchPreview
@@ -144,7 +161,8 @@ function PitchModal({ venue }) {
         openModal={openModal}
         handleSubmit={handleSubmit}
         formData={formData}
-        date={date}
+        startDate={range.from}
+        endDate={range.to}
         onSubmit={onSubmit}
         venue={venue}
       />
@@ -160,7 +178,8 @@ function PitchModal({ venue }) {
     <div className="w-[400px] min-w-[400px] max-w-lg max-h-[75vh] overflow-y-auto">
       <h2 className="text-xl font-bold text-nextsetAccent">Pitch to Venue</h2>
       <p className="text-gray-700 mb-4">{`${venue.name} - ${venue.city}, ${venue.state}`}</p>
-      {/* Role */}
+
+      {/* Role Toggle */}
       <div className="mb-4">
         <label className="block text-nextsetPrimary font-semibold mb-2">
           Role
@@ -174,37 +193,36 @@ function PitchModal({ venue }) {
               checked={formData.role === "Support"}
               onChange={toggleRole}
             />
-            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:bg-nextsetAccent peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all"></div>
+            <div className="w-11 h-6 bg-gray-200 peer-focus:outline-none rounded-full peer dark:bg-gray-700 peer-checked:bg-nextsetAccent peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all" />
           </label>
           <span className="ml-2">Support</span>
         </div>
       </div>
+
       <form onSubmit={handlePitchPreviewModal}>
-        {/* Date Picker */}
+        {/* Date Range Picker */}
         <div className="mb-4">
           <label className="block text-nextsetPrimary font-semibold mb-2">
-            Select a Date
+            Select a Date Range
           </label>
           <button
             type="button"
             className="w-full border rounded-md p-2 text-left bg-gray-100"
             onClick={handleDatePickerToggle}
           >
-            {date ? new Date(date).toLocaleDateString() : "Select a date"}
+            {formatDateRangeLabel(range)}
           </button>
+
           {isDatePickerOpen && (
-            <DatePicker
-              value={date}
-              onChange={handleDateChange}
-              minDate={new Date()}
-              tileDisabled={({ date }) =>
-                venue.blocked_dates?.some(
-                  (blockedDate) =>
-                    new Date(blockedDate).toDateString() === date.toDateString()
-                )
-              }
-              className="mt-2 w-full border rounded-md"
-            />
+            <div className="mt-2 border rounded-md bg-white z-10">
+              <DayPicker
+                mode="range"
+                selected={range}
+                onSelect={(r) => handleRangeSelect(r, setRange)}
+                disabled={(date) => isDateBlocked(date, venue.blocked_dates)}
+                className="p-4"
+              />
+            </div>
           )}
         </div>
 
@@ -219,9 +237,9 @@ function PitchModal({ venue }) {
           onChange={handleChange}
           placeholder="Describe your event..."
           className="w-full border rounded-md p-2 mb-4"
-        ></input>
+        />
 
-        {/* Support Acts Search */}
+        {/* Support Acts */}
         <div className="mb-4">
           <label className="block text-nextsetPrimary font-semibold mb-2">
             Add Support Acts
@@ -233,7 +251,6 @@ function PitchModal({ venue }) {
             value={searchInput}
             onChange={(e) => handleSearch(e.target.value)}
           />
-
           <SpotifyDropdown
             results={spotifyResults}
             onSelect={(artist) => {
@@ -274,6 +291,7 @@ function PitchModal({ venue }) {
           </ul>
         </div>
 
+        {/* Footer Buttons */}
         <div className="mt-6 flex justify-end space-x-4">
           <button
             type="button"

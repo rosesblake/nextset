@@ -5,6 +5,7 @@ import { useUser } from "../../contexts/UserContext";
 import { useModal } from "../../contexts/ModalContext";
 import { PitchConfirmationModal } from "../../features/pitch/PitchConfirmationModal";
 import { NextSetApi } from "../../services/api";
+import { formatDate } from "../../utils/formatDate";
 
 function ArtistMobileRightSidebar() {
   const [isOpen, setIsOpen] = useState(false);
@@ -140,7 +141,10 @@ function ArtistMobileRightSidebar() {
                   {pitch.pitches.venues?.state || "Unknown State"}
                 </p>
                 <p className="text-xs text-gray-300">
-                  {new Date(pitch.pitches.date).toLocaleDateString("en-US")}
+                  {`${formatDate(
+                    pitch.pitches.start_date,
+                    true
+                  )} - ${formatDate(pitch.pitches.end_date, true)}`}
                 </p>
                 <p className="text-sm text-yellow-400">
                   Status: {pitch.pitches.status}

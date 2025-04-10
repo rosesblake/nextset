@@ -3,7 +3,7 @@ import { useUser } from "../../../contexts/UserContext";
 import { NextSetApi } from "../../../services/api";
 import { ArtistPitchCard } from "../components/ArtistPitchCard";
 import { useModal } from "../../../contexts/ModalContext";
-import { RequiredDocs } from "../components/RequiredDocs";
+import { VenueDateSelector } from "../components/VenueDateSelector";
 import { useLoading } from "../../../contexts/LoadingContext";
 import { Spinner } from "../../../shared/components/Spinner";
 import { useMessage } from "../../../contexts/MessageContext";
@@ -74,7 +74,7 @@ function VenueDashboard() {
 
   const openDocsModal = (pitch, status) => {
     openModal(
-      <RequiredDocs
+      <VenueDateSelector
         pitch={pitch}
         status={status}
         handlePitchStatus={handlePitchStatus}
