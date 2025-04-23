@@ -114,7 +114,7 @@ function Register() {
 
   return (
     <div className="mt-[64px] flex items-center justify-center min-h-screen bg-gray-100">
-      <div className="w-full max-w-sm">
+      <div className="w-full max-w-sm py-10">
         <TemporaryWarning />
         <ErrorDisplay errors={errorMessage} />
         {accountType === "artist" && (
