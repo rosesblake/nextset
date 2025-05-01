@@ -1,7 +1,5 @@
 # nextset
 
-Deployed at https://nextset-demo.render.com
-
 ## Description
 
 Tour Support is a web and mobile application designed to simplify the booking process for smaller artists and music venues. The app allows artists to pitch their profiles directly to venues and receive responses (yes/no). Artists can view venue availability through integrated calendars, while venues can access detailed artist profiles, including Spotify monthly listeners, social media statistics, genre, and hometown. The goal is to create an efficient, user-friendly platform that bridges the gap between artists and venues, streamlining the booking process for live performances.
