@@ -48,6 +48,13 @@ app.use("/pitches", pitchesRoutes);
 app.use("/spotify", spotifyRoutes);
 app.use("/locations", locationsRoutes);
 
+// Serve React frontend (after all API routes)
+app.use(express.static(path.join(__dirname, "../frontend/build")));
+
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
+});
+
 app.use((req, res, next) => {
   res.setHeader(
     "Content-Security-Policy",
