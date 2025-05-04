@@ -240,7 +240,7 @@ function PitchModal({ venue }) {
         />
 
         {/* Support Acts */}
-        <div className="mb-4">
+        <div className="mb-4 relative z-20">
           <label className="block text-nextsetPrimary font-semibold mb-2">
             Add Support Acts
           </label>

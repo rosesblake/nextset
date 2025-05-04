@@ -23,6 +23,7 @@ const allowedOrigins = [
   "http://localhost:3000",
   "https://nextset-demo.onrender.com",
   "https://nextset.onrender.com",
+  "https://nextset-u3js.onrender.com",
 ];
 
 app.use(
