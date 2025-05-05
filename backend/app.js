@@ -24,6 +24,7 @@ const allowedOrigins = [
   "https://nextset-demo.onrender.com",
   "https://nextset.onrender.com",
   "https://nextset-u3js.onrender.com",
+  "https://next-set.com",
 ];
 
 app.use(
