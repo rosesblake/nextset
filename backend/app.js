@@ -25,6 +25,7 @@ const allowedOrigins = [
   "https://nextset.onrender.com",
   "https://nextset-u3js.onrender.com",
   "https://next-set.com",
+  "https://www.next-set.com",
 ];
 
 app.use(
