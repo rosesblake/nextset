@@ -123,10 +123,20 @@ router.post(
   }
 );
 
-//added logout route to clear cookies
 router.post("/logout", function (req, res) {
-  res.clearCookie("token");
-  res.clearCookie("refreshToken");
+  res.clearCookie("token", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    path: "/",
+  });
+  res.clearCookie("refreshToken", {
+    httpOnly: true,
+    secure: true,
+    sameSite: "None",
+    path: "/",
+  });
+
   return res.status(200).json({ message: "Logged out" });
 });
 

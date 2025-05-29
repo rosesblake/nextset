@@ -58,14 +58,6 @@ app.get("*", (req, res) => {
   res.sendFile(path.join(__dirname, "../frontend/build/index.html"));
 });
 
-app.use((req, res, next) => {
-  res.setHeader(
-    "Content-Security-Policy",
-    "default-src 'self'; script-src 'self'; object-src 'none';"
-  );
-  next();
-});
-
 //handle 404 errors
 app.use(function (req, res, next) {
   return next(new NotFoundError());

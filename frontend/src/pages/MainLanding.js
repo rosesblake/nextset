@@ -1,77 +1,82 @@
-import React from "react";
-import { Link } from "react-router-dom";
-import { Spinner } from "../shared/components/Spinner";
-import { useLoading } from "../contexts/LoadingContext";
+import Link from "next/link";
 
-function MainLanding() {
-  const { isLoading } = useLoading();
-
-  if (isLoading) {
-    return <Spinner />;
-  }
-
+export default function MainLanding() {
   return (
-    <div className="min-h-screen bg-gradient-to-r from-gray-100 via-gray-200 to-gray-300 flex flex-col justify-center items-center py-20 px-10 mt-10">
-      {/* Header Section */}
-      <h1 className="text-5xl font-extrabold text-nextsetAccent mb-8 tracking-wide">
-        Welcome to NextSet!
+    <main className="min-h-screen bg-gradient-to-br from-white via-slate-100 to-slate-200 flex flex-col items-center justify-center px-6 py-20">
+      {/* Header */}
+      <h1 className="text-5xl font-bold text-nextsetAccent tracking-tight mb-6 text-center">
+        Join the NextSet Movement
       </h1>
-      <p className="text-lg text-gray-700 mb-12 text-center px-4 max-w-2xl leading-relaxed">
-        Are you an{" "}
-        <span className="font-semibold text-nextsetAccent">Artist</span> looking
-        to showcase your talent or a{" "}
-        <span className="font-semibold text-nextsetAccent">Venue</span> owner
-        looking to host events? Choose your path below to get started and become
-        part of the NextSet community.
+      <p className="text-lg text-gray-700 text-center max-w-xl mb-12">
+        Whether you’re an{" "}
+        <span className="font-semibold text-nextsetAccent">Artist</span> ready
+        to perform or a{" "}
+        <span className="font-semibold text-nextsetAccent">Venue</span> eager to
+        host, we make collaboration easy.
       </p>
 
-      {/* Action Modules */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-5xl px-4">
-        {/* Artist Module */}
-        <Link to="/register/artist" className="group">
-          <div className="bg-white shadow-lg rounded-xl p-8 hover:shadow-2xl transform hover:scale-105 transition duration-300">
-            <h2 className="text-4xl font-bold text-gray-800 group-hover:text-nextsetAccent">
-              🎵 Artist
-            </h2>
-            <p className="text-gray-600 mt-4 leading-relaxed">
-              Are you a musician, singer, or performer? Sign up to find venues,
-              book gigs, and connect with venues.
-            </p>
-            <button className="mt-8 px-8 py-3 text-white bg-nextsetAccent rounded-full hover:bg-nextsetButton transition duration-300">
-              Sign Up as an Artist
-            </button>
-          </div>
-        </Link>
-
-        {/* Venue Module */}
-        <Link to="/register/venue" className="group">
-          <div className="bg-white shadow-lg rounded-xl p-8 hover:shadow-2xl transform hover:scale-105 transition duration-300">
-            <h2 className="text-4xl font-bold text-gray-800 group-hover:text-teal-600">
-              🏢 Venue
-            </h2>
-            <p className="text-gray-600 mt-4 leading-relaxed">
-              Do you manage a venue or event space? Sign up to list your venue,
-              connect with artists, and book events.
-            </p>
-            <button className="mt-8 px-8 py-3 text-white bg-teal-600 rounded-full hover:bg-teal-500 transition duration-300">
-              Sign Up as a Venue
-            </button>
-          </div>
-        </Link>
+      {/* Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl">
+        <LandingCard
+          title="🎵 Artist"
+          description="Find venues, pitch your shows, and get booked with ease."
+          href="/register/artist"
+          buttonText="Sign Up as Artist"
+          color="nextsetAccent"
+        />
+        <LandingCard
+          title="🏢 Venue"
+          description="List your venue, discover talent, and manage bookings."
+          href="/register/venue"
+          buttonText="Sign Up as Venue"
+          color="teal-600"
+        />
       </div>
 
-      {/* Login Section */}
-      <p className="text-gray-600 text-sm mt-16">
+      {/* Footer */}
+      <p className="text-sm text-gray-600 mt-12">
         Already have an account?{" "}
         <Link
-          to="/login"
-          className="text-nextsetAccent font-medium hover:underline"
+          href="/login"
+          className="text-nextsetAccent hover:underline font-medium"
         >
-          Log in here.
+          Log in here
         </Link>
       </p>
-    </div>
+    </main>
   );
 }
 
-export { MainLanding };
+type LandingCardProps = {
+  title: string,
+  description: string,
+  href: string,
+  buttonText: string,
+  color: string,
+};
+
+function LandingCard({
+  title,
+  description,
+  href,
+  buttonText,
+  color,
+}: LandingCardProps) {
+  return (
+    <Link href={href} className="group">
+      <div className="bg-white shadow-md rounded-2xl p-8 transition-transform duration-300 hover:shadow-xl hover:scale-[1.03]">
+        <h2
+          className={`text-3xl font-bold text-gray-900 group-hover:text-${color}`}
+        >
+          {title}
+        </h2>
+        <p className="text-gray-600 mt-4">{description}</p>
+        <button
+          className={`mt-6 px-6 py-2 rounded-full text-white bg-${color} hover:opacity-90 transition`}
+        >
+          {buttonText}
+        </button>
+      </div>
+    </Link>
+  );
+}
