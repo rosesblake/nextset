@@ -52,11 +52,6 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   loadUser: async () => {
-    if (localStorage.getItem("isLoggedIn") !== "true") {
-      set({ isLoading: false });
-      return;
-    }
-
     try {
       const res = await NextSetApi.getCurrentUser();
       const user = res.user;
@@ -66,6 +61,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         artistData: user.account_type === "artist" ? user.artist ?? null : null,
         venueData: user.account_type === "venue" ? user.venue ?? null : null,
       });
+
+      localStorage.setItem("isLoggedIn", "true");
     } catch (err: any) {
       console.warn("Failed to load user from cookies", err.message);
       set({
@@ -73,6 +70,8 @@ export const useAuthStore = create<AuthStore>((set) => ({
         artistData: null,
         venueData: null,
       });
+
+      localStorage.setItem("isLoggedIn", "false");
     } finally {
       set({ isLoading: false });
     }
