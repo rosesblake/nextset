@@ -1,5 +1,5 @@
-import { ArtistDashboard } from "@/features/artist/pages/ArtistDashboard";
+import ArtistDashboard from "@/features/artist/pages/ArtistDashboard";
 
-export default function ArtistDashboardPage() {
+export default function ArtistPage() {
   return <ArtistDashboard />;
 }

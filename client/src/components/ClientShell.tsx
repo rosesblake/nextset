@@ -3,6 +3,7 @@
 import { useEffect } from "react";
 import { useAuthStore } from "@/lib/stores/useAuthStore";
 import { Spinner } from "@/components/ui/Spinner";
+import { Topbar } from "./ui/Topbar";
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
   const loadUser = useAuthStore((s) => s.loadUser);
@@ -21,5 +22,10 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
     );
   }
 
-  return <>{children}</>;
+  return (
+    <>
+      <Topbar />
+      <main>{children}</main>
+    </>
+  );
 }
