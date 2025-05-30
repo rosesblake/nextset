@@ -4,27 +4,33 @@ import { useAuthStore } from "@/lib/stores/useAuthStore";
 import { Bell } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
+import { motion } from "framer-motion";
 
 export function Topbar() {
   const { currUser } = useAuthStore();
   const profilePhoto = currUser?.artist?.spotify_photo || "/avatar.jpg";
 
   return (
-    <header className="sticky top-0 z-50 w-full h-[80px] bg-gradient-to-b from-white/90 to-white/40 backdrop-blur-md border-b border-zinc-200 shadow-[0_2px_8px_rgba(0,0,0,0.03)]">
-      <div className="h-[80px] px-10 flex items-center justify-between">
+    <motion.header
+      initial={{ opacity: 0, y: -8 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.4 }}
+      className="fixed top-0 left-0 z-50 w-full h-[80px] border-b border-white/10 backdrop-blur-lg bg-gradient-to-r from-black/60 via-black/40 to-black/60 shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+    >
+      <div className="h-full max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
         <Link
           href="/"
-          className="text-[22px] font-medium text-zinc-800 tracking-wide"
+          className="text-[24px] font-bold tracking-wide text-white hover:text-primary transition-colors"
         >
-          NEXTSET
+          <span className="tracking-tight">NEXTSET</span>
         </Link>
 
-        <div className="flex items-center gap-6">
+        <div className="flex items-center gap-5">
           <button
-            className="relative cursor-pointer"
+            className="relative group p-2 rounded-full hover:bg-white/10 transition"
             aria-label="Notifications"
           >
-            <Bell className="w-[20px] h-[20px] text-zinc-500 hover:text-zinc-800 transition" />
+            <Bell className="w-5 h-5 text-white/70 group-hover:text-white transition" />
             <span className="absolute -top-[2px] -right-[2px] h-2 w-2 rounded-full bg-red-500" />
           </button>
 
@@ -33,10 +39,10 @@ export function Topbar() {
             alt={currUser?.full_name || "User avatar"}
             width={40}
             height={40}
-            className="cursor-pointer rounded-full border border-white/50 object-cover"
+            className="rounded-full object-cover border border-black/30 hover:border-black transition"
           />
         </div>
       </div>
-    </header>
+    </motion.header>
   );
 }
