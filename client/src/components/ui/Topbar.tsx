@@ -15,14 +15,17 @@ export function Topbar() {
       initial={{ opacity: 0, y: -8 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4 }}
-      className="fixed top-0 left-0 z-50 w-full h-[80px] border-b border-white/10 backdrop-blur-lg bg-gradient-to-r from-black/60 via-black/40 to-black/60 shadow-[0_4px_12px_rgba(0,0,0,0.15)]"
+      className="fixed top-0 left-0 z-50 w-full h-[80px] border-b border-black/10 backdrop-blur-lg bg-gradient-to-r from-black/60 via-black/40 to-black/60 shadow-[0_4px_12px_rgba(0,0,0,0.4)]"
     >
       <div className="h-full max-w-7xl mx-auto px-4 sm:px-8 flex items-center justify-between">
-        <Link
-          href="/"
-          className="text-[24px] font-bold tracking-wide text-white hover:text-primary transition-colors"
-        >
-          <span className="tracking-tight">NEXTSET</span>
+        <Link href="/" className="flex items-center h-full">
+          <Image
+            src="/images/nextset-logo-white.png"
+            alt="NextSet logo"
+            width={150}
+            height={45}
+            className="object-contain"
+          />
         </Link>
 
         <div className="flex items-center gap-5">

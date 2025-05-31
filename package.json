@@ -4,7 +4,8 @@
   "description": "## Stack",
   "main": "index.js",
   "scripts": {
-    "start": "concurrently \"npm run dev --prefix backend\" \"npm start --prefix frontend\""
+    "start": "concurrently \"npm run dev --prefix backend\" \"npm start --prefix frontend\"",
+    "client": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix client\""
   },
   "repository": {
     "type": "git",
