@@ -53,6 +53,9 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
   loadUser: async () => {
     try {
+      const isLoggedIn = localStorage.getItem("isLoggedIn");
+      if (isLoggedIn !== "true") return;
+
       const res = await NextSetApi.getCurrentUser();
       const user = res.user;
 

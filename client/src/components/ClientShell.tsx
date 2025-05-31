@@ -14,7 +14,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
     loadUser();
   }, [loadUser]);
 
-  if (isLoading || !currUser) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <Spinner />
