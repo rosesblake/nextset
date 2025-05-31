@@ -22,7 +22,7 @@ export function LandingCard({
       href={href}
       className="group block w-full h-full focus:outline-none focus-visible:outline-none"
     >
-      <div className="max-w-md mx-auto h-full flex flex-col overflow-hidden rounded-3xl bg-white transition duration-300 ease-in-out transform group-hover:scale-[1.03]">
+      <div className="max-w-md mx-auto h-full flex flex-col overflow-hidden rounded-3xl bg-white transition duration-300 ease-in-out transform group-hover:scale-[1.03] group-hover:shadow-xl">
         {imageSrc && (
           <div className="relative w-full h-40 shrink-0">
             <Image

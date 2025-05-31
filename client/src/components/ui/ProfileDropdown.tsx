@@ -10,6 +10,7 @@ import {
   DropdownMenuItem,
   DropdownMenuSeparator,
 } from "@/components/ui/dropdown-menu";
+import Link from "next/link";
 
 export function ProfileDropdown() {
   const router = useRouter();
@@ -31,8 +32,10 @@ export function ProfileDropdown() {
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end" className="w-48">
-        <DropdownMenuItem onClick={() => router.push("/artist/dashboard")}>
-          Dashboard
+        <DropdownMenuItem asChild>
+          <Link href="/artist/dashboard" className="w-full h-full">
+            Dashboard
+          </Link>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem

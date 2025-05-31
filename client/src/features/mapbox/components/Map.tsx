@@ -11,9 +11,11 @@ mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_TOKEN!;
 export default function Map({
   venues,
   loading,
+  onMarkerClick,
 }: {
   venues: Venue[];
   loading: boolean;
+  onMarkerClick?: (venue: Venue) => void;
 }) {
   const mapContainer = useRef<HTMLDivElement | null>(null);
   const { currUser } = useAuthStore();
@@ -32,7 +34,7 @@ export default function Map({
     });
 
     map.on("load", () => {
-      venues.forEach((venue) => {
+      venues?.forEach((venue) => {
         if (venue.lat != null && venue.lng != null) {
           const el = document.createElement("div");
           const img = document.createElement("img");
@@ -45,6 +47,10 @@ export default function Map({
           img.className = "venue-marker";
 
           el.appendChild(img);
+
+          el.addEventListener("click", () => {
+            if (onMarkerClick) onMarkerClick(venue);
+          });
 
           new mapboxgl.Marker(el)
             .setLngLat([venue.lng, venue.lat])

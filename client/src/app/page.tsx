@@ -19,7 +19,7 @@ export default function MainLanding() {
 
       <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-black/30 to-transparent z-10" />
 
-      <main className="relative z-20 flex flex-col items-center text-white px-6 pt-28 pb-16 text-center gap-y-12 mt-6">
+      <main className="relative z-20 flex flex-col items-center justify-center min-h-[calc(100vh-80px)] text-white px-6 text-center gap-y-16">
         <motion.h1
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
