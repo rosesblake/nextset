@@ -4,7 +4,6 @@ import { useEffect } from "react";
 import { usePathname } from "next/navigation";
 import { useAuthStore } from "@/lib/stores/useAuthStore";
 import { Spinner } from "@/components/ui/Spinner";
-import { Topbar } from "./ui/Topbar";
 import { AnimatePresence, motion } from "framer-motion";
 
 export function ClientShell({ children }: { children: React.ReactNode }) {
@@ -26,7 +25,6 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <Topbar />
       <AnimatePresence mode="wait">
         <motion.main
           key={pathname}

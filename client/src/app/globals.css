@@ -52,6 +52,7 @@
 }
 
 :root {
+  --color-topbar: rgba(253, 244, 237, 0.75); /* warm translucent */
   --radius: 0.625rem;
   --background: oklch(1 0 0);
   --foreground: oklch(0.129 0.042 264.695);

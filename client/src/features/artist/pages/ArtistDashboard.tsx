@@ -44,16 +44,11 @@ export default function ArtistDashboard() {
         }}
       />
 
-      <SlidingSidebar
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      >
-        {selectedVenue ? (
+      {sidebarOpen && selectedVenue && (
+        <SlidingSidebar isOpen={true} onClose={() => setSidebarOpen(false)}>
           <ArtistVenueProfile venueId={selectedVenue.id} />
-        ) : (
-          <p className="text-zinc-500">No venue selected</p>
-        )}
-      </SlidingSidebar>
+        </SlidingSidebar>
+      )}
     </div>
   );
 }

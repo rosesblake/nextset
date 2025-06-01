@@ -81,7 +81,7 @@ export default function Map({
           setHoveredVenue(venue);
           setHoverCoords({
             x: point.x - rect.left,
-            y: point.y - rect.top - 220,
+            y: point.y - rect.top - 260,
           });
         });
 

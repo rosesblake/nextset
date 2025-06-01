@@ -33,17 +33,16 @@ export function SlidingSidebar({
           damping: 28,
           delay: 0.05,
         }}
-        className="fixed top-[80px] right-0 z-50 h-[calc(100%-80px)] w-full sm:max-w-lg md:max-w-xl lg:max-w-xl
-    bg-white/90 backdrop-blur-md text-zinc-900 border-l border-zinc-200
-    overflow-y-auto shadow-inner shadow-xl
-    rounded-l-2xl sm:rounded-l-2xl"
+        className="fixed top-[75px] right-0 z-50 h-[calc(100%-75px)] w-full sm:max-w-lg md:max-w-xl lg:max-w-2xl
+        bg-white/30 backdrop-blur-xl border-l border-white/20 text-zinc-900
+        overflow-y-auto shadow-xl rounded-l-2xl"
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 z-20 text-zinc-400 hover:text-black transition"
+          className="absolute top-4 right-4 z-20 text-zinc-400 hover:text-white transition"
           aria-label="Close sidebar"
         >
-          <X className="w-6 h-6" />
+          <X className="w-6 h-6 cursor-pointer" />
         </button>
 
         <div className="w-full h-full">{children}</div>

@@ -18,21 +18,33 @@ export function ArtistVenueProfile({ venueId }: Props) {
   const [isLoading, setIsLoading] = useState<Boolean>(true);
 
   useEffect(() => {
+    let isMounted = true;
+
     async function fetchVenue() {
       try {
         const v = await NextSetApi.getVenue(venueId);
-        setVenue(v);
+        if (isMounted) setVenue(v);
       } catch (e) {
-        console.error("Error fetching venue", e);
+        if (isMounted) console.error("Error fetching venue", e);
       } finally {
-        setIsLoading(false);
+        if (isMounted) setIsLoading(false);
       }
     }
 
     fetchVenue();
+
+    return () => {
+      isMounted = false;
+    };
   }, [venueId]);
 
-  if (!venue || isLoading) return <Spinner />;
+  if (!venue || isLoading) {
+    return (
+      <div className="w-full h-full flex items-center justify-center bg-white/30 backdrop-blur-xl">
+        <Spinner />
+      </div>
+    );
+  }
 
   const blockedDates = [
     new Date(2025, 5, 3),
@@ -45,8 +57,8 @@ export function ArtistVenueProfile({ venueId }: Props) {
     venue.venue_amenities && venue.venue_amenities.length > 0;
 
   return (
-    <div className="w-full h-full flex flex-col overflow-y-auto bg-white">
-      <div className="relative w-full min-h-[250px] sm:h-64">
+    <div className="w-full h-full flex flex-col overflow-y-auto text-zinc-800 border-l rounded-l-2xl">
+      <div className="relative w-full min-h-[275px] sm:h-64">
         <Image
           src="/images/hero.png"
           alt="Venue"
@@ -54,7 +66,6 @@ export function ArtistVenueProfile({ venueId }: Props) {
           className="object-cover"
           sizes="100vw"
         />
-
         <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/40 to-transparent" />
         <div className="absolute bottom-4 left-4 text-white">
           <h1 className="text-2xl font-semibold">{venue.name}</h1>
@@ -72,70 +83,71 @@ export function ArtistVenueProfile({ venueId }: Props) {
         </div>
       </div>
 
-      <div className="flex-1 px-6 py-6">
-        <div className="max-w-[500px] mx-auto space-y-6">
-          <div className="flex items-start gap-3">
-            <Users className="w-5 h-5 text-neutral-600 mt-1" />
-            <div>
-              <p className="text-sm text-neutral-500">Capacity</p>
-              <p className="text-base font-medium text-neutral-900">
-                {venue.capacity || "Not specified"}
-              </p>
-            </div>
-          </div>
-
-          <div className="flex items-start gap-3">
-            <MapPin className="w-5 h-5 text-neutral-600 mt-1" />
-            <div>
-              <p className="text-sm text-neutral-500">Address</p>
-              <p className="text-base font-medium text-neutral-900 break-words">
-                {venue.full_address ||
-                  `${venue.street}, ${venue.city}, ${venue.state} ${venue.zip_code}`}
-              </p>
-            </div>
-          </div>
-
-          {areAmenities && (
-            <div className="relative overflow-hidden rounded-xl border border-neutral-200 bg-neutral-50/60 shadow-sm px-5 py-6 space-y-5">
-              <div className="absolute inset-0 pointer-events-none border border-white/20 rounded-xl" />
-              <div className="flex items-center justify-center gap-2">
-                <Sparkles className="w-5 h-5 text-neutral-600" />
-                <h3 className="text-sm font-semibold uppercase tracking-wide text-neutral-700">
-                  Amenities
-                </h3>
-              </div>
-              <div className="flex flex-wrap justify-center gap-2">
-                {[
-                  ...new Set(
-                    venue.venue_amenities
-                      ?.map((a) => a.amenities?.name)
-                      .filter(Boolean)
-                  ),
-                ].map((name) => (
-                  <span
-                    key={name}
-                    className="px-3 py-1 rounded-full text-sm bg-white text-neutral-800 border border-neutral-200 shadow-sm"
-                  >
-                    {name}
-                  </span>
-                ))}
+      <div className="flex-1 px-6 py-6 lg:p-12 md:p-8">
+        <div className="rounded-2xl border border-white/20 bg-white/80 backdrop-blur-xl shadow-md p-6">
+          <div className="max-w-[500px] mx-auto space-y-6">
+            <div className="flex items-start gap-3">
+              <Users className="w-5 h-5 text-neutral-600 mt-1" />
+              <div>
+                <p className="text-sm text-neutral-500">Capacity</p>
+                <p className="text-base font-medium text-neutral-900">
+                  {venue.capacity || "Not specified"}
+                </p>
               </div>
             </div>
-          )}
 
-          <div className="space-y-2">
-            <h3 className="text-sm font-semibold text-neutral-800 tracking-tight text-center">
-              View Availability
-            </h3>
-            <div className="flex justify-center">
-              <div className="w-full max-w-[460px]">
-                <Calendar
-                  mode="single"
-                  selected={undefined}
-                  onSelect={() => {}}
-                  className="w-full"
-                  disabled={blockedDates}
-                />
+            <div className="flex items-start gap-3">
+              <MapPin className="w-5 h-5 text-neutral-600 mt-1" />
+              <div>
+                <p className="text-sm text-neutral-500">Address</p>
+                <p className="text-base font-medium text-neutral-900 break-words">
+                  {venue.full_address ||
+                    `${venue.street}, ${venue.city}, ${venue.state} ${venue.zip_code}`}
+                </p>
+              </div>
+            </div>
+
+            {areAmenities && (
+              <div className="relative overflow-hidden rounded-xl border border-white/20 bg-white/50 shadow-sm px-5 py-6 space-y-5">
+                <div className="flex items-center justify-center gap-2">
+                  <Sparkles className="w-5 h-5 text-neutral-600" />
+                  <h3 className="text-sm font-semibold uppercase tracking-wide text-neutral-700">
+                    Amenities
+                  </h3>
+                </div>
+                <div className="flex flex-wrap justify-center gap-2">
+                  {[
+                    ...new Set(
+                      venue.venue_amenities
+                        ?.map((a) => a.amenities?.name)
+                        .filter(Boolean)
+                    ),
+                  ].map((name) => (
+                    <span
+                      key={name}
+                      className="px-3 py-1 rounded-full text-sm bg-white text-neutral-800 border border-neutral-200 shadow-sm"
+                    >
+                      {name}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            <div className="space-y-2">
+              <h3 className="text-sm font-semibold text-neutral-800 tracking-tight text-center">
+                View Availability
+              </h3>
+              <div className="flex justify-center">
+                <div className="w-full max-w-[460px]">
+                  <Calendar
+                    mode="single"
+                    selected={undefined}
+                    onSelect={() => {}}
+                    className="w-full"
+                    disabled={blockedDates}
+                  />
+                </div>
               </div>
             </div>
           </div>

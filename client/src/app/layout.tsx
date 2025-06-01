@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import "./globals.css";
 import { ClientShell } from "@/components/ClientShell";
 import { Inter } from "next/font/google";
+import { Topbar } from "@/components/ui/Topbar";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -21,6 +22,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={`${inter.variable} font-sans bg-transparent`}>
+        <Topbar />
         <ClientShell>{children}</ClientShell>
       </body>
     </html>
