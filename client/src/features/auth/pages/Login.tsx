@@ -29,9 +29,7 @@ export function Login() {
       setUser(user);
       localStorage.setItem("isLoggedIn", "true");
 
-      router.push(
-        user.account_type === "artist" ? "/artist/dashboard" : "/venue/profile"
-      );
+      router.push("/artist/dashboard");
     } catch (err: any) {
       console.error(err);
       setError(err.message || "Login failed");

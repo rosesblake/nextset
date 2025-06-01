@@ -11,4 +11,16 @@ export type Venue = {
   capacity?: number;
   street?: string;
   zip_code?: string;
+  venue_amenities?: VenueAmenities[];
+};
+
+export type Amenities = {
+  id: number;
+  name: string;
+};
+
+export type VenueAmenities = {
+  amenities: Amenities;
+  amenity_id: number;
+  venue_id: number;
 };

@@ -38,7 +38,7 @@ export function Topbar() {
           className={clsx(
             "absolute inset-0 w-full h-full backdrop-blur-lg bg-gradient-to-r",
             isLoggedIn
-              ? "from-zinc-50 via-white to-zinc-50 shadow-[0_2px_6px_rgba(0,0,0,0.04)]"
+              ? "from-white/90 via-white/80 to-white/90 border-b border-zinc-50/90 shadow-sm"
               : "from-zinc-950/80 via-zinc-950/60 to-zinc-950/80 border-b border-black/10 shadow-[0_4px_12px_rgba(0,0,0,0.04)]"
           )}
         />

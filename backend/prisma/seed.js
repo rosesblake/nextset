@@ -1,3 +1,4 @@
+require("dotenv").config();
 const { PrismaClient } = require("@prisma/client");
 const prisma = new PrismaClient();
 const bcrypt = require("bcrypt");
@@ -13,7 +14,8 @@ async function main() {
   await prisma.users.deleteMany();
 
   const hashed_password = await bcrypt.hash("Devtester123", 10);
-  // Create a user
+
+  // Create users
   const user = await prisma.users.create({
     data: {
       password_hash: hashed_password,
@@ -62,7 +64,7 @@ async function main() {
 
   console.log("User seeded successfully:");
 
-  // Create an artist associated with the user
+  // Create artists
   const artist = await prisma.artists.create({
     data: {
       name: "Sleeping Lion",
@@ -94,6 +96,7 @@ async function main() {
       hometown_lng: -118.243683,
     },
   });
+
   const artist2 = await prisma.artists.create({
     data: {
       name: "Wasp Eater",
@@ -125,6 +128,7 @@ async function main() {
       website: "waspeater.com",
     },
   });
+
   const artist3 = await prisma.artists.create({
     data: {
       name: "DAZYFACE",
@@ -137,7 +141,6 @@ async function main() {
       x_handle: "https://x.com/dazyface",
       facebook_url: "https://facebook.com/dazyface",
       apple_music_url: "https://music.apple.com/dazyface",
-      facebook_url: "https://facebook.com/dazyface",
       soundcloud: "https://soundcloud.com/dazyface",
       tiktok: "https://tiktok.com/dazyface",
       live_show_url: "https://youtube.com/dazyface",
@@ -160,33 +163,18 @@ async function main() {
 
   console.log("Artist seeded successfully:");
 
-  // Associate the user with the artist using the `artist_users` table
-  await prisma.artist_users.create({
-    data: {
-      user_id: user.id,
-      artist_id: artist.id,
-      role: "Creator",
-    },
-  });
-  await prisma.artist_users.create({
-    data: {
-      user_id: user3.id,
-      artist_id: artist2.id,
-      role: "Creator",
-    },
-  });
-  await prisma.artist_users.create({
-    data: {
-      user_id: user4.id,
-      artist_id: artist3.id,
-      role: "Creator",
-    },
+  await prisma.artist_users.createMany({
+    data: [
+      { user_id: user.id, artist_id: artist.id, role: "Creator" },
+      { user_id: user3.id, artist_id: artist2.id, role: "Creator" },
+      { user_id: user4.id, artist_id: artist3.id, role: "Creator" },
+    ],
   });
 
   console.log("User-Artist association created successfully.");
 
   // Create venues
-  const venues = await prisma.venues.createMany({
+  await prisma.venues.createMany({
     data: [
       {
         name: "Troubadour",
@@ -217,7 +205,6 @@ async function main() {
 
   console.log("Venues seeded successfully.");
 
-  // Fetch the venues to seed events
   const troubadour = await prisma.venues.findUnique({
     where: { name: "Troubadour" },
   });
@@ -225,20 +212,47 @@ async function main() {
     where: { name: "The Echo" },
   });
 
-  //connect user to venue
-  await prisma.venue_users.create({
-    data: {
-      user_id: user2.id,
-      venue_id: theEcho.id,
-      role: "Creator",
-    },
+  // Create amenities
+  await prisma.amenities.createMany({
+    data: [
+      { name: "Green Room" },
+      { name: "Backline Provided" },
+      { name: "Parking" },
+      { name: "Hospitality" },
+      { name: "Merch Table" },
+    ],
   });
-  await prisma.venue_users.create({
-    data: {
-      user_id: user5.id,
-      venue_id: troubadour.id,
-      role: "Creator",
-    },
+
+  console.log("Amenities created.");
+
+  const allAmenities = await prisma.amenities.findMany();
+
+  async function assignAmenitiesToVenue(venueId, amenityNames) {
+    const data = allAmenities
+      .filter((a) => amenityNames.includes(a.name))
+      .map((a) => ({ venue_id: venueId, amenity_id: a.id }));
+    await prisma.venue_amenities.createMany({ data, skipDuplicates: true });
+  }
+
+  if (troubadour?.id && theEcho?.id) {
+    await assignAmenitiesToVenue(troubadour.id, [
+      "Green Room",
+      "Backline Provided",
+      "Merch Table",
+    ]);
+    await assignAmenitiesToVenue(theEcho.id, [
+      "Parking",
+      "Hospitality",
+      "Green Room",
+    ]);
+    console.log("Amenities assigned to venues.");
+  }
+
+  await prisma.venue_users.createMany({
+    data: [
+      { user_id: user2.id, venue_id: theEcho.id, role: "Creator" },
+      { user_id: user5.id, venue_id: troubadour.id, role: "Creator" },
+    ],
   });
 }
 

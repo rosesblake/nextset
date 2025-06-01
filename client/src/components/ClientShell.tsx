@@ -14,7 +14,7 @@ export function ClientShell({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     loadUser();
-  }, [loadUser]);
+  }, [pathname, loadUser]);
 
   if (isLoading) {
     return (

@@ -32,6 +32,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
       currUser: user,
       artistData: user.account_type === "artist" ? user.artist ?? null : null,
       venueData: user.account_type === "venue" ? user.venue ?? null : null,
+      isLoading: false,
     });
   },
 
@@ -52,13 +53,12 @@ export const useAuthStore = create<AuthStore>((set) => ({
   },
 
   loadUser: async () => {
+    set({ isLoading: true });
+
     try {
-      const isLoggedIn = localStorage.getItem("isLoggedIn");
-      if (isLoggedIn !== "true") return;
-
       const res = await NextSetApi.getCurrentUser();
-      const user = res.user;
 
+      const user = res.user;
       set({
         currUser: user,
         artistData: user.account_type === "artist" ? user.artist ?? null : null,
@@ -67,7 +67,7 @@ export const useAuthStore = create<AuthStore>((set) => ({
 
       localStorage.setItem("isLoggedIn", "true");
     } catch (err: any) {
-      console.warn("Failed to load user from cookies", err.message);
+      console.warn("Failed to load user", err.message);
       set({
         currUser: null,
         artistData: null,
