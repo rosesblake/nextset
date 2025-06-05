@@ -1,6 +1,6 @@
-import Link from "next/link";
+import { Link } from "react-router-dom";
 
-export default function MainLanding() {
+function MainLanding() {
   return (
     <main className="min-h-screen bg-gradient-to-br from-white via-slate-100 to-slate-200 flex flex-col items-center justify-center px-6 py-20">
       {/* Header */}
@@ -29,7 +29,7 @@ export default function MainLanding() {
           description="List your venue, discover talent, and manage bookings."
           href="/register/venue"
           buttonText="Sign Up as Venue"
-          color="teal-600"
+          color="nextsetAccent"
         />
       </div>
 
@@ -37,7 +37,7 @@ export default function MainLanding() {
       <p className="text-sm text-gray-600 mt-12">
         Already have an account?{" "}
         <Link
-          href="/login"
+          to="/login"
           className="text-nextsetAccent hover:underline font-medium"
         >
           Log in here
@@ -47,23 +47,9 @@ export default function MainLanding() {
   );
 }
 
-type LandingCardProps = {
-  title: string,
-  description: string,
-  href: string,
-  buttonText: string,
-  color: string,
-};
-
-function LandingCard({
-  title,
-  description,
-  href,
-  buttonText,
-  color,
-}: LandingCardProps) {
+function LandingCard({ title, description, href, buttonText, color }) {
   return (
-    <Link href={href} className="group">
+    <Link to={href} className="group">
       <div className="bg-white shadow-md rounded-2xl p-8 transition-transform duration-300 hover:shadow-xl hover:scale-[1.03]">
         <h2
           className={`text-3xl font-bold text-gray-900 group-hover:text-${color}`}
@@ -80,3 +66,5 @@ function LandingCard({
     </Link>
   );
 }
+
+export { MainLanding };

@@ -17,7 +17,7 @@ const debounce = (func, delay) => {
 function ArtistLayout({ isCollapsed, toggleSidebars, setIsMobile, isMobile }) {
   const handleResize = useCallback(
     debounce(() => setIsMobile(window.innerWidth < 1000), 150),
-    []
+    [setIsMobile]
   );
 
   useEffect(() => {
